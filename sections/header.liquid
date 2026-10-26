@@ -1,6 +1,7 @@
 {% assign primary_menu = section.settings.menu %}
 {% assign utility_menu = section.settings.utility_menu %}
 {% assign mega_menu_collections = section.settings.mega_menu_collections %}
+{% assign mega_menu_product_collections = section.settings.mega_menu_product_collections %}
 {% assign has_products_link = false %}
 {% if primary_menu != blank %}
   {% for menu_link in primary_menu.links %}
@@ -70,11 +71,15 @@
                 {% assign menu_link_url = routes.all_products_collection_url %}
                 {% assign display_menu_title = 'Produtos' %}
               {% endif %}
+              {% assign configured_mega_menu_collections = blank %}
+              {% if normalized_link_title contains 'cole' %}
+                {% assign configured_mega_menu_collections = mega_menu_collections %}
+              {% elsif normalized_link_title contains 'produt' %}
+                {% assign configured_mega_menu_collections = mega_menu_product_collections %}
+              {% endif %}
               <li>
                 {% assign has_mega_menu = false %}
-                {% if link.links.size > 0 %}
-                  {% assign has_mega_menu = true %}
-                {% elsif normalized_link_title contains 'cole' and mega_menu_collections != blank %}
+                {% if link.links.size > 0 or configured_mega_menu_collections != blank %}
                   {% assign has_mega_menu = true %}
                 {% endif %}
                 {% if has_mega_menu %}
@@ -83,8 +88,8 @@
                     <div class="site-header__mega">
                       <div class="site-header__mega-inner" id="HeaderMegaMenu-{{ section.id }}-{{ forloop.index }}">
                         <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
-                          {% if mega_menu_collections != blank and normalized_link_title contains 'cole' %}
-                            {% for menu_collection in mega_menu_collections limit: 6 %}
+                          {% if configured_mega_menu_collections != blank %}
+                            {% for menu_collection in configured_mega_menu_collections limit: 6 %}
                               <a href="{{ menu_collection.url }}">{{ menu_collection.title | escape }}</a>
                             {% endfor %}
                           {% else %}
@@ -93,9 +98,9 @@
                             {% endfor %}
                           {% endif %}
                         </nav>
-                        <div class="site-header__mega-cards" aria-label="Coleções">
-                          {% if mega_menu_collections != blank and normalized_link_title contains 'cole' %}
-                            {% for menu_collection in mega_menu_collections limit: 6 %}
+                        <div class="site-header__mega-cards" aria-label="{{ display_menu_title | escape }}">
+                          {% if configured_mega_menu_collections != blank %}
+                            {% for menu_collection in configured_mega_menu_collections limit: 6 %}
                               {% assign menu_collection_image = menu_collection.image | default: menu_collection.products.first.featured_image %}
                               <a class="site-header__mega-card" href="{{ menu_collection.url }}">
                                 <div class="site-header__mega-card-image">
@@ -501,6 +506,13 @@
       "id": "mega_menu_collections",
       "label": "Coleções do menu suspenso",
       "info": "Exibidas ao passar o mouse em Coleções. As imagens vêm da imagem de cada coleção.",
+      "limit": 6
+    },
+    {
+      "type": "collection_list",
+      "id": "mega_menu_product_collections",
+      "label": "Categorias do menu Produtos",
+      "info": "Exibidas ao passar o mouse em Produtos. As imagens vêm da imagem de cada coleção.",
       "limit": 6
     },
     {
