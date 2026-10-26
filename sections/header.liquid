@@ -1,7 +1,8 @@
 {% assign primary_menu = section.settings.menu %}
 {% assign utility_menu = section.settings.utility_menu %}
-{% assign mega_menu_collections = section.settings.mega_menu_collections %}
-{% assign mega_menu_product_collections = section.settings.mega_menu_product_collections %}
+{% assign collection_submenu = metaobjects.header_submenu_1['header-submenu1'] %}
+{% assign product_submenu = metaobjects.header_submenu_2['header-submenu2'] %}
+{% assign menu_collection_fields = 'colecao_1,colecao_2,colecao_3,colecao_4,colecao_5,colecao_6' | split: ',' %}
 {% assign has_products_link = false %}
 {% if primary_menu != blank %}
   {% for menu_link in primary_menu.links %}
@@ -71,15 +72,15 @@
                 {% assign menu_link_url = routes.all_products_collection_url %}
                 {% assign display_menu_title = 'Produtos' %}
               {% endif %}
-              {% assign configured_mega_menu_collections = blank %}
+              {% assign menu_submenu = blank %}
               {% if normalized_link_title contains 'cole' %}
-                {% assign configured_mega_menu_collections = mega_menu_collections %}
+                {% assign menu_submenu = collection_submenu %}
               {% elsif normalized_link_title contains 'produt' %}
-                {% assign configured_mega_menu_collections = mega_menu_product_collections %}
+                {% assign menu_submenu = product_submenu %}
               {% endif %}
               <li>
                 {% assign has_mega_menu = false %}
-                {% if link.links.size > 0 or configured_mega_menu_collections != blank %}
+                {% if link.links.size > 0 or menu_submenu != blank %}
                   {% assign has_mega_menu = true %}
                 {% endif %}
                 {% if has_mega_menu %}
@@ -88,9 +89,11 @@
                     <div class="site-header__mega">
                       <div class="site-header__mega-inner" id="HeaderMegaMenu-{{ section.id }}-{{ forloop.index }}">
                         <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
-                          {% if configured_mega_menu_collections != blank %}
-                            {% for menu_collection in configured_mega_menu_collections limit: 6 %}
-                              <a href="{{ menu_collection.url }}">{{ menu_collection.title | escape }}</a>
+                          {% if menu_submenu != blank %}
+                            {% for menu_collection_key in menu_collection_fields %}
+                              {% assign menu_collection_field = menu_submenu[menu_collection_key] %}
+                              {% assign menu_collection = menu_collection_field.value %}
+                              {% if menu_collection != blank %}<a href="{{ menu_collection.url }}">{{ menu_collection.title | escape }}</a>{% endif %}
                             {% endfor %}
                           {% else %}
                             {% for child_link in link.links %}
@@ -99,8 +102,11 @@
                           {% endif %}
                         </nav>
                         <div class="site-header__mega-cards" aria-label="{{ display_menu_title | escape }}">
-                          {% if configured_mega_menu_collections != blank %}
-                            {% for menu_collection in configured_mega_menu_collections limit: 6 %}
+                          {% if menu_submenu != blank %}
+                            {% for menu_collection_key in menu_collection_fields %}
+                              {% assign menu_collection_field = menu_submenu[menu_collection_key] %}
+                              {% assign menu_collection = menu_collection_field.value %}
+                              {% if menu_collection != blank %}
                               {% assign menu_collection_image = menu_collection.image | default: menu_collection.products.first.featured_image %}
                               <a class="site-header__mega-card" href="{{ menu_collection.url }}">
                                 <div class="site-header__mega-card-image">
@@ -112,6 +118,7 @@
                                 </div>
                                 <span class="site-header__mega-card-title">{{ menu_collection.title | escape }}</span>
                               </a>
+                              {% endif %}
                             {% endfor %}
                           {% else %}
                             {% for child_link in link.links limit: 6 %}
@@ -136,7 +143,48 @@
                 {% endif %}
               </li>
             {% endfor %}
-            {% unless has_products_link %}<li><a href="{{ routes.all_products_collection_url }}">Produtos</a></li>{% endunless %}
+            {% unless has_products_link %}
+              <li>
+                {% if product_submenu != blank %}
+                  {% assign fallback_product_menu_id = 'HeaderMegaMenu-' | append: section.id | append: '-products' %}
+                  <div class="site-header__nav-group" data-header-dropdown>
+                    <a class="site-header__nav-trigger" href="{{ routes.all_products_collection_url }}" aria-haspopup="true" aria-expanded="false" aria-controls="{{ fallback_product_menu_id }}">Produtos</a>
+                    <div class="site-header__mega">
+                      <div class="site-header__mega-inner" id="{{ fallback_product_menu_id }}">
+                        <nav class="site-header__mega-links" aria-label="Produtos">
+                          {% for menu_collection_key in menu_collection_fields %}
+                            {% assign menu_collection_field = product_submenu[menu_collection_key] %}
+                            {% assign menu_collection = menu_collection_field.value %}
+                            {% if menu_collection != blank %}<a href="{{ menu_collection.url }}">{{ menu_collection.title | escape }}</a>{% endif %}
+                          {% endfor %}
+                        </nav>
+                        <div class="site-header__mega-cards" aria-label="Produtos">
+                          {% for menu_collection_key in menu_collection_fields %}
+                            {% assign menu_collection_field = product_submenu[menu_collection_key] %}
+                            {% assign menu_collection = menu_collection_field.value %}
+                            {% if menu_collection != blank %}
+                              {% assign menu_collection_image = menu_collection.image | default: menu_collection.products.first.featured_image %}
+                              <a class="site-header__mega-card" href="{{ menu_collection.url }}">
+                                <div class="site-header__mega-card-image">
+                                  {% if menu_collection_image != blank %}
+                                    {{ menu_collection_image | image_url: width: 640 | image_tag: alt: menu_collection.title, loading: 'lazy', widths: '240, 360, 480, 640', sizes: '(min-width: 1200px) 16vw, 24vw' }}
+                                  {% else %}
+                                    <span>{{ menu_collection.title | escape }}</span>
+                                  {% endif %}
+                                </div>
+                                <span class="site-header__mega-card-title">{{ menu_collection.title | escape }}</span>
+                              </a>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% else %}
+                  <a href="{{ routes.all_products_collection_url }}">Produtos</a>
+                {% endif %}
+              </li>
+            {% endunless %}
           {% else %}
             <li><a href="{{ routes.collections_url }}">Coleções</a></li>
             <li><a href="{{ routes.all_products_collection_url }}">Produtos</a></li>
@@ -500,20 +548,6 @@
       "id": "menu",
       "label": "t:sections.header_menu",
       "default": "main-menu"
-    },
-    {
-      "type": "collection_list",
-      "id": "mega_menu_collections",
-      "label": "Coleções do menu suspenso",
-      "info": "Exibidas ao passar o mouse em Coleções. As imagens vêm da imagem de cada coleção.",
-      "limit": 6
-    },
-    {
-      "type": "collection_list",
-      "id": "mega_menu_product_collections",
-      "label": "Categorias do menu Produtos",
-      "info": "Exibidas ao passar o mouse em Produtos. As imagens vêm da imagem de cada coleção.",
-      "limit": 6
     },
     {
       "type": "link_list",

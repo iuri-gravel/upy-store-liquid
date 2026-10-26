@@ -8,18 +8,7 @@
     },
     "header": {
       "type": "header",
-      "settings": {
-        "mega_menu_collections": [
-          "even",
-          "move"
-        ],
-        "mega_menu_product_collections": [
-          "top",
-          "short",
-          "calca",
-          "conjuntos"
-        ]
-      }
+      "settings": {}
     }
   },
   "order": [
