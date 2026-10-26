@@ -252,6 +252,10 @@ summary {
   backdrop-filter: blur(16px);
 }
 
+.site-header.is-scrolled:has(.site-header__nav-group.is-open) {
+  backdrop-filter: none;
+}
+
 .site-header__inner {
   position: relative;
   display: grid;

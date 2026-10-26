@@ -120,6 +120,10 @@
       const trigger = group.querySelector(".site-header__nav-trigger");
       let closeTimer = 0;
       const setExpanded = (expanded) => {
+        if (expanded) {
+          const megaMenu = group.querySelector(".site-header__mega");
+          megaMenu?.style.setProperty("--header-mega-top", `${Math.max(0, header.getBoundingClientRect().bottom)}px`);
+        }
         group.classList.toggle("is-open", expanded);
         trigger?.setAttribute("aria-expanded", String(expanded));
       };
@@ -141,6 +145,15 @@
         trigger?.focus();
       });
     });
+
+    const updateMegaMenuPosition = () => {
+      const headerBottom = `${Math.max(0, header.getBoundingClientRect().bottom)}px`;
+      header.querySelectorAll(".site-header__nav-group.is-open .site-header__mega").forEach((megaMenu) => {
+        megaMenu.style.setProperty("--header-mega-top", headerBottom);
+      });
+    };
+    window.addEventListener("scroll", updateMegaMenuPosition, { passive: true });
+    window.addEventListener("resize", updateMegaMenuPosition);
   });
 
   const searchDialog = document.querySelector("[data-search-dialog]");

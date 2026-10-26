@@ -1,5 +1,6 @@
 {% assign primary_menu = section.settings.menu %}
 {% assign utility_menu = section.settings.utility_menu %}
+{% assign mega_menu_collections = section.settings.mega_menu_collections %}
 {% assign has_products_link = false %}
 {% if primary_menu != blank %}
   {% for menu_link in primary_menu.links %}
@@ -70,29 +71,57 @@
                 {% assign display_menu_title = 'Produtos' %}
               {% endif %}
               <li>
+                {% assign has_mega_menu = false %}
                 {% if link.links.size > 0 %}
+                  {% assign has_mega_menu = true %}
+                {% elsif normalized_link_title contains 'cole' and mega_menu_collections != blank %}
+                  {% assign has_mega_menu = true %}
+                {% endif %}
+                {% if has_mega_menu %}
                   <div class="site-header__nav-group" data-header-dropdown>
-                    <a class="site-header__nav-trigger" href="{{ menu_link_url }}" aria-haspopup="true" aria-expanded="false">{{ display_menu_title | escape }}</a>
+                    <a class="site-header__nav-trigger" href="{{ menu_link_url }}" aria-haspopup="true" aria-expanded="false" aria-controls="HeaderMegaMenu-{{ section.id }}-{{ forloop.index }}">{{ display_menu_title | escape }}</a>
                     <div class="site-header__mega">
-                      <div class="site-header__mega-inner">
+                      <div class="site-header__mega-inner" id="HeaderMegaMenu-{{ section.id }}-{{ forloop.index }}">
                         <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
-                          {% for child_link in link.links %}
-                            <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
-                          {% endfor %}
+                          {% if mega_menu_collections != blank and normalized_link_title contains 'cole' %}
+                            {% for menu_collection in mega_menu_collections limit: 6 %}
+                              <a href="{{ menu_collection.url }}">{{ menu_collection.title | escape }}</a>
+                            {% endfor %}
+                          {% else %}
+                            {% for child_link in link.links %}
+                              <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                            {% endfor %}
+                          {% endif %}
                         </nav>
                         <div class="site-header__mega-cards" aria-label="Coleções">
-                          {% for child_link in link.links limit: 6 %}
-                            <a class="site-header__mega-card" href="{{ child_link.url }}">
-                              <div class="site-header__mega-card-image">
-                                {% if child_link.type == 'collection_link' and child_link.object.image != blank %}
-                                  {{ child_link.object.image | image_url: width: 480 | image_tag: alt: child_link.title, loading: 'lazy', widths: '240, 360, 480', sizes: '(min-width: 1200px) 16vw, 24vw' }}
-                                {% else %}
-                                  <span>{{ child_link.title | escape }}</span>
-                                {% endif %}
-                              </div>
-                              <span class="site-header__mega-card-title">{{ child_link.title | escape }}</span>
-                            </a>
-                          {% endfor %}
+                          {% if mega_menu_collections != blank and normalized_link_title contains 'cole' %}
+                            {% for menu_collection in mega_menu_collections limit: 6 %}
+                              {% assign menu_collection_image = menu_collection.image | default: menu_collection.products.first.featured_image %}
+                              <a class="site-header__mega-card" href="{{ menu_collection.url }}">
+                                <div class="site-header__mega-card-image">
+                                  {% if menu_collection_image != blank %}
+                                    {{ menu_collection_image | image_url: width: 640 | image_tag: alt: menu_collection.title, loading: 'lazy', widths: '240, 360, 480, 640', sizes: '(min-width: 1200px) 16vw, 24vw' }}
+                                  {% else %}
+                                    <span>{{ menu_collection.title | escape }}</span>
+                                  {% endif %}
+                                </div>
+                                <span class="site-header__mega-card-title">{{ menu_collection.title | escape }}</span>
+                              </a>
+                            {% endfor %}
+                          {% else %}
+                            {% for child_link in link.links limit: 6 %}
+                              <a class="site-header__mega-card" href="{{ child_link.url }}">
+                                <div class="site-header__mega-card-image">
+                                  {% if child_link.type == 'collection_link' and child_link.object.image != blank %}
+                                    {{ child_link.object.image | image_url: width: 640 | image_tag: alt: child_link.title, loading: 'lazy', widths: '240, 360, 480, 640', sizes: '(min-width: 1200px) 16vw, 24vw' }}
+                                  {% else %}
+                                    <span>{{ child_link.title | escape }}</span>
+                                  {% endif %}
+                                </div>
+                                <span class="site-header__mega-card-title">{{ child_link.title | escape }}</span>
+                              </a>
+                            {% endfor %}
+                          {% endif %}
                         </div>
                       </div>
                     </div>
@@ -466,6 +495,13 @@
       "id": "menu",
       "label": "t:sections.header_menu",
       "default": "main-menu"
+    },
+    {
+      "type": "collection_list",
+      "id": "mega_menu_collections",
+      "label": "Coleções do menu suspenso",
+      "info": "Exibidas ao passar o mouse em Coleções. As imagens vêm da imagem de cada coleção.",
+      "limit": 6
     },
     {
       "type": "link_list",
