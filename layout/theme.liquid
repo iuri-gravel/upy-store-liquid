@@ -15,7 +15,11 @@
     <meta property="og:title" content="{{ page_title | escape }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
-    {% if request.page_type == 'product' and product != blank %}{{ product | structured_data }}{% endif %}
+    {% if request.page_type == 'product' and product != blank %}
+      <script type="application/ld+json">
+        {{ product | structured_data }}
+      </script>
+    {% endif %}
     {{ 'theme.css' | asset_url | stylesheet_tag }}
     {% if request.page_type == 'product' %}
       {{ 'product-page.css' | asset_url | stylesheet_tag }}
