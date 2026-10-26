@@ -42,6 +42,7 @@
           <option value="price-ascending"{% if selected_sort == 'price-ascending' %} selected{% endif %}>Menor preço</option>
           <option value="price-descending"{% if selected_sort == 'price-descending' %} selected{% endif %}>Maior preço</option>
         </select>
+        <svg class="main-collection__sort-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
       </label>
 
       <p class="main-collection__count" aria-live="polite">
@@ -218,19 +219,25 @@
     padding: 0;
   }
   .main-collection__count { margin: 0; color: var(--upy-canvas); font-size: 0.9rem; }
-  .main-collection__sort { display: flex; align-items: center; font-size: 0.9rem; }
+  .main-collection__sort { position: relative; display: flex; align-items: center; font-size: 0.9rem; }
   .main-collection__sort select {
     width: 12.1rem;
     min-height: 3.5rem;
-    border: 1px solid var(--upy-canvas);
+    border: 1px solid rgb(243 240 237 / 55%);
     border-radius: 0;
-    padding: 0.4rem 2rem 0.4rem 1.25rem;
-    background: transparent;
+    padding: 0.4rem 2.75rem 0.4rem 1.25rem;
+    appearance: none;
+    background: rgb(243 240 237 / 4%);
     color: var(--upy-canvas);
     font: inherit;
     cursor: pointer;
+    transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
   }
+  .main-collection__sort select:hover { border-color: var(--upy-accent); background-color: rgb(243 240 237 / 8%); }
+  .main-collection__sort select:focus-visible { border-color: var(--upy-accent); outline: 2px solid var(--upy-accent); outline-offset: 3px; }
   .main-collection__sort select option { background: var(--upy-ink); color: var(--upy-canvas); }
+  .main-collection__sort-icon { position: absolute; right: 1.1rem; width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; pointer-events: none; transition: transform 180ms ease; }
+  .main-collection__sort select:focus-visible + .main-collection__sort-icon { transform: rotate(180deg); }
   .main-collection__filter-panel { border-bottom: 1px solid rgb(243 240 237 / 25%); }
   .main-collection__filter-summary {
     display: flex;
