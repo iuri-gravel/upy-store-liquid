@@ -1,0 +1,45 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Upy Store",
+    "theme_author": "Upy Store",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://shopify.dev/docs/storefronts/themes",
+    "theme_support_email": "contato@upystore.com.br"
+  },
+  {
+    "name": "t:settings_schema.brand",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_canvas",
+        "label": "t:settings_schema.color_canvas",
+        "default": "#f3f0ed"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "t:settings_schema.color_ink",
+        "default": "#1c191a"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "t:settings_schema.color_accent",
+        "default": "#d06b3f"
+      },
+      {
+        "type": "color",
+        "id": "color_footer",
+        "label": "t:settings_schema.color_footer",
+        "default": "#1c191a"
+      },
+      {
+        "type": "color",
+        "id": "color_footer_text",
+        "label": "t:settings_schema.color_footer_text",
+        "default": "#f3f0ed"
+      }
+    ]
+  }
+]

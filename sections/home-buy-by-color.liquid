@@ -1,0 +1,164 @@
+{% liquid
+  assign color_featured = metaobjects.featuredcollectionssection3.featuredcollections3
+  assign fallback_image = metaobjects.bannerherohome.bannerhero.image_1.value
+%}
+
+<section class="home-buy-color" data-buy-color>
+  <div class="home-buy-color__heading-wrap">
+    <h2 class="home-buy-color__heading">{{ section.settings.title | default: 'Comprar por cor' | escape }}</h2>
+  </div>
+
+  <div class="home-buy-color__grid" data-buy-color-grid>
+    {% for color_index in (1..4) %}
+      {% liquid
+        case color_index
+          when 1
+            assign color_name = 'Preto'
+            assign color_label = 'PRETO'
+            assign fallback_color = '#111111'
+            assign color_filter_values = 'Preto,Preta,Pretos,Pretas'
+          when 2
+            assign color_name = 'Azul'
+            assign color_label = 'AZUL'
+            assign fallback_color = '#2B3F5F'
+            assign color_filter_values = 'Azul,Azuis'
+          when 3
+            assign color_name = 'Vinho'
+            assign color_label = 'VINHO'
+            assign fallback_color = '#752F43'
+            assign color_filter_values = 'Vinho,Vinhos,Bordo,Bordô'
+          when 4
+            assign color_name = 'Marrom'
+            assign color_label = 'MARROM'
+            assign fallback_color = '#704E35'
+            assign color_filter_values = 'Marrom,Marrons'
+        endcase
+
+        assign image_key = 'image_' | append: color_index
+        assign color_key = 'cor_' | append: color_index
+        assign color_image = color_featured[image_key].value
+        if color_image == blank
+          assign color_image = fallback_image
+        endif
+        assign image_alt_fallback = 'Produtos na cor ' | append: color_name
+        assign image_alt = color_image.alt | default: image_alt_fallback
+
+        assign swatch_color = color_featured[color_key].value | remove: '"' | strip
+        assign swatch_prefix = swatch_color | slice: 0
+        if swatch_prefix != '#'
+          assign swatch_color = fallback_color
+        endif
+
+        assign encoded_filter_values = color_filter_values | url_encode
+        assign color_url = routes.all_products_collection_url | append: '?filter.v.option.cor=' | append: encoded_filter_values
+      %}
+
+      <article class="home-buy-color__item{% if forloop.first %} is-selected{% endif %}" data-buy-color-item data-color-index="{{ forloop.index0 }}" id="{{ section.id }}-color-{{ color_index }}" {% if forloop.first %}aria-current="true"{% endif %}>
+        <a class="home-buy-color__card" href="{{ color_url }}" aria-label="Ver produtos na cor {{ color_name | escape }}">
+          {% if color_image != blank %}
+            <img
+              class="home-buy-color__image"
+              src="{{ color_image | image_url: width: 1200 }}"
+              srcset="
+                {{ color_image | image_url: width: 320 }} 320w,
+                {{ color_image | image_url: width: 480 }} 480w,
+                {{ color_image | image_url: width: 640 }} 640w,
+                {{ color_image | image_url: width: 800 }} 800w,
+                {{ color_image | image_url: width: 960 }} 960w,
+                {{ color_image | image_url: width: 1200 }} 1200w
+              "
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 84vw"
+              width="{{ color_image.width | default: 1200 }}"
+              height="{{ color_image.height | default: 1500 }}"
+              alt="{{ image_alt | escape }}"
+              loading="lazy"
+              decoding="async"
+            >
+          {% endif %}
+          <span class="home-buy-color__shade" aria-hidden="true"></span>
+          <span class="home-buy-color__label">{{ color_label }}</span>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+
+  <div class="home-buy-color__picker">
+    <p class="home-buy-color__caption">{{ section.settings.caption | default: 'Encontre o seu tom' | escape }}</p>
+    <div class="home-buy-color__swatch-row">
+      <span class="home-buy-color__rule" aria-hidden="true"></span>
+      <div class="home-buy-color__swatches" role="group" aria-label="Comprar por cor">
+        {% for color_index in (1..4) %}
+          {% liquid
+            case color_index
+              when 1
+                assign color_name = 'Preto'
+                assign fallback_color = '#111111'
+                assign color_filter_values = 'Preto,Preta,Pretos,Pretas'
+              when 2
+                assign color_name = 'Azul'
+                assign fallback_color = '#2B3F5F'
+                assign color_filter_values = 'Azul,Azuis'
+              when 3
+                assign color_name = 'Vinho'
+                assign fallback_color = '#752F43'
+                assign color_filter_values = 'Vinho,Vinhos,Bordo,Bordô'
+              when 4
+                assign color_name = 'Marrom'
+                assign fallback_color = '#704E35'
+                assign color_filter_values = 'Marrom,Marrons'
+            endcase
+
+            assign color_key = 'cor_' | append: color_index
+            assign swatch_color = color_featured[color_key].value | remove: '"' | strip
+            assign swatch_prefix = swatch_color | slice: 0
+            if swatch_prefix != '#'
+              assign swatch_color = fallback_color
+            endif
+
+            assign encoded_filter_values = color_filter_values | url_encode
+            assign color_url = routes.all_products_collection_url | append: '?filter.v.option.cor=' | append: encoded_filter_values
+          %}
+          <a
+            class="home-buy-color__swatch-link{% if forloop.first %} is-selected{% endif %}"
+            href="{{ color_url }}"
+            data-buy-color-swatch
+            data-color-index="{{ forloop.index0 }}"
+            aria-label="Ver produtos na cor {{ color_name | escape }}"
+            aria-controls="{{ section.id }}-color-{{ color_index }}"
+            title="{{ color_name | escape }}"
+            {% if forloop.first %}aria-current="true"{% endif %}
+          >
+            <span class="home-buy-color__swatch" style="--swatch-color: {{ swatch_color | escape }}" aria-hidden="true"></span>
+          </a>
+        {% endfor %}
+      </div>
+      <span class="home-buy-color__rule" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comprar por cor",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Comprar por cor"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Texto dos tons",
+      "default": "Encontre o seu tom"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comprar por cor"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,376 @@
+{% assign primary_menu = section.settings.menu %}
+{% assign utility_menu = section.settings.utility_menu %}
+{% assign has_products_link = false %}
+{% if primary_menu != blank %}
+  {% for menu_link in primary_menu.links %}
+    {% assign menu_link_title = menu_link.title | downcase %}
+    {% if menu_link_title contains 'produt' %}{% assign has_products_link = true %}{% endif %}
+  {% endfor %}
+{% endif %}
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    <div class="site-header__left">
+      <button class="icon-button site-header__menu-trigger" type="button" aria-label="Abrir menu" aria-controls="HeaderMenuDialog" aria-expanded="false" data-dialog-open="menu">
+        <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+      </button>
+
+      <details class="site-header__utility-menu" data-utility-menu>
+        <summary class="icon-button site-header__utility-trigger" aria-label="Abrir menu de informações">
+          <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+        </summary>
+        <div class="site-header__utility-popover">
+          <div class="site-header__utility-heading">
+            <p class="site-header__eyebrow">Explore a Upy</p>
+            <p>Informações para acompanhar seu movimento.</p>
+          </div>
+          <div class="site-header__utility-sections">
+            {% if utility_menu != blank and utility_menu.links.size > 0 %}
+              {% for link in utility_menu.links %}
+                <section>
+                  {% if link.links.size > 0 %}
+                    <h2>{{ link.title | escape }}</h2>
+                    <nav aria-label="{{ link.title | escape }}">
+                      {% for child_link in link.links %}<a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>{% endfor %}
+                    </nav>
+                  {% else %}
+                    <nav aria-label="Informações"><a href="{{ link.url }}">{{ link.title | escape }}</a></nav>
+                  {% endif %}
+                </section>
+              {% endfor %}
+            {% else %}
+              <section>
+                <h2>Institucional</h2>
+                <span class="site-header__utility-disabled">Nossa História <small>Em breve</small></span>
+                <a href="/pages/manifesto">Manifesto</a>
+              </section>
+              <section>
+                <h2>Dúvidas</h2>
+                <a href="/pages/frete-e-entregas">Frete e Entregas</a>
+                <a href="/pages/trocas-e-devolucoes">Trocas e Devoluções</a>
+                <a href="/pages/faq">FAQ</a>
+              </section>
+            {% endif %}
+          </div>
+        </div>
+      </details>
+
+      <nav class="site-header__desktop-nav" aria-label="Navegação principal">
+        <ul class="site-header__desktop-links">
+          {% if primary_menu != blank %}
+            {% for link in primary_menu.links %}
+              {% assign normalized_link_title = link.title | downcase %}
+              {% assign menu_link_url = link.url %}
+              {% assign display_menu_title = link.title %}
+              {% if normalized_link_title contains 'cole' %}
+                {% assign menu_link_url = routes.collections_url %}
+                {% assign display_menu_title = 'Coleções' %}
+              {% endif %}
+              {% if normalized_link_title contains 'produt' %}
+                {% assign menu_link_url = routes.all_products_collection_url %}
+                {% assign display_menu_title = 'Produtos' %}
+              {% endif %}
+              <li>
+                {% if link.links.size > 0 %}
+                  <details class="site-header__nav-group" data-header-dropdown>
+                    <summary aria-haspopup="true" aria-expanded="false">{{ display_menu_title | escape }}</summary>
+                    <div class="site-header__mega">
+                      <div class="site-header__mega-inner">
+                        <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
+                          <a class="site-header__mega-all" href="{{ menu_link_url }}">Ver tudo de {{ display_menu_title | escape }}</a>
+                          {% for child_link in link.links %}
+                            <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                          {% endfor %}
+                        </nav>
+                        <div class="site-header__mega-cards" aria-label="Coleções">
+                          {% for child_link in link.links limit: 6 %}
+                            <a class="site-header__mega-card" href="{{ child_link.url }}">
+                              <div class="site-header__mega-card-image">
+                                {% if child_link.type == 'collection_link' and child_link.object.image != blank %}
+                                  {{ child_link.object.image | image_url: width: 480 | image_tag: alt: child_link.title, loading: 'lazy', widths: '240, 360, 480', sizes: '(min-width: 1200px) 16vw, 24vw' }}
+                                {% else %}
+                                  <span>{{ child_link.title | escape }}</span>
+                                {% endif %}
+                              </div>
+                              <span class="site-header__mega-card-title">{{ child_link.title | escape }}</span>
+                            </a>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </details>
+                {% else %}
+                  <a href="{{ menu_link_url }}">{{ display_menu_title | escape }}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+            {% unless has_products_link %}<li><a href="{{ routes.all_products_collection_url }}">Produtos</a></li>{% endunless %}
+          {% else %}
+            <li><a href="{{ routes.collections_url }}">Coleções</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}">Produtos</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+    <a class="site-header__logo" href="{{ routes.root_url }}" aria-label="Ir para a página inicial">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'site-header__logo-image', alt: shop.name, widths: '120, 180, 240, 320, 420', sizes: '(max-width: 1023px) 112px, 160px' }}
+      {% else %}
+        <img class="site-header__logo-image" src="{{ 'LOGOTIPO.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="2000" height="2000" fetchpriority="high">
+      {% endif %}
+    </a>
+
+    <div class="site-header__actions">
+      <button class="site-header__search-trigger" type="button" aria-label="Pesquisar produtos" aria-controls="HeaderSearchDialog" aria-expanded="false" data-dialog-open="search">
+        <span>{{ section.settings.search_placeholder | escape }}</span>
+        <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+      </button>
+
+      {% if shop.customer_accounts_enabled %}
+        <a class="icon-button site-header__account" href="{{ routes.account_url }}" aria-label="Minha conta">
+          {% if customer %}
+            <span class="site-header__account-initial" aria-hidden="true">{{ customer.first_name | default: customer.email | slice: 0, 1 | upcase }}</span>
+          {% else %}
+            <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5" /><path d="M4.5 21a7.5 7.5 0 0 1 15 0" /></svg>
+          {% endif %}
+        </a>
+      {% endif %}
+
+      <button class="icon-button site-header__wishlist" type="button" aria-label="Favoritos" aria-controls="HeaderWishlistDialog" aria-expanded="false" data-dialog-open="wishlist">
+        <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.7c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.7 4.7 0 0 1 12 6.4a4.7 4.7 0 0 1 8.8 2.3Z" /></svg>
+        <span class="site-header__count" data-wishlist-count hidden>0</span>
+      </button>
+
+      <button class="icon-button site-header__cart" type="button" aria-label="Abrir sacola com {{ cart.item_count }} itens" aria-controls="HeaderCartDialog" aria-expanded="false" data-dialog-open="cart">
+        <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z" /><path d="M9 9V6a3 3 0 0 1 6 0v3" /></svg>
+        {% if cart.item_count > 0 %}<span class="site-header__count" data-cart-count>{{ cart.item_count }}</span>{% endif %}
+      </button>
+    </div>
+  </div>
+
+  <dialog class="site-header__dialog site-header__menu-dialog" id="HeaderMenuDialog" aria-label="Menu principal" data-menu-dialog>
+    <div class="site-header__dialog-panel site-header__menu-panel">
+      <div class="site-header__dialog-heading">
+        <div>
+          <p class="site-header__eyebrow">Explore a Upy</p>
+          <h2>{{ shop.name | escape }}</h2>
+        </div>
+        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close>
+          <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+
+      <nav class="site-header__drawer-main-nav" aria-label="Navegação principal">
+        {% if primary_menu != blank %}
+          {% for link in primary_menu.links %}
+            {% assign normalized_link_title = link.title | downcase %}
+            {% assign menu_link_url = link.url %}
+            {% assign display_menu_title = link.title %}
+            {% if normalized_link_title contains 'cole' %}
+              {% assign menu_link_url = routes.collections_url %}
+              {% assign display_menu_title = 'Coleções' %}
+            {% endif %}
+            {% if normalized_link_title contains 'produt' %}
+              {% assign menu_link_url = routes.all_products_collection_url %}
+              {% assign display_menu_title = 'Produtos' %}
+            {% endif %}
+            {% if link.links.size > 0 %}
+              <details class="site-header__drawer-group">
+                <summary>{{ display_menu_title | escape }}<span aria-hidden="true">+</span></summary>
+                <div class="site-header__drawer-submenu">
+                  <a class="site-header__drawer-all" href="{{ menu_link_url }}">Ver tudo de {{ display_menu_title | escape }}</a>
+                  {% for child_link in link.links %}
+                    {% if child_link.links.size > 0 %}
+                      <details class="site-header__drawer-subgroup">
+                        <summary>{{ child_link.title | escape }}</summary>
+                        <div>{% for grandchild_link in child_link.links %}<a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>{% endfor %}</div>
+                      </details>
+                    {% else %}
+                      <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                    {% endif %}
+                  {% endfor %}
+                  <div class="site-header__drawer-cards">
+                    {% for child_link in link.links limit: 6 %}
+                      <a class="site-header__drawer-card" href="{{ child_link.url }}">
+                        {% if child_link.type == 'collection_link' and child_link.object.image != blank %}
+                          {{ child_link.object.image | image_url: width: 360 | image_tag: alt: child_link.title, loading: 'lazy', widths: '180, 240, 360', sizes: '42vw' }}
+                        {% endif %}
+                        <span>{{ child_link.title | escape }}</span>
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </details>
+            {% else %}
+              <a class="site-header__drawer-link" href="{{ menu_link_url }}">{{ display_menu_title | escape }}</a>
+            {% endif %}
+          {% endfor %}
+          {% unless has_products_link %}<a class="site-header__drawer-link" href="{{ routes.all_products_collection_url }}">Produtos</a>{% endunless %}
+        {% else %}
+          <a class="site-header__drawer-link" href="{{ routes.collections_url }}">Coleções</a>
+          <a class="site-header__drawer-link" href="{{ routes.all_products_collection_url }}">Produtos</a>
+        {% endif %}
+      </nav>
+
+      <details class="site-header__mobile-utility">
+        <summary>Menu<span aria-hidden="true">+</span></summary>
+        <div class="site-header__mobile-utility-content">
+          <p class="site-header__eyebrow">Informações</p>
+          {% if utility_menu != blank and utility_menu.links.size > 0 %}
+            {% for link in utility_menu.links %}
+              {% if link.links.size > 0 %}
+                <section>
+                  <h2>{{ link.title | escape }}</h2>
+                  {% for child_link in link.links %}<a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>{% endfor %}
+                </section>
+              {% else %}
+                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <section>
+              <h2>Institucional</h2>
+              <span class="site-header__utility-disabled">Nossa História <small>Em breve</small></span>
+              <a href="/pages/manifesto">Manifesto</a>
+            </section>
+            <section>
+              <h2>Dúvidas</h2>
+              <a href="/pages/frete-e-entregas">Frete e Entregas</a>
+              <a href="/pages/trocas-e-devolucoes">Trocas e Devoluções</a>
+              <a href="/pages/faq">FAQ</a>
+            </section>
+          {% endif %}
+        </div>
+      </details>
+    </div>
+  </dialog>
+
+  <dialog class="site-header__dialog site-header__search-dialog" id="HeaderSearchDialog" aria-label="Pesquisa de produtos, cores e tamanhos" data-search-dialog data-predictive-url="{{ routes.predictive_search_url | append: '.json' }}" data-search-products="Produtos" data-search-collections="Coleções" data-search-empty="Nenhum produto ou coleção encontrado." data-search-error="Não foi possível carregar as sugestões. Pressione Enter para ver os resultados." data-search-all="Ver todos os resultados">
+    <div class="site-header__search-panel">
+      <form class="site-header__search-form" action="{{ routes.search_url }}" method="get" role="search">
+        <label class="visually-hidden" for="HeaderSearchInput">Pesquisa de produtos, cores e tamanhos</label>
+        <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+        <input id="HeaderSearchInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ section.settings.search_placeholder | escape }}" role="combobox" aria-expanded="false" aria-controls="HeaderSearchResults" aria-autocomplete="list" autocomplete="off" data-predictive-search-input>
+        <input type="hidden" name="options[prefix]" value="last">
+        <button class="site-header__search-submit" type="submit" aria-label="Pesquisar produtos">Pesquisar produtos</button>
+        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close>
+          <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </form>
+      <div class="site-header__search-content">
+        <div class="site-header__search-initial" data-search-initial>
+          <p class="site-header__eyebrow">Explore a Upy</p>
+          <h2>Encontre o que você procura na UPY</h2>
+          {% if primary_menu != blank %}
+            <div class="site-header__search-quick-links">
+              {% for link in primary_menu.links limit: 8 %}
+                {% assign normalized_link_title = link.title | downcase %}
+                {% assign menu_link_url = link.url %}
+                {% assign display_menu_title = link.title %}
+                {% if normalized_link_title contains 'cole' %}
+                  {% assign menu_link_url = routes.collections_url %}
+                  {% assign display_menu_title = 'Coleções' %}
+                {% endif %}
+                {% if normalized_link_title contains 'produt' %}
+                  {% assign menu_link_url = routes.all_products_collection_url %}
+                  {% assign display_menu_title = 'Produtos' %}
+                {% endif %}
+                <a href="{{ menu_link_url }}">{{ display_menu_title | escape }}</a>
+              {% endfor %}
+              {% unless has_products_link %}<a href="{{ routes.all_products_collection_url }}">Produtos</a>{% endunless %}
+            </div>
+          {% else %}
+            <div class="site-header__search-quick-links">
+              <a href="{{ routes.collections_url }}">Coleções</a>
+              <a href="{{ routes.all_products_collection_url }}">Produtos</a>
+            </div>
+          {% endif %}
+        </div>
+        <div class="site-header__search-results" id="HeaderSearchResults" role="listbox" aria-live="polite" data-search-results hidden></div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="site-header__dialog site-header__side-dialog" id="HeaderWishlistDialog" aria-label="Favoritos" data-wishlist-dialog data-remove-label="Remover">
+    <div class="site-header__dialog-panel site-header__side-panel">
+      <div class="site-header__dialog-heading">
+        <div><p class="site-header__eyebrow">Favoritos</p><h2>Favoritos</h2></div>
+        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close><svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+      </div>
+      <p class="site-header__wishlist-empty" data-wishlist-empty>Sua lista de favoritos está vazia.</p>
+      <div class="site-header__wishlist-list" data-wishlist-list hidden></div>
+      <a class="upy-button site-header__drawer-continue" href="{{ routes.all_products_collection_url }}">Continuar comprando</a>
+    </div>
+  </dialog>
+
+  <dialog class="site-header__dialog site-header__side-dialog" id="HeaderCartDialog" aria-label="Sua sacola" data-cart-dialog>
+    <div class="site-header__dialog-panel site-header__side-panel">
+      <div class="site-header__dialog-heading">
+        <div><p class="site-header__eyebrow">Sua sacola</p><h2>Sua sacola <span>({{ cart.item_count }})</span></h2></div>
+        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close><svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+      </div>
+      {% if cart.item_count == 0 %}
+        <div class="site-header__cart-empty"><p>Sua sacola está vazia.</p><a class="upy-button" href="{{ routes.all_products_collection_url }}">Continuar comprando</a></div>
+      {% else %}
+        {% form 'cart', cart, class: 'site-header__cart-form' %}
+          <div class="site-header__cart-items">
+            {% for item in cart.items %}
+              <article class="site-header__cart-item">
+                <a class="site-header__cart-image" href="{{ item.url }}">
+                  {% if item.image != blank %}{{ item.image | image_url: width: 180 | image_tag: alt: item.product.title, loading: 'lazy', widths: '90, 135, 180', sizes: '90px' }}{% endif %}
+                </a>
+                <div class="site-header__cart-item-details">
+                  <a class="site-header__cart-item-title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+                  {% unless item.variant.title == 'Default Title' %}<p>{{ item.variant.title | escape }}</p>{% endunless %}
+                  <p class="site-header__cart-item-price">{{ item.final_line_price | money }}</p>
+                  <div class="site-header__cart-item-controls">
+                    <label class="visually-hidden" for="HeaderCartQuantity-{{ forloop.index }}">Quantidade</label>
+                    <input id="HeaderCartQuantity-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
+                    <a href="{{ item.url_to_remove }}">Remover</a>
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+          <div class="site-header__cart-summary">
+            <div class="site-header__cart-subtotal"><span>Subtotal</span><strong>{{ cart.total_price | money }}</strong></div>
+            <p>Frete, impostos, descontos e condições de pagamento serão confirmados no checkout da Shopify.</p>
+            <button class="upy-button site-header__checkout" type="submit" name="checkout">Finalizar compra</button>
+            <button class="site-header__continue-button" type="button" data-dialog-close>Continuar comprando</button>
+          </div>
+        {% endform %}
+      {% endif %}
+    </div>
+  </dialog>
+</header>
+
+{% schema %}
+{
+  "name": "t:sections.header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.header_logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:sections.header_menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "utility_menu",
+      "label": "t:sections.header_utility_menu"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "t:sections.header_search_placeholder",
+      "default": "Produto, cor ou tamanho"
+    }
+  ]
+}
+{% endschema %}

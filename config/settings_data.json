@@ -1,0 +1,10 @@
+{
+  "current": {
+    "color_canvas": "#f3f0ed",
+    "color_ink": "#1c191a",
+    "color_accent": "#d06b3f",
+    "color_footer": "#1c191a",
+    "color_footer_text": "#f3f0ed"
+  },
+  "presets": {}
+}

@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "announcement_bar": "Barra de anúncios",
+    "announcement_message_1": "Anúncio 1",
+    "announcement_message_2": "Anúncio 2",
+    "announcement_message_3": "Anúncio 3",
+    "announcement_message_4": "Anúncio 4",
+    "announcement_rotation_speed": "Intervalo entre mensagens",
+    "header": "Cabeçalho",
+    "header_logo": "Logotipo",
+    "header_menu": "Menu principal",
+    "header_utility_menu": "Menu institucional",
+    "header_search_placeholder": "Texto de orientação da busca",
+    "footer": "Rodapé",
+    "footer_logo": "Logotipo do rodapé",
+    "footer_description": "Descrição da marca",
+    "footer_institutional_menu": "Menu institucional",
+    "footer_help_menu": "Menu de ajuda",
+    "footer_information_menu": "Menu de informações",
+    "footer_support_hours": "Horário de atendimento",
+    "footer_contact_email": "E-mail de contato",
+    "footer_business_id": "CNPJ",
+    "footer_instagram": "URL do Instagram",
+    "footer_facebook": "URL do Facebook",
+    "footer_youtube": "URL do YouTube",
+    "footer_tiktok": "URL do TikTok",
+    "footer_pinterest": "URL do Pinterest",
+    "home_hero": "Banner principal da página inicial"
+  },
+  "settings_schema": {
+    "brand": "Cores da marca",
+    "color_canvas": "Fundo quente",
+    "color_ink": "Texto e cabeçalho",
+    "color_accent": "Cor de destaque",
+    "color_footer": "Fundo do rodapé",
+    "color_footer_text": "Texto do rodapé"
+  },
+  "announcements": {
+    "shipping": "Frete Grátis acima de 149,90",
+    "exchange": "Primeira troca GRÁTIS",
+    "pix": "Pague com PIX e ganhe 5% de desconto",
+    "installments": "Parcele em até 3x sem juros no cartão"
+  },
+  "footer": {
+    "brand_description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
+    "support_hours": "Atendimento de segunda a sexta-feira, das 8h às 17h30."
+  }
+}

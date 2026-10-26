@@ -1,0 +1,89 @@
+{% liquid
+  assign editorial = metaobjects.editorialcollectionsection.editorialcollection
+  assign image = section.settings.image | default: editorial.image.value
+  assign fallback_image = metaobjects.bannerherohome.bannerhero.image_1.value
+  if image == blank
+    assign image = fallback_image
+  endif
+
+  assign image_alt = image.alt | default: 'Sobre a Upy'
+  assign eyebrow = section.settings.eyebrow | default: editorial.etiqueta.value | default: 'Sobre a Upy'
+  assign title = section.settings.title | default: editorial.titulo.value | default: 'Você. Da forma que quiser.'
+  assign description = section.settings.description | default: editorial.descricao.value | default: 'Conheça a essência, o movimento e as escolhas por trás da nova UPY.'
+  assign manifesto_page = pages['manifesto']
+  assign default_link = manifesto_page.url | default: '/pages/manifesto'
+  assign editorial_link = section.settings.link | default: default_link
+%}
+
+<section class="home-editorial">
+  <a class="home-editorial__visual" href="{{ editorial_link }}" aria-label="Abrir o Manifesto da UPY">
+    {% if image != blank %}
+      <img
+        class="home-editorial__image"
+        src="{{ image | image_url: width: 2000 }}"
+        srcset="
+          {{ image | image_url: width: 480 }} 480w,
+          {{ image | image_url: width: 750 }} 750w,
+          {{ image | image_url: width: 1000 }} 1000w,
+          {{ image | image_url: width: 1400 }} 1400w,
+          {{ image | image_url: width: 1800 }} 1800w,
+          {{ image | image_url: width: 2000 }} 2000w
+        "
+        sizes="(min-width: 1024px) 64vw, 100vw"
+        width="{{ image.width | default: 2000 }}"
+        height="{{ image.height | default: 1200 }}"
+        alt="{{ image_alt | escape }}"
+        loading="lazy"
+        decoding="async"
+      >
+    {% endif %}
+    <span class="home-editorial__mobile-link">Nosso manifesto</span>
+  </a>
+
+  <div class="home-editorial__content">
+    <div class="home-editorial__copy">
+      {% if eyebrow != blank %}<p class="home-editorial__eyebrow">{{ eyebrow | escape }}</p>{% endif %}
+      {% if title != blank %}<h2 class="home-editorial__title">{{ title | escape }}</h2>{% endif %}
+      {% if description != blank %}<p class="home-editorial__description">{{ description | escape }}</p>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sobre a Upy",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto de apoio"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descrição"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link do manifesto"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sobre a Upy"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,197 @@
+{% liquid
+  assign launch_color_option_index = -1
+  assign launch_size_option_index = -1
+  assign launch_first_color = blank
+
+  for option_name in product.options
+    assign option_key = option_name | downcase | strip
+    if option_key == 'cor' or option_key == 'color' or option_key == 'colour'
+      assign launch_color_option_index = forloop.index0
+    endif
+    if option_key == 'tamanho' or option_key == 'size'
+      assign launch_size_option_index = forloop.index0
+    endif
+  endfor
+
+  if initial_variant != blank and launch_color_option_index >= 0
+    case launch_color_option_index
+      when 0
+        assign launch_first_color = initial_variant.option1
+      when 1
+        assign launch_first_color = initial_variant.option2
+      when 2
+        assign launch_first_color = initial_variant.option3
+    endcase
+  endif
+
+  assign launch_seen_colors = '|'
+  assign launch_color_count = 0
+  for launch_product_variant in product.variants
+    assign launch_variant_color = blank
+    assign launch_variant_size = blank
+    if launch_color_option_index >= 0
+      assign launch_variant_color = launch_product_variant.options[launch_color_option_index] | strip
+    endif
+    if launch_size_option_index >= 0
+      assign launch_variant_size = launch_product_variant.options[launch_size_option_index] | downcase | strip
+    endif
+    if launch_variant_color != blank and launch_variant_size != 'img 1' and launch_variant_size != 'img 2'
+      capture launch_color_token
+        echo '|' | append: launch_variant_color | append: '|'
+      endcapture
+      unless launch_seen_colors contains launch_color_token
+        assign launch_seen_colors = launch_seen_colors | append: launch_variant_color | append: '|'
+        assign launch_color_count = launch_color_count | plus: 1
+        if launch_first_color == blank
+          assign launch_first_color = launch_variant_color
+        endif
+      endunless
+    endif
+  endfor
+
+  assign launch_selected_color = launch_first_color
+  if initial_variant != blank and launch_first_color != blank
+    assign launch_selected_color = launch_first_color
+  endif
+
+  assign launch_card_image = product.featured_image
+  if initial_variant != blank and launch_first_color != blank and launch_color_option_index >= 0
+    for launch_product_variant in product.variants
+      assign launch_variant_color = launch_product_variant.options[launch_color_option_index] | strip
+      assign launch_variant_size = blank
+      if launch_size_option_index >= 0
+        assign launch_variant_size = launch_product_variant.options[launch_size_option_index] | downcase | strip
+      endif
+      assign launch_color_match = launch_variant_color | handleize
+      assign launch_first_color_key = launch_first_color | handleize
+      if launch_color_match == launch_first_color_key and launch_product_variant.image != blank and launch_variant_size != 'img 1' and launch_variant_size != 'img 2'
+        assign launch_card_image = launch_product_variant.image
+        break
+      endif
+    endfor
+  endif
+
+  assign launch_card_url = product.url
+  if launch_selected_color != blank
+    assign launch_color_query = launch_selected_color | url_encode
+    assign launch_card_url = product.url | append: '?cor=' | append: launch_color_query
+  endif
+%}
+
+<article class="home-launches__card" data-launch-card data-product-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-product-handle="{{ product.handle | escape }}" data-product-url="{{ product.url }}" data-active-color="{{ launch_selected_color | escape }}">
+  <div class="home-launches__image-wrap">
+    <a class="home-launches__image-link" href="{{ launch_card_url }}" data-launch-product-link data-product-base-url="{{ product.url }}" aria-label="Ver {{ product.title | escape }}">
+      {% if launch_card_image != blank %}
+        {% assign launch_image_480 = launch_card_image | image_url: width: 480 %}
+        {% assign launch_image_760 = launch_card_image | image_url: width: 760 %}
+        {% assign launch_image_1000 = launch_card_image | image_url: width: 1000 %}
+        <img
+          class="home-launches__image"
+          data-launch-image
+          src="{{ launch_image_760 }}"
+          srcset="{{ launch_image_480 }} 480w, {{ launch_image_760 }} 760w, {{ launch_image_1000 }} 1000w"
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 78vw"
+          alt="{{ product.title | escape }}{% if launch_selected_color != blank %} na cor {{ launch_selected_color | escape }}{% endif %}"
+          width="500"
+          height="625"
+          loading="lazy"
+          decoding="async"
+          {% if product.featured_image == launch_card_image %}fetchpriority="auto"{% endif %}
+        >
+      {% else %}
+        <span class="home-launches__image-placeholder" aria-hidden="true"></span>
+      {% endif %}
+    </a>
+
+    <button
+      class="home-launches__wishlist"
+      type="button"
+      data-launch-wishlist
+      data-product-id="{{ product.id }}"
+      data-product-title="{{ product.title | escape }}"
+      data-product-handle="{{ product.handle | escape }}"
+      data-product-url="{{ product.url }}"
+      data-product-image="{% if launch_card_image != blank %}{{ launch_card_image | image_url: width: 180 }}{% endif %}"
+      aria-label="Adicionar {{ product.title | escape }} aos favoritos"
+      aria-pressed="false"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg>
+    </button>
+
+    <div class="home-launches__quick-add" data-launch-quick-add>
+      <p class="home-launches__quick-add-label">Selecione o tamanho</p>
+      <div class="home-launches__sizes">
+        {% assign launch_seen_size_pairs = '|' %}
+        {% for launch_product_variant in product.variants %}
+          {% assign launch_variant_color = blank %}
+          {% assign launch_variant_size = blank %}
+          {% if launch_color_option_index >= 0 %}
+            {% assign launch_variant_color = launch_product_variant.options[launch_color_option_index] | strip %}
+          {% endif %}
+          {% if launch_size_option_index >= 0 %}
+            {% assign launch_variant_size = launch_product_variant.options[launch_size_option_index] | strip %}
+          {% endif %}
+          {% assign launch_size_key = launch_variant_size | downcase %}
+          {% if launch_variant_size != blank and launch_size_key != 'img 1' and launch_size_key != 'img 2' %}
+            {% capture launch_size_pair %}|{{ launch_variant_color }}|{{ launch_size_key }}|{% endcapture %}
+            {% unless launch_seen_size_pairs contains launch_size_pair %}
+              {% assign launch_seen_size_pairs = launch_seen_size_pairs | append: launch_variant_color | append: '|' | append: launch_size_key | append: '|' %}
+              <button
+                class="home-launches__size"
+                type="button"
+                data-launch-size
+                data-size-color="{{ launch_variant_color | escape }}"
+                data-size-label="{{ launch_variant_size | escape }}"
+                data-variant-id="{{ launch_product_variant.id }}"
+                {% if launch_product_variant.available == false %}disabled{% endif %}
+                {% if launch_selected_color != blank and launch_variant_color != launch_selected_color %}hidden{% endif %}
+              >{{ launch_variant_size | escape }}</button>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p class="home-launches__quick-add-feedback" data-launch-cart-feedback aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="home-launches__details">
+    {% if launch_color_count > 0 %}
+      <div class="home-launches__swatches" role="group" aria-label="Cores disponíveis para {{ product.title | escape }}">
+        {% assign launch_seen_colors = '|' %}
+        {% assign launch_rendered_colors = 0 %}
+        {% for launch_product_variant in product.variants %}
+          {% assign launch_variant_color = blank %}
+          {% assign launch_variant_size = blank %}
+          {% if launch_color_option_index >= 0 %}
+            {% assign launch_variant_color = launch_product_variant.options[launch_color_option_index] | strip %}
+          {% endif %}
+          {% if launch_size_option_index >= 0 %}
+            {% assign launch_variant_size = launch_product_variant.options[launch_size_option_index] | downcase | strip %}
+          {% endif %}
+          {% if launch_variant_color != blank and launch_variant_size != 'img 1' and launch_variant_size != 'img 2' %}
+            {% capture launch_color_token %}|{{ launch_variant_color }}|{% endcapture %}
+            {% unless launch_seen_colors contains launch_color_token %}
+              {% assign launch_seen_colors = launch_seen_colors | append: launch_variant_color | append: '|' %}
+              {% assign launch_rendered_colors = launch_rendered_colors | plus: 1 %}
+              {% if launch_rendered_colors <= 5 %}
+                {% render 'home-launch-product-color', product: product, color_name: launch_variant_color, color_option_index: launch_color_option_index, size_option_index: launch_size_option_index, selected_color: launch_selected_color, fallback_image: launch_card_image %}
+              {% endif %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+        {% if launch_color_count > 5 %}<span class="home-launches__swatch-more">+{{ launch_color_count | minus: 5 }}</span>{% endif %}
+      </div>
+    {% endif %}
+
+    <a class="home-launches__product-link" href="{{ launch_card_url }}" data-launch-product-link data-product-base-url="{{ product.url }}">
+      <h3 class="home-launches__product-title">{{ product.title | escape }}</h3>
+      {% if launch_selected_color != blank %}
+        <p class="home-launches__selected-color" data-launch-color-label>{{ launch_selected_color | escape }}</p>
+      {% else %}
+        <p class="home-launches__selected-color" data-launch-color-label hidden></p>
+      {% endif %}
+      <p class="home-launches__price">{{ product.price_min | money }}</p>
+      <p class="home-launches__pix">{{ product.price_min | times: 0.95 | money }} no Pix</p>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,73 @@
+<div
+  class="announcement-bar"
+  data-announcement-bar
+  data-interval="{{ section.settings.rotation_speed | times: 1000 }}"
+>
+  <div class="announcement-bar__messages" aria-live="polite" aria-atomic="true">
+    {% assign message_ids = 'message_1,message_2,message_3,message_4' | split: ',' %}
+    {% assign visible_message_count = 0 %}
+    {% for message_id in message_ids %}
+      {% assign message = section.settings[message_id] %}
+      {% if message != blank %}
+        <p class="announcement-bar__message{% if visible_message_count == 0 %} is-active{% endif %}" data-announcement-message {% if visible_message_count > 0 %}hidden{% endif %}>
+          {% assign highlighted_message = message | escape %}
+          {% if message contains 'GRÁTIS' %}
+            {% capture highlight_markup %}<span class="announcement-bar__highlight">{{ 'announcements.free' | t }}</span>{% endcapture %}
+            {% assign highlighted_message = highlighted_message | replace: 'GRÁTIS', highlight_markup %}
+          {% elsif message contains 'FREE' %}
+            {% capture highlight_markup %}<span class="announcement-bar__highlight">{{ 'announcements.free' | t }}</span>{% endcapture %}
+            {% assign highlighted_message = highlighted_message | replace: 'FREE', highlight_markup %}
+          {% endif %}
+          {% if message contains 'GRÁTIS' or message contains 'FREE' %}
+            {{ highlighted_message }}
+          {% else %}
+            {{ message | escape }}
+          {% endif %}
+        </p>
+        {% assign visible_message_count = visible_message_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.announcement_bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message_1",
+      "label": "t:sections.announcement_message_1",
+      "default": "t:announcements.shipping"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "t:sections.announcement_message_2",
+      "default": "t:announcements.exchange"
+    },
+    {
+      "type": "text",
+      "id": "message_3",
+      "label": "t:sections.announcement_message_3",
+      "default": "t:announcements.pix"
+    },
+    {
+      "type": "text",
+      "id": "message_4",
+      "label": "t:sections.announcement_message_4",
+      "default": "t:announcements.installments"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "t:sections.announcement_rotation_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

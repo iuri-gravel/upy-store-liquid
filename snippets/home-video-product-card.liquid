@@ -1,0 +1,53 @@
+{% liquid
+  assign video_sources = video.sources | where: 'mime_type', 'video/mp4'
+  assign video_source = blank
+  assign best_mobile_width = 0
+
+  for source in video_sources
+    assign source_width = source.width | default: 0
+    if source_width <= 720 and source_width > best_mobile_width
+      assign video_source = source
+      assign best_mobile_width = source_width
+    endif
+  endfor
+
+  if video_source == blank
+    assign video_source = video_sources | first
+  endif
+  if video_source == blank
+    assign video_source = video.sources | first
+  endif
+
+  assign poster_image = video.preview_image | default: product_item.featured_image
+%}
+
+<a class="home-video-products__card" href="{{ product_item.url }}" aria-label="Ver {{ product_item.title | escape }}" data-home-video-card>
+  <video
+    class="home-video-products__video"
+    data-home-video-element
+    data-video-src="{{ video_source.url | escape }}"
+    {% if poster_image != blank %}poster="{{ poster_image | image_url: width: 720 }}"{% endif %}
+    muted
+    loop
+    playsinline
+    preload="none"
+    aria-hidden="true"
+  ></video>
+
+  <span class="home-video-products__gradient" aria-hidden="true"></span>
+  <span class="home-video-products__play" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M8 5.8c0-.7.8-1.1 1.4-.7l10 6.2a.8.8 0 0 1 0 1.4l-10 6.2c-.6.4-1.4 0-1.4-.7V5.8Z" /></svg>
+  </span>
+
+  <span class="home-video-products__product">
+    <span class="home-video-products__product-image">
+      {% if product_item.featured_image != blank %}
+        {{ product_item.featured_image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', widths: '96, 128, 160', sizes: '44px' }}
+      {% endif %}
+    </span>
+    <span class="home-video-products__product-info">
+      <span class="home-video-products__product-title">{{ product_item.title | escape }}</span>
+      <span class="home-video-products__price">{{ product_item.price | money }}</span>
+    </span>
+  </span>
+</a>

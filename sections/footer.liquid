@@ -1,0 +1,241 @@
+<footer class="site-footer">
+  <div class="site-footer__signup">
+    <div class="page-width site-footer__signup-inner">
+      <h2>{{ section.settings.newsletter_heading | default: 'Receba Novidades' | escape }}</h2>
+      <p>{{ section.settings.newsletter_text | default: 'Cadastre-se e receba novidades exclusivas' | escape }}</p>
+      <a class="site-footer__register" href="{{ routes.account_url }}">{{ section.settings.register_label | default: 'Cadastrar' | escape }}</a>
+    </div>
+  </div>
+
+  <div class="page-width site-footer__main">
+    <div class="site-footer__brand">
+      <a class="site-footer__logo" href="{{ routes.root_url }}" aria-label="Página inicial">
+        {% if section.settings.logo != blank %}
+          {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'site-footer__logo-image', alt: shop.name, widths: '120, 180, 240, 320, 420', sizes: '160px' }}
+        {% else %}
+          <img class="site-footer__logo-image" src="{{ 'LOGOTIPO.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="2000" height="2000" loading="lazy">
+        {% endif %}
+      </a>
+      <p>{{ section.settings.description | escape }}</p>
+      <div class="site-footer__socials" aria-label="Redes sociais">
+        {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" class="icon-fill" /></svg></a>
+        {% endif %}
+        {% if section.settings.facebook_url != blank %}
+          <a href="{{ section.settings.facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h2V1.4c-.7-.1-1.7-.2-3-.2-3 0-5 1.8-5 5.2V9H7v4h3v8h4Z" /></svg></a>
+        {% endif %}
+        {% if section.settings.youtube_url != blank %}
+          <a href="{{ section.settings.youtube_url }}" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 7.2a2.8 2.8 0 0 0-2-2C18.2 4.7 12 4.7 12 4.7s-6.2 0-8 .5a2.8 2.8 0 0 0-2 2C1.5 9 1.5 12 1.5 12s0 3 .5 4.8a2.8 2.8 0 0 0 2 2c1.8.5 8 .5 8 .5s6.2 0 8-.5a2.8 2.8 0 0 0 2-2c.5-1.8.5-4.8.5-4.8s0-3-.5-4.8Z" /><path class="icon-cutout" d="m10 15.5 5-3.5-5-3.5v7Z" /></svg></a>
+        {% endif %}
+        {% if section.settings.tiktok_url != blank %}
+          <a href="{{ section.settings.tiktok_url }}" aria-label="TikTok" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.8a4.9 4.9 0 0 1-1.2-3.2h-3.7v14.8a3.1 3.1 0 1 1-2.1-2.9v-3.8a6.8 6.8 0 1 0 5.8 6.7V9.9a8.5 8.5 0 0 0 5 1.6V7.8a4.9 4.9 0 0 1-3.8-2Z" /></svg></a>
+        {% endif %}
+        {% if section.settings.pinterest_url != blank %}
+          <a href="{{ section.settings.pinterest_url }}" aria-label="Pinterest" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a11 11 0 0 0-4 21.2c0-1.8.1-3.7.6-5.4l1.3-5.5s-.3-.7-.3-1.7c0-1.6.9-2.7 2-2.7 1 0 1.5.7 1.5 1.6 0 1-.6 2.4-1 3.8-.3 1.1.6 2 1.6 2 2 0 3.5-2.1 3.5-5.1 0-2.7-1.9-4.6-4.7-4.6-3.2 0-5.1 2.4-5.1 4.9 0 1 .4 2 .8 2.6.1.1.1.2.1.3l-.3 1.3c-.1.2-.2.3-.4.2-1.5-.7-2.4-2.8-2.4-4.5 0-3.7 2.7-7.1 7.7-7.1 4 0 7.2 2.9 7.2 6.8 0 4-2.5 7.3-6 7.3-1.2 0-2.3-.6-2.7-1.3l-.7 2.8c-.3 1.1-1 2.5-1.5 3.4A11 11 0 1 0 12 1Z" /></svg></a>
+        {% endif %}
+        {% if section.settings.contact_email != blank %}
+          <a href="mailto:{{ section.settings.contact_email | escape }}" aria-label="Contato por e-mail"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5" /><path d="m3.5 6 8.5 7 8.5-7" /></svg></a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% assign history_page = pages['nossa-historia'] %}
+    {% assign manifesto_page = pages['manifesto'] %}
+    <nav class="site-footer__column" aria-label="Institucional">
+      <h2>Institucional</h2>
+      <ul>
+        {% if section.settings.institutional_menu != blank %}
+          {% for link in section.settings.institutional_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
+        {% else %}
+          <li><a href="{{ history_page.url | default: '#' }}">Nossa História</a></li>
+          <li><a href="{{ manifesto_page.url | default: '/pages/manifesto' }}">Manifesto</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <nav class="site-footer__column" aria-label="Dúvidas">
+      <h2>Dúvidas</h2>
+      <ul>
+        {% if section.settings.help_menu != blank %}
+          {% for link in section.settings.help_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
+        {% else %}
+          <li><a href="/pages/frete-e-entregas">Frete e Entregas</a></li>
+          <li><a href="/pages/trocas-e-devolucoes">Trocas e Devoluções</a></li>
+          <li><a href="/pages/faq">FAQ</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    {% assign privacy_policy_url = shop.privacy_policy.url | default: '/policies/privacy-policy' %}
+    {% assign terms_url = shop.terms_of_service.url | default: '/policies/terms-of-service' %}
+    <nav class="site-footer__column" aria-label="Informações">
+      <h2>Informações</h2>
+      <ul>
+        {% if section.settings.information_menu != blank %}
+          {% for link in section.settings.information_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
+        {% else %}
+          <li><a href="{{ privacy_policy_url }}">Política de Privacidade</a></li>
+          <li><a href="/pages/politica-de-cookies">Política de Cookies</a></li>
+          <li><a href="{{ terms_url }}">Termos de Uso</a></li>
+        {% endif %}
+        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>Preferências de cookies</button></li>
+      </ul>
+    </nav>
+
+    <div class="site-footer__column site-footer__help">
+      <h2>Ajuda</h2>
+      <p class="site-footer__support-hours">{{ section.settings.support_hours | escape }}</p>
+      <div class="site-footer__trust">
+        <h3>Segurança e qualidade</h3>
+        <a class="site-footer__trust-link" href="https://transparencyreport.google.com/safe-browsing/search?url=https://upystore.com.br" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4.5 5v5.4c0 5.1 3.2 9.6 7.5 11.6 4.3-2 7.5-6.5 7.5-11.6V5L12 2Z"/><path d="m8.8 12 2.1 2.1 4.4-4.5"/></svg>
+          <span>Ambiente protegido</span>
+        </a>
+        <div class="site-footer__trust-link">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg>
+          <span>Compra 100% segura</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="page-width site-footer__bottom-inner">
+      {% assign current_year = 'now' | date: '%Y' %}
+      <p class="site-footer__copyright">© {{ current_year }} {{ shop.name | upcase | escape }}{% if section.settings.business_id != blank %} • {{ section.settings.business_id | escape }}{% endif %} — Todos os direitos reservados.</p>
+      <div class="site-footer__payment-row" aria-label="Formas de pagamento">
+        {% assign featured_payment_types = 'visa,master,mastercard,pix' | split: ',' %}
+        {% assign has_pix = false %}
+        {% for type in shop.enabled_payment_types %}
+          {% if featured_payment_types contains type %}
+            {{ type | payment_type_svg_tag: class: 'site-footer__payment-icon' }}
+            {% if type == 'pix' %}{% assign has_pix = true %}{% endif %}
+          {% endif %}
+        {% endfor %}
+        {% unless has_pix %}<span class="site-footer__pix-mark">◆ PIX</span>{% endunless %}
+        <a class="site-footer__security-badge" href="https://transparencyreport.google.com/safe-browsing/search?url=https://upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar a Upy Store no Google Safe Browsing">
+          <img src="{{ 'logo-google-safe-browsing.png' | asset_url }}" alt="Google Safe Browsing" width="160" height="45" loading="lazy">
+        </a>
+        <a class="site-footer__security-badge site-footer__security-badge--ssl" href="https://www.sslshopper.com/ssl-checker.html#hostname=upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar certificado SSL da Upy Store">
+          <img src="{{ 'ssl-secured.png' | asset_url }}" alt="SSL Secured" width="120" height="40" loading="lazy">
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="Suas preferências foram salvas." data-error-message="Não foi possível carregar as preferências de privacidade. Tente novamente." aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+  <div class="site-footer__cookie-header">
+    <div>
+      <h2 id="cookie-preferences-title">Preferências de cookies</h2>
+      <p id="cookie-preferences-description">Escolha quais categorias de cookies não essenciais podem ser utilizadas durante sua navegação.</p>
+    </div>
+    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="Fechar preferências de cookies">×</button>
+  </div>
+  <div class="site-footer__cookie-options">
+    <p class="site-footer__cookie-option"><span><strong>Cookies necessários</strong><small>Essenciais para autenticação, segurança, sacola e finalização da compra.</small></span><span class="site-footer__cookie-always">Sempre ativos</span></p>
+    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>Cookies de preferências</strong><small>Lembram suas configurações para personalizar sua experiência.</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
+    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>Cookies de análise</strong><small>Ajudam a entender como a loja é utilizada e melhorar navegação e desempenho.</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
+    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>Cookies de marketing</strong><small>Podem medir campanhas e apresentar comunicações mais relevantes.</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
+    <p class="site-footer__cookie-status" data-cookie-preferences-status role="status" aria-live="polite"></p>
+  </div>
+  <div class="site-footer__cookie-actions">
+    <button type="button" data-cookie-preferences-reject>Rejeitar não essenciais</button>
+    <button type="button" data-cookie-preferences-save>Salvar preferências</button>
+  </div>
+</dialog>
+
+{% schema %}
+{
+  "name": "t:sections.footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Título da inscrição",
+      "default": "Receba Novidades"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Texto da inscrição",
+      "default": "Cadastre-se e receba novidades exclusivas"
+    },
+    {
+      "type": "text",
+      "id": "register_label",
+      "label": "Texto do botão",
+      "default": "Cadastrar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.footer_logo"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.footer_description",
+      "default": "t:footer.brand_description"
+    },
+    {
+      "type": "link_list",
+      "id": "institutional_menu",
+      "label": "t:sections.footer_institutional_menu"
+    },
+    {
+      "type": "link_list",
+      "id": "help_menu",
+      "label": "t:sections.footer_help_menu"
+    },
+    {
+      "type": "link_list",
+      "id": "information_menu",
+      "label": "t:sections.footer_information_menu"
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "t:sections.footer_support_hours",
+      "default": "t:footer.support_hours"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "t:sections.footer_contact_email",
+      "default": "contato@upystore.com.br"
+    },
+    {
+      "type": "text",
+      "id": "business_id",
+      "label": "t:sections.footer_business_id",
+      "default": "35.895.795/0001-28"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "t:sections.footer_instagram"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "t:sections.footer_facebook"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "t:sections.footer_youtube"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "t:sections.footer_tiktok"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "t:sections.footer_pinterest"
+    }
+  ]
+}
+{% endschema %}

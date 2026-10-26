@@ -1,0 +1,51 @@
+<section
+  class="home-recent"
+  data-recently-viewed
+  data-product-limit="{{ section.settings.product_limit }}"
+  aria-labelledby="home-recently-title-{{ section.id }}"
+  hidden
+>
+  <div class="home-recent__container">
+    <header class="home-recent__heading">
+      <svg class="home-recent__clock" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v5l3 2"></path>
+      </svg>
+      <h2 class="home-recent__title" id="home-recently-title-{{ section.id }}">
+        {{ section.settings.title | escape }}
+      </h2>
+    </header>
+
+    <div class="home-recent__grid" data-recently-viewed-grid role="list" aria-label="{{ section.settings.title | escape }}"></div>
+    <p class="visually-hidden" data-recently-viewed-status aria-live="polite"></p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vistos recentemente",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Vistos Recentemente"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Quantidade de produtos",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vistos recentemente"
+    }
+  ]
+}
+{% endschema %}

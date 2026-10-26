@@ -1,0 +1,64 @@
+{% liquid
+  assign swatch_image = blank
+  for color_variant in product.variants
+    assign variant_color = color_variant.options[color_option_index] | strip
+    assign variant_size = blank
+    if size_option_index >= 0
+      assign variant_size = color_variant.options[size_option_index] | downcase | strip
+    endif
+    assign variant_color_key = variant_color | handleize
+    assign color_name_key = color_name | handleize
+    if variant_color_key == color_name_key and color_variant.image != blank and variant_size != 'img 1' and variant_size != 'img 2'
+      assign swatch_image = color_variant.image
+      break
+    endif
+  endfor
+
+  if swatch_image == blank
+    for color_variant in product.variants
+      assign variant_color = color_variant.options[color_option_index] | strip
+      assign variant_color_key = variant_color | handleize
+      assign color_name_key = color_name | handleize
+      if variant_color_key == color_name_key and color_variant.image != blank
+        assign swatch_image = color_variant.image
+        break
+      endif
+    endfor
+  endif
+
+  if swatch_image == blank
+    assign swatch_image = fallback_image
+  endif
+
+  assign swatch_image_480 = blank
+  assign swatch_image_760 = blank
+  assign swatch_image_1000 = blank
+  if swatch_image != blank
+    assign swatch_image_480 = swatch_image | image_url: width: 480
+    assign swatch_image_760 = swatch_image | image_url: width: 760
+    assign swatch_image_1000 = swatch_image | image_url: width: 1000
+  endif
+  assign swatch_selected = false
+  if selected_color != blank
+    assign selected_color_key = selected_color | handleize
+    assign swatch_color_key = color_name | handleize
+    if selected_color_key == swatch_color_key
+      assign swatch_selected = true
+    endif
+  endif
+%}
+
+<button
+  class="home-launches__swatch{% if swatch_selected %} is-selected{% endif %}"
+  type="button"
+  data-launch-color
+  data-color-name="{{ color_name | escape }}"
+  data-image-480="{{ swatch_image_480 }}"
+  data-image-760="{{ swatch_image_760 }}"
+  data-image-1000="{{ swatch_image_1000 }}"
+  aria-label="Selecionar cor {{ color_name | escape }}"
+  aria-pressed="{{ swatch_selected }}"
+  title="{{ color_name | escape }}"
+>
+  <span class="home-launches__swatch-dot" data-launch-swatch-dot data-color-name="{{ color_name | escape }}" aria-hidden="true"></span>
+</button>

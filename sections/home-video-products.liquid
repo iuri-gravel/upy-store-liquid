@@ -1,0 +1,96 @@
+{% assign video_section = metaobjects.videoproductssection.videoproductssection %}
+{% assign video_item_count = 0 %}
+
+{% if video_section != blank %}
+  {% for item_index in (1..8) %}
+    {% assign video_field_key = 'video_' | append: item_index %}
+    {% assign product_field_key = 'produto_' | append: item_index %}
+    {% assign video_field = video_section[video_field_key] %}
+    {% assign product_field = video_section[product_field_key] %}
+    {% assign video = video_field.value %}
+    {% assign product_item = product_field.value %}
+
+    {% if video != blank and product_item != blank %}
+      {% if video.sources.size > 0 %}
+        {% assign video_item_count = video_item_count | plus: 1 %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if video_item_count > 0 %}
+  <section class="home-video-products" aria-label="{{ section.settings.title | default: 'Visto na Upy' | escape }}" data-home-video-section>
+    <header class="home-video-products__heading">
+      <div>
+        {% if section.settings.eyebrow != blank %}<p class="home-video-products__eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+        <h2 class="home-video-products__title">{{ section.settings.title | default: 'Visto na Upy' | escape }}</h2>
+      </div>
+      {% if section.settings.supporting_text != blank %}<p class="home-video-products__supporting-text">{{ section.settings.supporting_text | escape }}</p>{% endif %}
+    </header>
+
+    <div class="home-video-products__carousel" data-home-video-carousel data-center-if-fits="{% if video_item_count <= 4 %}true{% else %}false{% endif %}">
+      <div class="home-video-products__track" data-home-video-track data-item-count="{{ video_item_count }}" role="group" aria-label="Vídeos de produtos" aria-roledescription="carrossel">
+        {% for item_index in (1..8) %}
+          {% assign video_field_key = 'video_' | append: item_index %}
+          {% assign product_field_key = 'produto_' | append: item_index %}
+          {% assign video_field = video_section[video_field_key] %}
+          {% assign product_field = video_section[product_field_key] %}
+          {% assign video = video_field.value %}
+          {% assign product_item = product_field.value %}
+
+          {% if video != blank and product_item != blank %}
+            {% if video.sources.size > 0 %}
+              <div class="home-video-products__slide">
+                {% render 'home-video-product-card', video: video, product_item: product_item %}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if video_item_count > 1 %}
+        <div class="home-video-products__controls" aria-label="Controles dos vídeos">
+          <button class="home-video-products__arrow" type="button" data-home-video-previous aria-label="Ver vídeos anteriores" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button class="home-video-products__arrow" type="button" data-home-video-next aria-label="Ver próximos vídeos">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+    <p class="visually-hidden" data-home-video-status aria-live="polite"></p>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Visto na Upy",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto de apoio",
+      "default": "Movimento real"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Visto na Upy"
+    },
+    {
+      "type": "text",
+      "id": "supporting_text",
+      "label": "Texto à direita",
+      "default": "Use em movimento"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Visto na Upy"
+    }
+  ]
+}
+{% endschema %}

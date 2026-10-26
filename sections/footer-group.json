@@ -1,0 +1,27 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "newsletter_heading": "Receba Novidades",
+        "newsletter_text": "Cadastre-se e receba novidades exclusivas",
+        "register_label": "Cadastrar",
+        "description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
+        "support_hours": "Atendimento de segunda a sexta-feira, das 8h às 17h30.",
+        "contact_email": "contato@upystore.com.br",
+        "business_id": "35.895.795/0001-28",
+        "instagram_url": "https://www.instagram.com/upystore_/",
+        "facebook_url": "https://www.facebook.com/upysttore/",
+        "youtube_url": "https://www.youtube.com/@UpyStore_",
+        "tiktok_url": "https://www.tiktok.com/@upy.store_",
+        "pinterest_url": "https://br.pinterest.com/upystore_/"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}
+

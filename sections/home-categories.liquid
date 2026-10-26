@@ -1,0 +1,128 @@
+{% liquid
+  assign featured_categories = metaobjects.featuredcollectionsection.featuredcollections
+  assign fallback_image = metaobjects.bannerherohome.bannerhero.image_1.value
+  assign category_count = 0
+
+  for category_index in (1..4)
+    assign collection_key = 'colecao_' | append: category_index
+    assign category_collection = featured_categories[collection_key].value
+    if category_collection != blank
+      assign category_count = category_count | plus: 1
+    endif
+  endfor
+%}
+
+{% if category_count > 0 %}
+  <section
+    class="home-categories"
+    aria-label="{{ section.settings.title | default: 'Categorias' | escape }}"
+    data-home-categories
+    data-autoplay="{{ section.settings.autoplay }}"
+    data-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+  >
+    <div class="home-categories__inner">
+      <div class="home-categories__heading">
+        <span class="home-categories__rule" aria-hidden="true"></span>
+        <h2 class="home-categories__title">{{ section.settings.title | default: 'Categorias' | escape }}</h2>
+        <span class="home-categories__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="home-categories__carousel" data-categories-carousel>
+        <div class="home-categories__viewport" data-categories-viewport>
+          <div class="home-categories__track" data-categories-track>
+            {% for category_index in (1..4) %}
+              {% assign collection_key = 'colecao_' | append: category_index %}
+              {% assign image_key = 'image_' | append: category_index %}
+              {% assign category_collection = featured_categories[collection_key].value %}
+              {% assign category_image = featured_categories[image_key].value %}
+              {% if category_image == blank %}{% assign category_image = category_collection.image %}{% endif %}
+              {% if category_image == blank %}{% assign category_image = fallback_image %}{% endif %}
+
+              {% if category_collection != blank %}
+                <article class="home-categories__slide" data-category-slide>
+                  <a
+                    class="home-categories__card"
+                    href="{{ category_collection.url }}"
+                    aria-label="Abrir coleção {{ category_collection.title | escape }}"
+                  >
+                    {% if category_image != blank %}
+                      <img
+                        class="home-categories__image"
+                        src="{{ category_image | image_url: width: 1200 }}"
+                        srcset="
+                          {{ category_image | image_url: width: 320 }} 320w,
+                          {{ category_image | image_url: width: 480 }} 480w,
+                          {{ category_image | image_url: width: 640 }} 640w,
+                          {{ category_image | image_url: width: 800 }} 800w,
+                          {{ category_image | image_url: width: 960 }} 960w,
+                          {{ category_image | image_url: width: 1200 }} 1200w
+                        "
+                        sizes="(min-width: 1680px) 396px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 84vw"
+                        width="{{ category_image.width | default: 1200 }}"
+                        height="{{ category_image.height | default: 1500 }}"
+                        alt="{{ category_image.alt | default: category_collection.title | escape }}"
+                        loading="lazy"
+                        decoding="async"
+                      >
+                    {% endif %}
+                    <span class="home-categories__overlay" aria-hidden="true"></span>
+                    <span class="home-categories__label">{{ category_collection.title | escape }}</span>
+                  </a>
+                </article>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if category_count > 1 %}
+          <button class="home-categories__arrow home-categories__arrow--previous" type="button" data-categories-previous aria-label="Ver categorias anteriores" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button class="home-categories__arrow home-categories__arrow--next" type="button" data-categories-next aria-label="Ver próximas categorias">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+        {% endif %}
+      </div>
+
+      {% if category_count > 1 %}
+        <div class="home-categories__dots" data-categories-dots aria-label="Posição do carrossel"></div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Categorias",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Categorias"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Avançar automaticamente no celular",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Intervalo de avanço",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categorias"
+    }
+  ]
+}
+{% endschema %}

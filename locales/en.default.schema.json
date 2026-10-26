@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "announcement_bar": "Announcement bar",
+    "announcement_message_1": "Announcement 1",
+    "announcement_message_2": "Announcement 2",
+    "announcement_message_3": "Announcement 3",
+    "announcement_message_4": "Announcement 4",
+    "announcement_rotation_speed": "Time between messages",
+    "header": "Header",
+    "header_logo": "Logo",
+    "header_menu": "Main menu",
+    "header_utility_menu": "Institutional menu",
+    "header_search_placeholder": "Search placeholder",
+    "footer": "Footer",
+    "footer_logo": "Footer logo",
+    "footer_description": "Brand description",
+    "footer_institutional_menu": "About menu",
+    "footer_help_menu": "Help menu",
+    "footer_information_menu": "Information menu",
+    "footer_support_hours": "Customer service hours",
+    "footer_contact_email": "Contact email",
+    "footer_business_id": "Business registration number",
+    "footer_instagram": "Instagram URL",
+    "footer_facebook": "Facebook URL",
+    "footer_youtube": "YouTube URL",
+    "footer_tiktok": "TikTok URL",
+    "footer_pinterest": "Pinterest URL",
+    "home_hero": "Homepage hero"
+  },
+  "settings_schema": {
+    "brand": "Brand colors",
+    "color_canvas": "Warm background",
+    "color_ink": "Text and header",
+    "color_accent": "Accent",
+    "color_footer": "Footer background",
+    "color_footer_text": "Footer text"
+  },
+  "announcements": {
+    "shipping": "Free shipping on orders over 149.90",
+    "exchange": "First exchange is FREE",
+    "pix": "Pay with PIX and get 5% off",
+    "installments": "Pay in up to 3 interest-free installments"
+  },
+  "footer": {
+    "brand_description": "Women's activewear with comfort, style, and freedom. For women who live in motion.",
+    "support_hours": "Customer service Monday to Friday, from 8 a.m. to 5:30 p.m."
+  }
+}

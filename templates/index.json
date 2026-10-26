@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "home-hero": {
+      "type": "home-hero",
+      "settings": {}
+    },
+    "home-video-products": {
+      "type": "home-video-products",
+      "settings": {}
+    },
+    "home-launches": {
+      "type": "home-launches",
+      "settings": {}
+    },
+    "home-categories": {
+      "type": "home-categories",
+      "settings": {}
+    },
+    "home-buy-by-color": {
+      "type": "home-buy-by-color",
+      "settings": {
+        "title": "Comprar por cor",
+        "caption": "Encontre o seu tom"
+      }
+    },
+    "home-editorial": {
+      "type": "home-editorial",
+      "settings": {
+        "link": "/pages/manifesto"
+      }
+    },
+    "home-recently-viewed": {
+      "type": "home-recently-viewed",
+      "settings": {
+        "title": "Vistos Recentemente",
+        "product_limit": 4
+      }
+    }
+  },
+  "order": [
+    "home-hero",
+    "home-video-products",
+    "home-launches",
+    "home-categories",
+    "home-buy-by-color",
+    "home-editorial",
+    "home-recently-viewed"
+  ]
+}

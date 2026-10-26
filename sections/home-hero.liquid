@@ -1,0 +1,69 @@
+{% liquid
+  assign hero = metaobjects.bannerherohome.bannerhero
+  assign image_1 = hero.image_1.value
+  assign image_2 = hero.image_2.value
+  assign mobile_image_1 = hero.imagem_m1.value
+  assign mobile_image_2 = hero.imagem_m2.value
+  assign collection_1 = hero.colecao_1.value
+  assign collection_2 = hero.colecao_2.value
+  assign hero_label = hero.etiqueta.value
+  assign hero_title = hero.titulo.value
+  assign hero_description = hero.descricao.value
+  assign hero_slide_count = 0
+  if image_1 != blank
+    assign hero_slide_count = hero_slide_count | plus: 1
+  endif
+  if image_2 != blank
+    assign hero_slide_count = hero_slide_count | plus: 1
+  endif
+%}
+
+<section class="home-hero" data-home-hero data-interval="5000" aria-label="{{ 'home.hero.label' | t }}" {% if hero_slide_count == 0 %}aria-busy="true"{% endif %}>
+  <div class="home-hero__track" data-home-hero-track>
+    {% if image_1 != blank %}
+      {% render 'home-hero-slide', image: image_1, mobile_image: mobile_image_1, collection: collection_1, index: 1, total: hero_slide_count, eager: true %}
+    {% endif %}
+    {% if image_2 != blank %}
+      {% render 'home-hero-slide', image: image_2, mobile_image: mobile_image_2, collection: collection_2, index: 2, total: hero_slide_count, eager: false %}
+    {% endif %}
+  </div>
+
+  {% if hero_label != blank or hero_title != blank or hero_description != blank %}
+    <div class="home-hero__copy">
+      <div class="home-hero__copy-inner">
+        {% if hero_label != blank %}<p class="upy-section-label">{{ hero_label | escape }}</p>{% endif %}
+        {% if hero_title != blank %}<h1 class="upy-display-title">{{ hero_title | escape }}</h1>{% endif %}
+        {% if hero_description != blank %}<p class="upy-body-copy">{{ hero_description | escape }}</p>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if hero_slide_count > 1 %}
+    <div class="home-hero__controls">
+      <button class="home-hero__arrow home-hero__arrow--previous" type="button" data-home-hero-previous aria-label="{{ 'home.hero.previous' | t }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+      </button>
+      <div class="home-hero__dots" aria-label="{{ 'home.hero.choose_slide' | t }}">
+        {% for slide_number in (1..hero_slide_count) %}
+          <button class="home-hero__dot{% if forloop.first %} is-active{% endif %}" type="button" data-home-hero-dot="{{ forloop.index0 }}" aria-label="{{ 'home.hero.go_to_slide' | t: number: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}></button>
+        {% endfor %}
+      </div>
+      <button class="home-hero__arrow home-hero__arrow--next" type="button" data-home-hero-next aria-label="{{ 'home.hero.next' | t }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+      </button>
+    </div>
+    <p class="visually-hidden" data-home-hero-status aria-live="polite"></p>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.home_hero",
+  "limit": 1,
+  "presets": [
+    {
+      "name": "t:sections.home_hero"
+    }
+  ]
+}
+{% endschema %}

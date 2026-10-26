@@ -1,0 +1,98 @@
+{% assign launches_collection = metaobjects.launchessection.launchessection %}
+{% assign launch_product_count = 0 %}
+{% assign launch_product_limit = section.settings.product_limit | default: 7 %}
+
+{% if launches_collection != blank %}
+  {% for launch_index in (1..7) %}
+    {% if launch_index <= launch_product_limit %}
+      {% assign launch_field_key = 'product_' | append: launch_index %}
+      {% assign launch_field = launches_collection[launch_field_key] %}
+      {% assign launch_reference = launch_field.value %}
+      {% assign launch_product = launch_reference %}
+      {% if launch_reference.product != blank %}{% assign launch_product = launch_reference.product %}{% endif %}
+      {% if launch_product != blank %}{% assign launch_product_count = launch_product_count | plus: 1 %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if launch_product_count > 0 %}
+  <section class="home-launches" aria-label="{{ section.settings.title | default: 'Lançamentos' | escape }}" data-home-launches>
+    <header class="home-launches__heading">
+      <h2 class="home-launches__title">{{ section.settings.title | default: 'Lançamentos' | escape }}</h2>
+      {% if section.settings.supporting_text != blank %}
+        <span class="home-launches__supporting-text">{{ section.settings.supporting_text | escape }}</span>
+      {% endif %}
+    </header>
+
+    <div class="home-launches__carousel" data-launches-carousel>
+      <div class="home-launches__track" data-launches-track role="list" aria-label="Produtos em lançamento">
+        {% for launch_index in (1..7) %}
+          {% if launch_index <= launch_product_limit %}
+            {% assign launch_field_key = 'product_' | append: launch_index %}
+            {% assign launch_field = launches_collection[launch_field_key] %}
+            {% assign launch_reference = launch_field.value %}
+            {% assign launch_product = launch_reference %}
+            {% assign launch_variant = blank %}
+            {% if launch_reference.product != blank %}
+              {% assign launch_product = launch_reference.product %}
+              {% assign launch_variant = launch_reference %}
+            {% endif %}
+
+            {% if launch_product != blank %}
+              <div class="home-launches__slide" role="listitem" data-launch-slide>
+                {% render 'home-launch-product-card', product: launch_product, initial_variant: launch_variant, product_index: launch_index %}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if launch_product_count > 1 %}
+        <div class="home-launches__controls" aria-label="Controles dos lançamentos">
+          <button class="home-launches__arrow home-launches__arrow--previous" type="button" data-launches-previous aria-label="Ver lançamentos anteriores" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button class="home-launches__arrow home-launches__arrow--next" type="button" data-launches-next aria-label="Ver próximos lançamentos">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+    <p class="visually-hidden" data-launches-status aria-live="polite"></p>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Lançamentos",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Lançamentos"
+    },
+    {
+      "type": "text",
+      "id": "supporting_text",
+      "label": "Texto à direita",
+      "default": "Novidades"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Quantidade de produtos",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "default": 7
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lançamentos"
+    }
+  ]
+}
+{% endschema %}

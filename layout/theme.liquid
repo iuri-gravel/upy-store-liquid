@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="{{ localization.language.iso_code | default: 'pt-BR' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_canvas }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <title>{{ page_title | escape }}{% unless page_title contains shop.name %} · {{ shop.name | escape }}{% endunless %}</title>
+    {% if page_description != blank %}
+      <meta name="description" content="{{ page_description | strip_html | escape }}">
+    {% elsif shop.description != blank %}
+      <meta name="description" content="{{ shop.description | strip_html | escape }}">
+    {% endif %}
+    <meta property="og:site_name" content="{{ shop.name | escape }}">
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:type" content="website">
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    <style>
+      :root {
+        --upy-canvas: {{ settings.color_canvas }};
+        --upy-ink: {{ settings.color_ink }};
+        --upy-accent: {{ settings.color_accent }};
+        --upy-footer: {{ settings.color_footer }};
+        --upy-footer-text: {{ settings.color_footer_text }};
+      }
+    </style>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script src="{{ 'recently-viewed.js' | asset_url }}" defer></script>
+    <script src="{{ 'footer.js' | asset_url }}" defer></script>
+    {{ content_for_header }}
+  </head>
+  <body
+    {% if request.page_type == 'product' and product != blank %}
+      data-recent-product-id="{{ product.id }}"
+      data-recent-product-handle="{{ product.handle | escape }}"
+    {% endif %}
+  >
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+    {% sections 'header-group' %}
+    <main id="MainContent" class="main-content" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    {% sections 'footer-group' %}
+  </body>
+</html>
