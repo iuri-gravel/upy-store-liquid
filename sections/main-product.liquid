@@ -236,10 +236,21 @@
               <span data-favorite-label>{{ 'product.favorite_button' | t }}</span>
             </button>
           </div>
-          <div class="main-product__inventory-proof" data-product-stock role="status" aria-live="polite" hidden>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 5 5 4-4 8 8"></path><path d="M14 16h6v-6"></path></svg>
-            <span data-stock-low hidden>{{ 'product.stock_remaining' | t }} <strong data-stock-quantity></strong> {{ 'product.stock_units' | t }} {{ 'product.stock_this_option' | t }}</span>
-            <span data-stock-out hidden>{{ 'product.stock_sold_out' | t }}</span>
+          <div class="main-product__social-proof" data-product-social-proof>
+            <div class="main-product__social-proof-row">
+              <span class="main-product__viewers-dot" aria-hidden="true"></span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <p><strong><span data-social-viewers></span> {{ 'product.social_people' | t }}</strong> {{ 'product.social_viewing_now' | t }}</p>
+            </div>
+            <div class="main-product__social-proof-row">
+              <svg class="main-product__social-proof-sales-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-3 8H5l6 12 3-8h5L13 2Z"></path></svg>
+              <p><strong><span data-social-sold></span> {{ 'product.social_sold' | t }}</strong> {{ 'product.social_sold_24h' | t }}</p>
+            </div>
+            <div class="main-product__social-proof-row" data-product-stock role="status" aria-live="polite" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 5 5 4-4 8 8"></path><path d="M14 16h6v-6"></path></svg>
+              <p data-stock-low hidden>{{ 'product.stock_remaining' | t }} <strong data-stock-quantity></strong> {{ 'product.stock_units' | t }} {{ 'product.stock_this_option' | t }}</p>
+              <p data-stock-out hidden>{{ 'product.stock_sold_out' | t }}</p>
+            </div>
           </div>
           <div class="main-product__trust">
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.5 8.3-8 10-4.5-1.7-8-5-8-10V6z"></path><path d="m8.5 12 2.2 2.2 4.8-5"></path></svg>{{ 'product.secure_purchase' | t }}</span>

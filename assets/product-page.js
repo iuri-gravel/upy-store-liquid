@@ -37,6 +37,8 @@
     const selectionError = page.querySelector("[data-selection-error]");
     const quantityValue = page.querySelector("[data-quantity-value]");
     const quantityInput = page.querySelector("[data-quantity-input]");
+    const viewersCount = page.querySelector("[data-social-viewers]");
+    const soldCount = page.querySelector("[data-social-sold]");
     const stockRow = page.querySelector("[data-product-stock]");
     const stockLow = page.querySelector("[data-stock-low]");
     const stockOut = page.querySelector("[data-stock-out]");
@@ -54,6 +56,10 @@
     const colorIndex = Number(page.dataset.colorOptionIndex);
     const sizeIndex = Number(page.dataset.sizeOptionIndex);
     const optionGroups = Array.from(page.querySelectorAll("[data-product-option]"));
+    const colorValues = colorIndex >= 0 ? [...new Set(variants.map((variant) => variant.options[colorIndex]))] : [];
+    const sizeValues = sizeIndex >= 0 ? [...new Set(variants.map((variant) => variant.options[sizeIndex]))] : [];
+    const proofVariationSlots = Math.max(3, colorValues.length, sizeValues.length);
+    const productSeed = String(page.dataset.productId || "").split("").reduce((sum, character) => sum + character.charCodeAt(0), 0);
     const initialVariant = variants.find((variant) => String(variant.id) === String(variantInput.value)) || variants.find((variant) => variant.available) || variants[0];
     const selected = Array.from(initialVariant.options || []);
     while (selected.length < 3) selected.push("");
@@ -73,6 +79,14 @@
     const knownMatches = (variant, skipIndex = -1) => selected.every((value, index) => index === skipIndex || !value || normalize(variant.options[index]) === normalize(value));
     const exactVariant = () => variants.find((variant) => variant.options.every((value, index) => normalize(value) === normalize(selected[index] || "")));
     const matchingVariants = () => variants.filter((variant) => knownMatches(variant));
+    const proofVariation = () => {
+      const colorPosition = colorIndex >= 0 ? Math.max(0, colorValues.findIndex((value) => normalize(value) === normalize(selected[colorIndex]))) : 0;
+      const sizePosition = sizeIndex >= 0 ? Math.max(0, sizeValues.findIndex((value) => normalize(value) === normalize(selected[sizeIndex]))) : 0;
+      const normalizeIndex = (index) => ((index % proofVariationSlots) + proofVariationSlots) % proofVariationSlots;
+      return (productSeed + normalizeIndex(colorPosition) + normalizeIndex(sizePosition)) % proofVariationSlots;
+    };
+    const viewers = Math.floor(Math.random() * 11) + 20;
+    if (viewersCount) viewersCount.textContent = String(viewers);
     const getPriceVariant = () => {
       const exact = exactVariant();
       if (exact) return exact;
@@ -132,6 +146,20 @@
       const exact = exactVariant();
       const canPurchase = Boolean(exact?.available && hasRequiredSelection());
       const currentColor = colorIndex >= 0 ? selected[colorIndex] : "";
+      if (soldCount) {
+        const variation = proofVariation();
+        const initialSold = 9 + variation;
+        const soldLimit = 15 + variation;
+        let reductions = 0;
+        if (!(exact && exact.inventoryManagement && Number(exact.inventoryQuantity) <= 0)) {
+          const now = new Date();
+          if (now.getHours() >= 8) {
+            const minutesSince8AM = (now.getHours() - 8) * 60 + now.getMinutes();
+            reductions = Math.floor(minutesSince8AM / 150);
+          }
+        }
+        soldCount.textContent = String(Math.min(soldLimit, initialSold + reductions));
+      }
       if (stockRow && stockLow && stockOut && stockQuantity) {
         const tracksStock = Boolean(exact?.inventoryManagement) && exact.inventoryPolicy === "deny";
         const inventory = Number(exact?.inventoryQuantity);

@@ -207,11 +207,16 @@
 .main-product__buy:hover:not(:disabled) { background: var(--upy-ink); color: var(--upy-canvas); }
 .main-product__add:disabled,
 .main-product__buy:disabled { cursor: not-allowed; opacity: 0.55; }
-.main-product__inventory-proof { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 1.2rem; padding: 0.8rem 0; border-block: 1px solid rgb(28 25 26 / 12%); font-size: 0.92rem; line-height: 1.5; }
-.main-product__inventory-proof[hidden],
-.main-product__inventory-proof [hidden] { display: none; }
-.main-product__inventory-proof svg { width: 1.3rem; height: 1.3rem; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
-.main-product__inventory-proof strong { font-weight: 700; }
+.main-product__social-proof { margin: 0 0 1.2rem; border-block: 1px solid rgb(28 25 26 / 12%); }
+.main-product__social-proof-row { display: flex; min-height: 4rem; align-items: center; gap: 0.75rem; padding: 0.85rem 0; font-size: 0.92rem; line-height: 1.5; }
+.main-product__social-proof-row + .main-product__social-proof-row { border-top: 1px solid rgb(28 25 26 / 12%); }
+.main-product__social-proof-row[hidden],
+.main-product__social-proof-row [hidden] { display: none; }
+.main-product__social-proof-row p { margin: 0; }
+.main-product__social-proof-row svg { width: 1.3rem; height: 1.3rem; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+.main-product__social-proof-row strong { font-weight: 700; }
+.main-product__viewers-dot { width: 0.45rem; height: 0.45rem; flex: 0 0 auto; border: 4px solid rgb(28 25 26 / 14%); border-radius: 50%; background: #55514f; box-sizing: content-box; }
+.main-product__social-proof-sales-icon { color: #87914d; }
 .main-product__trust { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; color: #5f5a56; font-size: 0.75rem; }
 .main-product__trust span { display: inline-flex; align-items: center; gap: 0.4rem; }
 .main-product__trust svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.35; }
