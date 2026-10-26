@@ -8,7 +8,7 @@
   {% endfor %}
 {% endif %}
 
-<header class="site-header" data-site-header>
+<header class="site-header" data-site-header data-cart-section-id="{{ section.id }}" data-cart-item-count="{{ cart.item_count }}">
   <div class="site-header__inner">
     <div class="site-header__left">
       <button class="icon-button site-header__menu-trigger" type="button" aria-label="Abrir menu" aria-controls="HeaderMenuDialog" aria-expanded="false" data-dialog-open="menu">
@@ -304,43 +304,154 @@
     </div>
   </dialog>
 
-  <dialog class="site-header__dialog site-header__side-dialog" id="HeaderCartDialog" aria-label="Sua sacola" data-cart-dialog>
-    <div class="site-header__dialog-panel site-header__side-panel">
-      <div class="site-header__dialog-heading">
-        <div><p class="site-header__eyebrow">Sua sacola</p><h2>Sua sacola <span>({{ cart.item_count }})</span></h2></div>
-        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close><svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+  <dialog class="site-header__dialog site-header__side-dialog" id="HeaderCartDialog" aria-label="Sua sacola" data-cart-dialog data-cart-free-shipping-threshold="14990">
+    <div class="site-header__dialog-panel site-header__side-panel site-header__cart-panel" data-cart-panel aria-busy="false">
+      <div class="site-header__dialog-heading site-header__cart-heading">
+        <div class="site-header__cart-heading-title">
+          <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z" /><path d="M9 9V6a3 3 0 0 1 6 0v3" /></svg>
+          <h2>Sacola <span data-cart-count-label>({{ cart.item_count }})</span></h2>
+        </div>
+        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar sacola" data-dialog-close><svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
       </div>
       {% if cart.item_count == 0 %}
         <div class="site-header__cart-empty"><p>Sua sacola está vazia.</p><a class="upy-button" href="{{ routes.all_products_collection_url }}">Continuar comprando</a></div>
       {% else %}
-        {% form 'cart', cart, class: 'site-header__cart-form' %}
-          <div class="site-header__cart-items">
+        {% form 'cart', cart, id: 'HeaderCartForm', class: 'site-header__cart-form' %}
+          <div class="site-header__cart-items" data-cart-items>
             {% for item in cart.items %}
-              <article class="site-header__cart-item">
-                <a class="site-header__cart-image" href="{{ item.url }}">
-                  {% if item.image != blank %}{{ item.image | image_url: width: 180 | image_tag: alt: item.product.title, loading: 'lazy', widths: '90, 135, 180', sizes: '90px' }}{% endif %}
+              {% assign color_position = 0 %}
+              {% assign size_position = 0 %}
+              {% for product_option in item.product.options_with_values %}
+                {% assign normalized_option_name = product_option.name | downcase %}
+                {% if normalized_option_name contains 'cor' %}{% assign color_position = forloop.index %}{% endif %}
+                {% if normalized_option_name contains 'tamanho' or normalized_option_name contains 'size' or normalized_option_name contains 'numera' %}{% assign size_position = forloop.index %}{% endif %}
+              {% endfor %}
+              {% assign current_color = blank %}
+              {% assign current_size = blank %}
+              {% assign current_stock = -1 %}
+              {% if item.variant.inventory_management != blank and item.variant.inventory_policy != 'continue' %}{% assign current_stock = item.variant.inventory_quantity %}{% endif %}
+              {% case color_position %}
+                {% when 1 %}{% assign current_color = item.variant.option1 %}
+                {% when 2 %}{% assign current_color = item.variant.option2 %}
+                {% when 3 %}{% assign current_color = item.variant.option3 %}
+              {% endcase %}
+              {% case size_position %}
+                {% when 1 %}{% assign current_size = item.variant.option1 %}
+                {% when 2 %}{% assign current_size = item.variant.option2 %}
+                {% when 3 %}{% assign current_size = item.variant.option3 %}
+              {% endcase %}
+              <article class="site-header__cart-item" data-cart-item data-line-key="{{ item.key | escape }}" data-current-variant-id="{{ item.variant_id }}" data-current-color="{{ current_color | escape }}" data-current-size="{{ current_size | escape }}" data-current-stock="{{ current_stock }}" data-current-available="{{ item.variant.available }}" data-quantity="{{ item.quantity }}" data-color-position="{{ color_position }}" data-size-position="{{ size_position }}" data-selling-plan-id="{{ item.selling_plan_allocation.selling_plan.id }}">
+                <script type="application/json" data-cart-variants>
+                  [
+                    {%- for variant in item.product.variants -%}
+                      {%- assign variant_color = blank -%}
+                      {%- assign variant_size = blank -%}
+                      {%- case color_position -%}
+                        {%- when 1 -%}{%- assign variant_color = variant.option1 -%}
+                        {%- when 2 -%}{%- assign variant_color = variant.option2 -%}
+                        {%- when 3 -%}{%- assign variant_color = variant.option3 -%}
+                      {%- endcase -%}
+                      {%- case size_position -%}
+                        {%- when 1 -%}{%- assign variant_size = variant.option1 -%}
+                        {%- when 2 -%}{%- assign variant_size = variant.option2 -%}
+                        {%- when 3 -%}{%- assign variant_size = variant.option3 -%}
+                      {%- endcase -%}
+                      {%- assign variant_image = variant.image | default: item.product.featured_image -%}
+                      {%- assign variant_stock = -1 -%}
+                      {%- if variant.inventory_management != blank and variant.inventory_policy != 'continue' -%}{%- assign variant_stock = variant.inventory_quantity -%}{%- endif -%}
+                      {%- unless forloop.first -%},{%- endunless -%}
+                      {"id":{{ variant.id | json }},"color":{{ variant_color | json }},"size":{{ variant_size | json }},"available":{{ variant.available | json }},"stock":{{ variant_stock | json }},"image":{% if variant_image != blank %}{{ variant_image | image_url: width: 420 | json }}{% else %}null{% endif %}}
+                    {%- endfor -%}
+                  ]
+                </script>
+                <script type="application/json" data-cart-line-properties>{{ item.properties | json }}</script>
+                <a class="site-header__cart-image" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                  {% if item.image != blank %}{{ item.image | image_url: width: 240 | image_tag: alt: item.product.title, loading: 'lazy', widths: '120, 180, 240', sizes: '(max-width: 600px) 6.25rem, 6.25rem' }}{% endif %}
                 </a>
                 <div class="site-header__cart-item-details">
                   <a class="site-header__cart-item-title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
-                  {% unless item.variant.title == 'Default Title' %}<p>{{ item.variant.title | escape }}</p>{% endunless %}
-                  <p class="site-header__cart-item-price">{{ item.final_line_price | money }}</p>
+                  {% unless item.variant.title == 'Default Title' %}<p class="site-header__cart-variant-label">{{ item.options_with_values | map: 'value' | join: ' / ' | escape }}</p>{% endunless %}
+                  {% if item.product.variants.size > 1 and color_position > 0 or item.product.variants.size > 1 and size_position > 0 %}
+                    <button class="site-header__cart-edit-trigger" type="button" aria-expanded="false" data-cart-edit-toggle>Alterar cor e tamanho <span aria-hidden="true">⌃</span></button>
+                    <div class="site-header__cart-editor" data-cart-editor hidden>
+                      {% if color_position > 0 %}
+                        {% for product_option in item.product.options_with_values %}
+                          {% if forloop.index == color_position %}
+                            <fieldset class="site-header__cart-option" data-cart-color-option>
+                              <legend>Cor: <span data-cart-draft-color-label>{{ current_color | escape }}</span></legend>
+                              <div class="site-header__cart-swatches">
+                                {% for option_value in product_option.values %}
+                                  {% assign color_value = option_value.name | default: option_value %}
+                                  <button class="site-header__cart-swatch" type="button" data-cart-color data-value="{{ color_value | escape }}" aria-label="Selecionar cor {{ color_value | escape }}" aria-pressed="{% if color_value == current_color %}true{% else %}false{% endif %}" title="{{ color_value | escape }}">
+                                    <span{% if option_value.swatch.color != blank %} data-swatch-color="{{ option_value.swatch.color | escape }}"{% endif %}{% if option_value.swatch.image != blank %} data-swatch-image="{{ option_value.swatch.image | image_url: width: 80 | escape }}"{% endif %} aria-hidden="true"></span>
+                                  </button>
+                                {% endfor %}
+                              </div>
+                            </fieldset>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                      {% if size_position > 0 %}
+                        {% for product_option in item.product.options_with_values %}
+                          {% if forloop.index == size_position %}
+                            <fieldset class="site-header__cart-option site-header__cart-size-option" data-cart-size-option>
+                              <legend>{{ product_option.name | escape }}</legend>
+                              <div class="site-header__cart-sizes">
+                                {% for option_value in product_option.values %}
+                                  {% assign size_value = option_value.name | default: option_value %}
+                                  {% assign normalized_size_value = size_value | downcase %}
+                                  {% unless normalized_size_value contains 'img' %}<button class="site-header__cart-size" type="button" data-cart-size data-value="{{ size_value | escape }}" aria-pressed="{% if size_value == current_size %}true{% else %}false{% endif %}">{{ size_value | escape }}</button>{% endunless %}
+                                {% endfor %}
+                              </div>
+                            </fieldset>
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                      <div class="site-header__cart-editor-actions">
+                        <button class="site-header__cart-editor-cancel" type="button" data-cart-edit-cancel><span aria-hidden="true">×</span> Cancelar</button>
+                        <button class="site-header__cart-editor-save" type="button" data-cart-edit-save disabled><span aria-hidden="true">✓</span> Salvar</button>
+                      </div>
+                    </div>
+                  {% endif %}
                   <div class="site-header__cart-item-controls">
-                    <label class="visually-hidden" for="HeaderCartQuantity-{{ forloop.index }}">Quantidade</label>
-                    <input id="HeaderCartQuantity-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
-                    <a href="{{ item.url_to_remove }}">Remover</a>
+                    <div class="site-header__cart-quantity" role="group" aria-label="Quantidade de {{ item.product.title | escape }}">
+                      <button type="button" data-cart-quantity-change="-1" aria-label="Diminuir quantidade">−</button>
+                      <label class="visually-hidden" for="HeaderCartQuantity-{{ forloop.index }}">Quantidade</label>
+                      <input id="HeaderCartQuantity-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric" data-cart-quantity>
+                      <button type="button" data-cart-quantity-change="1" aria-label="Aumentar quantidade"{% if current_stock >= 0 and item.quantity >= current_stock %} disabled{% endif %}>+</button>
+                    </div>
+                    <strong class="site-header__cart-item-price">{{ item.final_line_price | money }}</strong>
                   </div>
+                  <a class="site-header__cart-remove" href="{{ item.url_to_remove }}" data-cart-remove aria-label="Remover {{ item.product.title | escape }} da sacola"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5" /></svg>Remover</a>
                 </div>
               </article>
             {% endfor %}
           </div>
           <div class="site-header__cart-summary">
-            <div class="site-header__cart-subtotal"><span>Subtotal</span><strong>{{ cart.total_price | money }}</strong></div>
+            <p class="site-header__cart-error" role="alert" data-cart-error hidden></p>
+            <div class="site-header__cart-subtotal"><span>Subtotal</span><strong data-cart-subtotal>{{ cart.items_subtotal_price | money }}</strong></div>
+            {% if cart.currency.iso_code == 'BRL' %}
+              {% assign free_shipping_threshold = 14990 %}
+              {% assign free_shipping_remaining = free_shipping_threshold | minus: cart.items_subtotal_price %}
+              {% assign free_shipping_percentage = cart.items_subtotal_price | times: 100.0 | divided_by: free_shipping_threshold | at_most: 100 %}
+              <div class="site-header__cart-shipping" data-cart-shipping data-threshold="{{ free_shipping_threshold }}" data-subtotal="{{ cart.items_subtotal_price }}">
+                <p data-cart-shipping-message>{% if free_shipping_remaining > 0 %}Faltam <strong>{{ free_shipping_remaining | money }}</strong> para ganhar frete grátis.{% else %}Você ganhou frete grátis!{% endif %}</p>
+                <div class="site-header__cart-progress" role="progressbar" aria-label="Progresso para frete grátis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ free_shipping_percentage }}"><span data-cart-progress-bar style="width: {{ free_shipping_percentage }}%"></span></div>
+              </div>
+            {% endif %}
             <p>Frete, impostos, descontos e condições de pagamento serão confirmados no checkout da Shopify.</p>
             <button class="upy-button site-header__checkout" type="submit" name="checkout">Finalizar compra</button>
             <button class="site-header__continue-button" type="button" data-dialog-close>Continuar comprando</button>
           </div>
         {% endform %}
       {% endif %}
+      <div class="site-header__cart-remove-dialog" data-cart-remove-dialog hidden>
+        <div class="site-header__cart-remove-card" role="alertdialog" aria-modal="true" aria-labelledby="HeaderCartRemoveTitle" aria-describedby="HeaderCartRemoveDescription">
+          <h3 id="HeaderCartRemoveTitle">Remover produto?</h3>
+          <p id="HeaderCartRemoveDescription" data-cart-remove-description>Deseja remover este produto da sacola?</p>
+          <div><button type="button" data-cart-remove-cancel>Cancelar</button><button type="button" data-cart-remove-confirm>Remover</button></div>
+        </div>
+      </div>
     </div>
   </dialog>
 </header>
