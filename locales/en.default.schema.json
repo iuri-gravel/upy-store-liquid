@@ -25,7 +25,10 @@
     "footer_youtube": "YouTube URL",
     "footer_tiktok": "TikTok URL",
     "footer_pinterest": "Pinterest URL",
-    "home_hero": "Homepage hero"
+    "home_hero": "Homepage hero",
+    "main_collection": "Collection page",
+    "main_collection_products_per_page": "Products per page",
+    "main_collection_desktop_columns": "Columns on large screens"
   },
   "settings_schema": {
     "brand": "Brand colors",

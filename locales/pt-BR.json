@@ -58,6 +58,25 @@
       "resume": "Retomar apresentação"
     }
   },
+  "collection": {
+    "breadcrumb": "Navegação estrutural",
+    "home": "Início",
+    "filters_and_sort": "Filtrar produtos",
+    "sort_by": "Ordenar por",
+    "apply_filters": "Aplicar filtros",
+    "active_filters": "Filtros ativos",
+    "clear_filters": "Limpar filtros",
+    "minimum_price": "Preço mínimo",
+    "maximum_price": "Preço máximo",
+    "results_one": "{{ count }} produto",
+    "results_other": "{{ count }} produtos",
+    "empty_title": "Nenhum produto encontrado",
+    "empty_description": "Esta coleção ainda não possui produtos disponíveis.",
+    "empty_filtered": "Não encontramos produtos com esses filtros. Ajuste ou limpe os filtros para ver mais opções.",
+    "pagination": "Paginação da coleção",
+    "previous_page": "Página anterior",
+    "next_page": "Próxima página"
+  },
   "footer": {
     "brand_description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
     "newsletter_heading": "Receba Novidades",

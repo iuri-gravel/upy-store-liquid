@@ -25,7 +25,10 @@
     "footer_youtube": "URL do YouTube",
     "footer_tiktok": "URL do TikTok",
     "footer_pinterest": "URL do Pinterest",
-    "home_hero": "Banner principal da página inicial"
+    "home_hero": "Banner principal da página inicial",
+    "main_collection": "Página de coleção",
+    "main_collection_products_per_page": "Produtos por página",
+    "main_collection_desktop_columns": "Colunas em telas grandes"
   },
   "settings_schema": {
     "brand": "Cores da marca",

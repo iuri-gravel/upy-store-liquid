@@ -58,6 +58,25 @@
       "resume": "Resume slideshow"
     }
   },
+  "collection": {
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "filters_and_sort": "Filter products",
+    "sort_by": "Sort by",
+    "apply_filters": "Apply filters",
+    "active_filters": "Active filters",
+    "clear_filters": "Clear filters",
+    "minimum_price": "Minimum price",
+    "maximum_price": "Maximum price",
+    "results_one": "{{ count }} product",
+    "results_other": "{{ count }} products",
+    "empty_title": "No products found",
+    "empty_description": "This collection does not have any available products yet.",
+    "empty_filtered": "No products match these filters. Adjust or clear the filters to see more options.",
+    "pagination": "Collection pagination",
+    "previous_page": "Previous page",
+    "next_page": "Next page"
+  },
   "footer": {
     "brand_description": "Women's activewear with comfort, style, and freedom. For women who live in motion.",
     "newsletter_heading": "Get the latest news",
