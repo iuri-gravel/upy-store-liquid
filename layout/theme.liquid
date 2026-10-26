@@ -14,8 +14,13 @@
     <meta property="og:site_name" content="{{ shop.name | escape }}">
     <meta property="og:title" content="{{ page_title | escape }}">
     <meta property="og:url" content="{{ canonical_url }}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+    {% if request.page_type == 'product' and product != blank %}{{ product | structured_data }}{% endif %}
     {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {% if request.page_type == 'product' %}
+      {{ 'product-page.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'product-page.js' | asset_url }}" defer></script>
+    {% endif %}
     <style>
       :root {
         --upy-canvas: {{ settings.color_canvas }};

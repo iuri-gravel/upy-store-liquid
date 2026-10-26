@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "size_chart": "auto"
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Complete o look",
+        "product_limit": 4
+      }
+    },
+    "recently-viewed": {
+      "type": "home-recently-viewed",
+      "settings": {
+        "title": "Vistos Recentemente",
+        "product_limit": 4
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations",
+    "recently-viewed"
+  ]
+}

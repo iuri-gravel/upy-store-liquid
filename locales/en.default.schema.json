@@ -28,7 +28,15 @@
     "home_hero": "Homepage hero",
     "main_collection": "Collection page",
     "main_collection_products_per_page": "Products per page",
-    "main_collection_desktop_columns": "Columns on large screens"
+    "main_collection_desktop_columns": "Columns on large screens",
+    "main_product": "Product page",
+    "product_recommendations": "Product recommendations",
+    "product_size_chart": "Size chart",
+    "product_size_chart_auto": "Choose automatically from product name",
+    "product_size_chart_tops": "Tops",
+    "product_size_chart_bottoms": "Pants and shorts",
+    "product_recommendations_heading": "Heading",
+    "product_recommendations_limit": "Products to show"
   },
   "settings_schema": {
     "brand": "Brand colors",
