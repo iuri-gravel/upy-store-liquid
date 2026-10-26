@@ -37,7 +37,6 @@
   data-product-title="{{ product.title | escape }}"
   data-color-option-index="{{ color_option_index }}"
   data-size-option-index="{{ size_option_index }}"
-  data-stock-threshold="{{ section.settings.stock_threshold }}"
   data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
   data-chart-kind="{{ chart_kind }}"
   data-msg-add="{{ 'product.add_to_cart' | t | escape }}"
@@ -345,15 +344,6 @@
         { "value": "bottoms", "label": "t:sections.product_size_chart_bottoms" }
       ],
       "default": "auto"
-    },
-    {
-      "type": "range",
-      "id": "stock_threshold",
-      "min": 1,
-      "max": 20,
-      "step": 1,
-      "default": 8,
-      "label": "Exibir alerta quando restarem até"
     }
   ],
   "blocks": [

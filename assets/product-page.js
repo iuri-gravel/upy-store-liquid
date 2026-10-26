@@ -43,7 +43,6 @@
     const stockLow = page.querySelector("[data-stock-low]");
     const stockOut = page.querySelector("[data-stock-out]");
     const stockQuantity = page.querySelector("[data-stock-quantity]");
-    const stockThreshold = Math.max(1, Number(page.dataset.stockThreshold) || 8);
     const submitButton = page.querySelector("[data-add-to-cart]");
     const buyNowButton = page.querySelector("[data-buy-now]");
     const stickyAdd = page.querySelector("[data-sticky-add]");
@@ -146,29 +145,30 @@
       const exact = exactVariant();
       const canPurchase = Boolean(exact?.available && hasRequiredSelection());
       const currentColor = colorIndex >= 0 ? selected[colorIndex] : "";
+      const variation = proofVariation();
+      const isSoldOut = Boolean(exact && !exact.available);
+      let reductions = 0;
+      if (!isSoldOut) {
+        const now = new Date();
+        if (now.getHours() >= 8) {
+          const minutesSince8AM = (now.getHours() - 8) * 60 + now.getMinutes();
+          reductions = Math.floor(minutesSince8AM / 150);
+        }
+      }
       if (soldCount) {
-        const variation = proofVariation();
         const initialSold = 9 + variation;
         const soldLimit = 15 + variation;
-        let reductions = 0;
-        if (!(exact && exact.inventoryManagement && Number(exact.inventoryQuantity) <= 0)) {
-          const now = new Date();
-          if (now.getHours() >= 8) {
-            const minutesSince8AM = (now.getHours() - 8) * 60 + now.getMinutes();
-            reductions = Math.floor(minutesSince8AM / 150);
-          }
-        }
         soldCount.textContent = String(Math.min(soldLimit, initialSold + reductions));
       }
       if (stockRow && stockLow && stockOut && stockQuantity) {
-        const tracksStock = Boolean(exact?.inventoryManagement) && exact.inventoryPolicy === "deny";
-        const inventory = Number(exact?.inventoryQuantity);
-        const isLowStock = tracksStock && Number.isFinite(inventory) && inventory > 0 && inventory <= stockThreshold;
-        const isSoldOut = tracksStock && Number.isFinite(inventory) && inventory <= 0 && !exact?.available;
-        stockRow.hidden = !isLowStock && !isSoldOut;
+        const isLowStock = !isSoldOut;
+        const initialStock = 6 + variation;
+        const stockFloor = 2 + variation;
+        const displayedStock = Math.max(stockFloor, initialStock - reductions);
+        stockRow.hidden = false;
         stockLow.hidden = !isLowStock;
         stockOut.hidden = !isSoldOut;
-        if (isLowStock) stockQuantity.textContent = String(inventory);
+        if (isLowStock) stockQuantity.textContent = String(displayedStock);
       }
       optionGroups.forEach((group) => {
         const index = Number(group.dataset.optionIndex);
