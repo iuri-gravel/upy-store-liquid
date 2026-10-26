@@ -1868,7 +1868,9 @@ summary {
   box-shadow: 0 24px 48px rgb(28 25 26 / 12%);
 }
 
-.site-header__nav-group.is-open > .site-header__mega {
+.site-header__nav-group.is-open > .site-header__mega,
+.site-header__nav-group:hover > .site-header__mega,
+.site-header__nav-group:focus-within > .site-header__mega {
   display: block;
 }
 
