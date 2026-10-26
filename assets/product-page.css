@@ -215,7 +215,6 @@
 .main-product__social-proof-row p { margin: 0; }
 .main-product__social-proof-row svg { width: 1.3rem; height: 1.3rem; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
 .main-product__social-proof-row strong { font-weight: 700; }
-.main-product__viewers-dot { width: 0.45rem; height: 0.45rem; flex: 0 0 auto; border: 4px solid rgb(28 25 26 / 14%); border-radius: 50%; background: #55514f; box-sizing: content-box; }
 .main-product__social-proof-sales-icon { color: #87914d; }
 .main-product__trust { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; color: #5f5a56; font-size: 0.75rem; }
 .main-product__trust span { display: inline-flex; align-items: center; gap: 0.4rem; }
