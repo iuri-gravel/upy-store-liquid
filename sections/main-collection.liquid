@@ -33,22 +33,20 @@
 
   <form class="main-collection__form" action="{{ collection.url }}" method="get">
     <div class="main-collection__toolbar">
-      <p class="main-collection__count" aria-live="polite">
-        {% if collection.products_count == 1 %}
-          {{ 'collection.results_one' | t: count: collection.products_count }}
-        {% else %}
-          {{ 'collection.results_other' | t: count: collection.products_count }}
-        {% endif %}
-      </p>
-
       <label class="main-collection__sort">
-        <span>{{ 'collection.sort_by' | t }}</span>
+        <span class="visually-hidden">{{ 'collection.sort_by' | t }}</span>
+        {% assign selected_sort = collection.sort_by | default: collection.default_sort_by | default: 'manual' %}
         <select name="sort_by" aria-label="{{ 'collection.sort_by' | t }}" onchange="this.form.requestSubmit()">
-          {% for sort_option in collection.sort_options %}
-            <option value="{{ sort_option.value | escape }}"{% if sort_option.value == collection.sort_by %} selected{% endif %}>{{ sort_option.name | escape }}</option>
-          {% endfor %}
+          <option value="manual"{% if selected_sort == 'manual' %} selected{% endif %}>Relevância</option>
+          <option value="created-descending"{% if selected_sort == 'created-descending' %} selected{% endif %}>Novidades</option>
+          <option value="price-ascending"{% if selected_sort == 'price-ascending' %} selected{% endif %}>Menor preço</option>
+          <option value="price-descending"{% if selected_sort == 'price-descending' %} selected{% endif %}>Maior preço</option>
         </select>
       </label>
+
+      <p class="main-collection__count" aria-live="polite">
+        Exibindo {{ collection.products_count }} {% if collection.products_count == 1 %}resultado{% else %}resultados{% endif %}
+      </p>
     </div>
 
     {% if collection.filters.size > 0 %}
@@ -166,35 +164,38 @@
 
 {% stylesheet %}
   .main-collection {
-    padding: 2.5rem 1rem 4rem;
+    padding: 0 0 4rem;
     background: var(--upy-canvas);
     color: var(--upy-ink);
   }
   .main-collection__header {
-    max-width: 78rem;
-    margin: 0 auto;
+    padding: 1.25rem 2rem 0;
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
     text-align: center;
   }
   .main-collection__breadcrumbs {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.55rem;
-    color: #77716c;
-    font-size: 0.75rem;
+    color: rgb(243 240 237 / 82%);
+    font-size: 0.9rem;
   }
   .main-collection__breadcrumbs a { color: inherit; text-decoration: none; }
+  .main-collection__breadcrumbs a:hover { opacity: 0.72; }
   .main-collection__title {
-    margin: 1.15rem 0 0;
+    margin: 1rem 0 0;
     font-family: var(--upy-font-heading);
-    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    font-size: clamp(3rem, 4vw, 4.5rem);
     font-weight: 300;
     letter-spacing: -0.055em;
-    line-height: 1.08;
+    line-height: 1.05;
+    color: var(--upy-canvas);
   }
   .main-collection__description {
     max-width: 46rem;
     margin: 1rem auto 0;
-    color: #5f5a56;
+    color: rgb(243 240 237 / 84%);
     font-size: 0.9rem;
     line-height: 1.7;
   }
@@ -202,28 +203,35 @@
   .main-collection__active-filters,
   .main-collection__carousel,
   .main-collection__pagination,
-  .main-collection__empty { max-width: 100rem; margin-inline: auto; }
-  .main-collection__form { margin-top: 2rem; }
+  .main-collection__empty { max-width: none; margin-inline: auto; }
+  .main-collection__form {
+    margin-top: 0;
+    padding: 1.5rem 2rem 1.35rem;
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
+  }
   .main-collection__toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 0.85rem;
-    border-block: 1px solid rgb(32 29 28 / 14%);
+    padding: 0;
   }
-  .main-collection__count { margin: 0; color: #77716c; font-size: 0.8rem; }
-  .main-collection__sort { display: flex; align-items: center; gap: 0.65rem; font-size: 0.8rem; }
+  .main-collection__count { margin: 0; color: var(--upy-canvas); font-size: 0.9rem; }
+  .main-collection__sort { display: flex; align-items: center; font-size: 0.9rem; }
   .main-collection__sort select {
-    min-height: 2.65rem;
-    border: 1px solid rgb(32 29 28 / 24%);
+    width: 12.1rem;
+    min-height: 3.5rem;
+    border: 1px solid var(--upy-canvas);
     border-radius: 0;
-    padding: 0.4rem 2rem 0.4rem 0.7rem;
+    padding: 0.4rem 2rem 0.4rem 1.25rem;
     background: transparent;
-    color: inherit;
+    color: var(--upy-canvas);
     font: inherit;
+    cursor: pointer;
   }
-  .main-collection__filter-panel { border-bottom: 1px solid rgb(32 29 28 / 14%); }
+  .main-collection__sort select option { background: var(--upy-ink); color: var(--upy-canvas); }
+  .main-collection__filter-panel { border-bottom: 1px solid rgb(243 240 237 / 25%); }
   .main-collection__filter-summary {
     display: flex;
     width: fit-content;
@@ -233,6 +241,7 @@
     cursor: pointer;
     list-style: none;
     font-size: 0.8rem;
+    color: var(--upy-canvas);
   }
   .main-collection__filter-summary::-webkit-details-marker { display: none; }
   .main-collection__filter-summary svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.5; }
@@ -246,7 +255,7 @@
     color: var(--upy-canvas);
     font-size: 0.65rem;
   }
-  .main-collection__filter-content { display: grid; gap: 1.25rem; padding: 0.5rem 0 1.25rem; }
+  .main-collection__filter-content { display: grid; gap: 1.25rem; padding: 1rem; background: var(--upy-canvas); color: var(--upy-ink); }
   .main-collection__facet { min-width: 0; margin: 0; padding: 0; border: 0; }
   .main-collection__facet legend { margin-bottom: 0.65rem; font-size: 0.75rem; font-weight: 600; }
   .main-collection__values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
@@ -278,10 +287,10 @@
     cursor: pointer;
     font-size: 0.75rem;
   }
-  .main-collection__active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding-top: 1rem; }
+  .main-collection__active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 1.25rem 0; padding-top: 0; }
   .main-collection__chip { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgb(32 29 28 / 20%); border-radius: 2rem; padding: 0.4rem 0.75rem; color: inherit; font-size: 0.7rem; text-decoration: none; }
   .main-collection__chip span { font-size: 1rem; }
-  .main-collection__carousel { margin-top: 1.5rem; }
+  .main-collection__carousel { margin: 1.25rem 1.25rem 0; }
   .main-collection .home-launches__track {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -299,16 +308,27 @@
   .main-collection__pagination { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-top: 2.5rem; font-size: 0.85rem; }
   .main-collection__pagination a { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid rgb(32 29 28 / 22%); border-radius: 50%; color: inherit; text-decoration: none; }
   @media (min-width: 640px) {
-    .main-collection { padding-inline: 1.5rem; }
-    .main-collection .home-launches__track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 0.85rem; }
+    .main-collection .home-launches__track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1.25rem; }
     .main-collection__filter-content { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .main-collection__facet:last-of-type { grid-column: auto; }
   }
   @media (min-width: 1024px) {
-    .main-collection { padding: 3rem 2rem 5rem; }
-    .main-collection .home-launches__track { grid-template-columns: repeat(var(--collection-columns), minmax(0, 1fr)); gap: 2rem 0.85rem; }
+    .main-collection { padding-bottom: 5rem; }
+    .main-collection .home-launches__track { grid-template-columns: repeat(var(--collection-columns), minmax(0, 1fr)); gap: 2rem 1.25rem; }
     .main-collection__filter-content { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .main-collection__values { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) {
+    .main-collection__filter-panel { display: none; }
+  }
+  @media (max-width: 639px) {
+    .main-collection__header { padding-inline: 1rem; }
+    .main-collection__form { padding-inline: 1rem; }
+    .main-collection__title { font-size: clamp(2.5rem, 11vw, 3.5rem); }
+    .main-collection__toolbar { gap: 0.5rem; }
+    .main-collection__sort select { width: 48vw; padding-inline: 0.8rem 1.5rem; }
+    .main-collection__count { font-size: 0.75rem; text-align: right; }
+    .main-collection__carousel { margin-inline: 0.75rem; }
   }
 {% endstylesheet %}
 
