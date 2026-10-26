@@ -1878,13 +1878,13 @@ summary {
 
 .site-header__mega-inner {
   display: grid;
-  width: min(100% - 4rem, 1800px);
-  max-height: calc(100dvh - 8rem);
-  grid-template-columns: 12rem minmax(0, 1fr);
-  gap: 2.5rem;
+  width: min(100%, 1920px);
+  max-height: calc(100dvh - 7rem);
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 2rem;
   overflow-y: auto;
   margin-inline: auto;
-  padding-block: 2rem;
+  padding: 2rem;
 }
 
 .site-header__mega-links {
@@ -1909,16 +1909,10 @@ summary {
   color: var(--upy-ink);
 }
 
-.site-header__mega-links .site-header__mega-all {
-  margin-bottom: 0.4rem;
-  border-bottom: 1px solid var(--upy-line);
-  font-weight: 600;
-}
-
 .site-header__mega-cards {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .site-header__mega-card {
@@ -1955,6 +1949,19 @@ summary {
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (min-width: 1280px) {
+  .site-header__mega-inner {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: 3rem;
+    padding: 2rem 3rem;
+  }
+
+  .site-header__mega-cards {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1rem;
+  }
 }
 
 .site-header__logo {

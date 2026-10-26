@@ -77,7 +77,6 @@
                     <div class="site-header__mega">
                       <div class="site-header__mega-inner">
                         <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
-                          <a class="site-header__mega-all" href="{{ menu_link_url }}">Ver tudo de {{ display_menu_title | escape }}</a>
                           {% for child_link in link.links %}
                             <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
                           {% endfor %}
