@@ -37,6 +37,7 @@
   data-product-title="{{ product.title | escape }}"
   data-color-option-index="{{ color_option_index }}"
   data-size-option-index="{{ size_option_index }}"
+  data-stock-threshold="{{ section.settings.stock_threshold }}"
   data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
   data-chart-kind="{{ chart_kind }}"
   data-msg-add="{{ 'product.add_to_cart' | t | escape }}"
@@ -232,6 +233,11 @@
             </button>
             <button class="main-product__buy" type="button" data-buy-now{% if product.available == false %} disabled{% endif %}>{{ 'product.buy_now' | t }}</button>
           </div>
+          <div class="main-product__inventory-proof" data-product-stock role="status" aria-live="polite" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 5 5 4-4 8 8"></path><path d="M14 16h6v-6"></path></svg>
+            <span data-stock-low hidden>{{ 'product.stock_remaining' | t }} <strong data-stock-quantity></strong> {{ 'product.stock_units' | t }} {{ 'product.stock_this_option' | t }}</span>
+            <span data-stock-out hidden>{{ 'product.stock_sold_out' | t }}</span>
+          </div>
           <div class="main-product__trust">
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.5 8.3-8 10-4.5-1.7-8-5-8-10V6z"></path><path d="m8.5 12 2.2 2.2 4.8-5"></path></svg>{{ 'product.secure_purchase' | t }}</span>
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h12v11H3zM15 11h4l3 3v4h-7z"></path><circle cx="7.5" cy="19" r="1.8"></circle><circle cx="18.5" cy="19" r="1.8"></circle></svg>{{ 'product.shipping_checkout' | t }}</span>
@@ -325,6 +331,15 @@
         { "value": "bottoms", "label": "t:sections.product_size_chart_bottoms" }
       ],
       "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "stock_threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 8,
+      "label": "Exibir alerta quando restarem até"
     }
   ],
   "blocks": [

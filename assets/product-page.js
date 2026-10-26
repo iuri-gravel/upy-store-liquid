@@ -37,6 +37,11 @@
     const selectionError = page.querySelector("[data-selection-error]");
     const quantityValue = page.querySelector("[data-quantity-value]");
     const quantityInput = page.querySelector("[data-quantity-input]");
+    const stockRow = page.querySelector("[data-product-stock]");
+    const stockLow = page.querySelector("[data-stock-low]");
+    const stockOut = page.querySelector("[data-stock-out]");
+    const stockQuantity = page.querySelector("[data-stock-quantity]");
+    const stockThreshold = Math.max(1, Number(page.dataset.stockThreshold) || 8);
     const submitButton = page.querySelector("[data-add-to-cart]");
     const buyNowButton = page.querySelector("[data-buy-now]");
     const stickyAdd = page.querySelector("[data-sticky-add]");
@@ -127,6 +132,16 @@
       const exact = exactVariant();
       const canPurchase = Boolean(exact?.available && hasRequiredSelection());
       const currentColor = colorIndex >= 0 ? selected[colorIndex] : "";
+      if (stockRow && stockLow && stockOut && stockQuantity) {
+        const tracksStock = Boolean(exact?.inventoryManagement) && exact.inventoryPolicy === "deny";
+        const inventory = Number(exact?.inventoryQuantity);
+        const isLowStock = tracksStock && Number.isFinite(inventory) && inventory > 0 && inventory <= stockThreshold;
+        const isSoldOut = tracksStock && Number.isFinite(inventory) && inventory <= 0 && !exact?.available;
+        stockRow.hidden = !isLowStock && !isSoldOut;
+        stockLow.hidden = !isLowStock;
+        stockOut.hidden = !isSoldOut;
+        if (isLowStock) stockQuantity.textContent = String(inventory);
+      }
       optionGroups.forEach((group) => {
         const index = Number(group.dataset.optionIndex);
         const kind = group.dataset.optionKind;
