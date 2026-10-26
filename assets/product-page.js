@@ -54,6 +54,13 @@
     if (!variants.length) return;
     const colorIndex = Number(page.dataset.colorOptionIndex);
     const sizeIndex = Number(page.dataset.sizeOptionIndex);
+    const isImageOnlyVariant = (variant) => {
+      if (sizeIndex < 0) return false;
+      const size = normalize(variant.options?.[sizeIndex]).replace(/\s+/g, " ");
+      return size === "img 1" || size === "img 2";
+    };
+    variants = variants.filter((variant) => !isImageOnlyVariant(variant));
+    if (!variants.length) return;
     const optionGroups = Array.from(page.querySelectorAll("[data-product-option]"));
     const colorValues = colorIndex >= 0 ? [...new Set(variants.map((variant) => variant.options[colorIndex]))] : [];
     const sizeValues = sizeIndex >= 0 ? [...new Set(variants.map((variant) => variant.options[sizeIndex]))] : [];
@@ -101,7 +108,9 @@
       const media = Array.from(page.querySelectorAll("[data-product-media]"));
       const colorKey = keyFor(color);
       const colorMatches = colorKey ? media.filter((item) => item.dataset.mediaColors?.includes(`|${colorKey}|`)) : [];
-      const visible = media.filter((item) => !colorKey || !colorMatches.length || !item.dataset.mediaColors || item.dataset.mediaColors === "|" || item.dataset.mediaColors.includes(`|${colorKey}|`));
+      const visible = colorMatches.length
+        ? media.filter((item) => colorMatches.includes(item) || item.dataset.mediaType !== "image")
+        : media;
       media.forEach((item) => {
         const show = visible.includes(item);
         item.hidden = !show;

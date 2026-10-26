@@ -1,5 +1,6 @@
 {% liquid
-  assign selected_variant = product.selected_or_first_available_variant | default: product.variants.first
+  assign requested_variant = product.selected_or_first_available_variant | default: product.variants.first
+  assign selected_variant = requested_variant
   assign color_option_index = -1
   assign size_option_index = -1
   assign breadcrumb_collection = product.collections.first
@@ -17,6 +18,33 @@
       assign size_option_index = forloop.index0
     endif
   endfor
+
+  assign selected_variant = blank
+  assign first_purchasable_variant = blank
+  for variant in product.variants
+    assign variant_is_image_only = false
+    if size_option_index >= 0
+      assign variant_size_value = variant.options[size_option_index] | downcase | strip
+      if variant_size_value == 'img 1' or variant_size_value == 'img 2'
+        assign variant_is_image_only = true
+      endif
+    endif
+    unless variant_is_image_only
+      if variant.id == requested_variant.id
+        assign selected_variant = variant
+        break
+      endif
+      if first_purchasable_variant == blank and variant.available
+        assign first_purchasable_variant = variant
+      endif
+    endunless
+  endfor
+  if selected_variant == blank
+    assign selected_variant = first_purchasable_variant
+  endif
+  if selected_variant == blank
+    assign selected_variant = product.variants.first
+  endif
 
   if chart_kind == 'auto'
     assign product_title_normalized = product.title | downcase
@@ -69,7 +97,16 @@
               {% for media_variant in product.variants %}
                 {% if media_variant.featured_media.id == media.id %}
                   {% assign media_color = media_variant.options[color_option_index] | handleize %}
-                  {% capture media_color_keys %}{{ media_color_keys }}{{ media_color }}|{% endcapture %}
+                  {% assign media_variant_is_image_only = false %}
+                  {% if size_option_index >= 0 %}
+                    {% assign media_variant_size = media_variant.options[size_option_index] | downcase | strip %}
+                    {% if media_variant_size == 'img 1' or media_variant_size == 'img 2' %}{% assign media_variant_is_image_only = true %}{% endif %}
+                  {% endif %}
+                  {% assign media_is_default_image = false %}
+                  {% if media.preview_image.id == product.featured_image.id or media.preview_image.id == product.images.first.id %}{% assign media_is_default_image = true %}{% endif %}
+                  {% unless media_variant_is_image_only and media_is_default_image %}
+                    {% capture media_color_keys %}{{ media_color_keys }}{{ media_color }}|{% endcapture %}
+                  {% endunless %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -78,6 +115,7 @@
               data-product-media
               data-media-index="{{ forloop.index0 }}"
               data-media-id="{{ media.id }}"
+              data-media-type="{{ media.media_type }}"
               data-media-colors="{{ media_color_keys | escape }}"
               {% unless forloop.first %}hidden{% endunless %}
             >
@@ -172,7 +210,8 @@
                   <div class="main-product__sizes" role="group" aria-label="{{ 'product.available_sizes' | t | escape }}">
                     {% for option_value in option.values %}
                       {% assign size_value = option_value.name | default: option_value %}
-                      <button type="button" class="main-product__size" data-option-button data-option-value="{{ size_value | escape }}" aria-pressed="false">{{ size_value | escape }}</button>
+                      {% assign normalized_size_value = size_value | downcase | strip %}
+                      {% unless normalized_size_value == 'img 1' or normalized_size_value == 'img 2' %}<button type="button" class="main-product__size" data-option-button data-option-value="{{ size_value | escape }}" aria-pressed="false">{{ size_value | escape }}</button>{% endunless %}
                     {% endfor %}
                   </div>
                 {% else %}
