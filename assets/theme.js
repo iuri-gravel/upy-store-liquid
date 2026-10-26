@@ -117,11 +117,11 @@
     });
 
     header.querySelectorAll(".site-header__nav-group").forEach((group) => {
-      const summary = group.querySelector("summary");
+      const trigger = group.querySelector(".site-header__nav-trigger");
       let closeTimer = 0;
       const setExpanded = (expanded) => {
-        group.open = expanded;
-        summary?.setAttribute("aria-expanded", String(expanded));
+        group.classList.toggle("is-open", expanded);
+        trigger?.setAttribute("aria-expanded", String(expanded));
       };
       group.addEventListener("mouseenter", () => {
         window.clearTimeout(closeTimer);
@@ -138,7 +138,7 @@
       group.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         setExpanded(false);
-        summary?.focus();
+        trigger?.focus();
       });
     });
   });

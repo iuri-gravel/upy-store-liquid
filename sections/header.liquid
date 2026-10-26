@@ -63,7 +63,6 @@
               {% assign menu_link_url = link.url %}
               {% assign display_menu_title = link.title %}
               {% if normalized_link_title contains 'cole' %}
-                {% assign menu_link_url = routes.collections_url %}
                 {% assign display_menu_title = 'Coleções' %}
               {% endif %}
               {% if normalized_link_title contains 'produt' %}
@@ -72,8 +71,8 @@
               {% endif %}
               <li>
                 {% if link.links.size > 0 %}
-                  <details class="site-header__nav-group" data-header-dropdown>
-                    <summary aria-haspopup="true" aria-expanded="false">{{ display_menu_title | escape }}</summary>
+                  <div class="site-header__nav-group" data-header-dropdown>
+                    <a class="site-header__nav-trigger" href="{{ menu_link_url }}" aria-haspopup="true" aria-expanded="false">{{ display_menu_title | escape }}</a>
                     <div class="site-header__mega">
                       <div class="site-header__mega-inner">
                         <nav class="site-header__mega-links" aria-label="{{ display_menu_title | escape }}">
@@ -97,7 +96,7 @@
                         </div>
                       </div>
                     </div>
-                  </details>
+                  </div>
                 {% else %}
                   <a href="{{ menu_link_url }}">{{ display_menu_title | escape }}</a>
                 {% endif %}
@@ -167,7 +166,6 @@
             {% assign menu_link_url = link.url %}
             {% assign display_menu_title = link.title %}
             {% if normalized_link_title contains 'cole' %}
-              {% assign menu_link_url = routes.collections_url %}
               {% assign display_menu_title = 'Coleções' %}
             {% endif %}
             {% if normalized_link_title contains 'produt' %}
@@ -268,7 +266,6 @@
                 {% assign menu_link_url = link.url %}
                 {% assign display_menu_title = link.title %}
                 {% if normalized_link_title contains 'cole' %}
-                  {% assign menu_link_url = routes.collections_url %}
                   {% assign display_menu_title = 'Coleções' %}
                 {% endif %}
                 {% if normalized_link_title contains 'produt' %}
