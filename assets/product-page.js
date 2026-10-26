@@ -174,9 +174,10 @@
         page.querySelectorAll("[data-sticky-price]").forEach((node) => { node.textContent = money(priceVariant.price); });
         if (submitButton) {
           submitButton.disabled = !priceVariant.available;
-          submitButton.textContent = !priceVariant.available ? page.dataset.msgUnavailable : canPurchase ? page.dataset.msgAdd : sizeIndex >= 0 && !selected[sizeIndex] ? page.dataset.msgSelectSize : page.dataset.msgSelectOptions;
+          submitButton.textContent = !priceVariant.available ? page.dataset.msgUnavailable : page.dataset.msgAdd;
         }
         if (buyNowButton) buyNowButton.disabled = !canPurchase;
+        if (buyNowButton) buyNowButton.hidden = !canPurchase;
         if (stickyAdd) stickyAdd.disabled = !canPurchase;
         const max = priceVariant.inventoryManagement && priceVariant.inventoryPolicy !== "continue" ? Math.max(1, Number(priceVariant.inventoryQuantity) || 1) : 99;
         if (quantityValue) {
@@ -277,6 +278,8 @@
       const favorite = readWishlist().some((item) => String(item.id) === String(favoriteButton.dataset.productId));
       favoriteButton.setAttribute("aria-pressed", String(favorite));
       favoriteButton.setAttribute("aria-label", favorite ? favoriteButton.dataset.labelUnfavorite : favoriteButton.dataset.labelFavorite);
+      const favoriteLabel = favoriteButton.querySelector("[data-favorite-label]");
+      if (favoriteLabel) favoriteLabel.textContent = favorite ? favoriteButton.dataset.labelUnfavoriteText : favoriteButton.dataset.labelFavoriteText;
     };
     favoriteButton?.addEventListener("click", () => {
       const items = readWishlist();

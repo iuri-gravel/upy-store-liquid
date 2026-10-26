@@ -105,6 +105,8 @@
     "add_error": "Could not add this product to your bag.",
     "favorite_add": "Add {{ title }} to favorites",
     "favorite_remove": "Remove {{ title }} from favorites",
+    "favorite_button": "Add to favorites",
+    "favorited_button": "In favorites",
     "secure_purchase": "Secure shopping",
     "shipping_checkout": "Shipping calculated at checkout",
     "stock_remaining": "Only",

@@ -105,6 +105,8 @@
     "add_error": "Não foi possível adicionar à sacola.",
     "favorite_add": "Adicionar {{ title }} aos favoritos",
     "favorite_remove": "Remover {{ title }} dos favoritos",
+    "favorite_button": "Adicionar aos favoritos",
+    "favorited_button": "Nos favoritos",
     "secure_purchase": "Compra segura",
     "shipping_checkout": "Frete calculado no checkout",
     "stock_remaining": "Restam apenas",

@@ -92,21 +92,27 @@
   text-wrap: balance;
 }
 .main-product__favorite {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid transparent;
-  border-radius: 50%;
+  display: flex;
+  width: 100%;
+  min-height: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--upy-ink);
+  border-radius: 2px;
   background: transparent;
+  color: var(--upy-ink);
   cursor: pointer;
-  transition: color 180ms ease, border-color 180ms ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
 }
-.main-product__favorite svg { width: 1.4rem; fill: transparent; stroke: currentColor; stroke-width: 1.6; }
+.main-product__favorite svg { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; fill: transparent; stroke: currentColor; stroke-width: 1.6; }
 .main-product__favorite[aria-pressed="true"] { color: var(--product-action); }
 .main-product__favorite[aria-pressed="true"] svg { fill: currentColor; }
-.main-product__favorite:hover { border-color: currentColor; }
+.main-product__favorite:hover { border-color: var(--product-action); color: var(--product-action); }
+.main-product__favorite:focus-visible { outline: 2px solid var(--product-action); outline-offset: 3px; }
 .main-product__form { display: block; }
 .main-product__price-block { margin: 0 0 1.85rem; }
 .main-product__compare-price { margin-right: 0.6rem; color: #77716c; font-size: 1rem; }
@@ -181,7 +187,7 @@
 .main-product__selection-error { margin: 0 0 0.8rem; color: #a52b29; font-size: 0.85rem; }
 .main-product__cart-feedback { min-height: 0; margin: 0; font-size: 0.85rem; }
 .main-product__cart-feedback:not(:empty) { margin-bottom: 0.65rem; }
-.main-product__actions { display: grid; gap: 0.65rem; margin: 0 0 1.2rem; }
+.main-product__actions { display: grid; gap: 0.75rem; margin: 0 0 1.2rem; }
 .main-product__add,
 .main-product__buy {
   min-height: 3.6rem;
@@ -195,6 +201,7 @@
   transition: background-color 180ms ease, color 180ms ease, opacity 180ms ease;
 }
 .main-product__add { background: var(--product-action); color: #fff; }
+.main-product__buy[hidden] { display: none; }
 .main-product__buy { border-color: var(--upy-ink); background: transparent; color: var(--upy-ink); }
 .main-product__add:hover:not(:disabled) { filter: brightness(0.94); }
 .main-product__buy:hover:not(:disabled) { background: var(--upy-ink); color: var(--upy-canvas); }

@@ -122,22 +122,6 @@
       <div class="main-product__details-inner">
         <div class="main-product__title-row">
           <h1 class="main-product__title">{{ product.title | escape }}</h1>
-          <button
-            class="main-product__favorite"
-            type="button"
-            data-product-wishlist
-            data-product-id="{{ product.id }}"
-            data-product-title="{{ product.title | escape }}"
-            data-product-handle="{{ product.handle | escape }}"
-            data-product-url="{{ product.url }}"
-            data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 240 }}{% endif %}"
-            data-label-favorite="{{ 'product.favorite_add' | t: title: product.title | escape }}"
-            data-label-unfavorite="{{ 'product.favorite_remove' | t: title: product.title | escape }}"
-            aria-label="{{ 'product.favorite_add' | t: title: product.title | escape }}"
-            aria-pressed="false"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg>
-          </button>
         </div>
 
         {% form 'product', product, id: product_form_id, class: 'main-product__form' %}
@@ -231,7 +215,26 @@
             <button class="main-product__add" type="submit" name="add" data-add-to-cart{% if product.available == false %} disabled{% endif %}>
               {% if product.available %}{{ 'product.add_to_cart' | t }}{% else %}{{ 'product.unavailable' | t }}{% endif %}
             </button>
-            <button class="main-product__buy" type="button" data-buy-now{% if product.available == false %} disabled{% endif %}>{{ 'product.buy_now' | t }}</button>
+            <button class="main-product__buy" type="button" data-buy-now hidden{% if product.available == false %} disabled{% endif %}>{{ 'product.buy_now' | t }}</button>
+            <button
+              class="main-product__favorite"
+              type="button"
+              data-product-wishlist
+              data-product-id="{{ product.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-handle="{{ product.handle | escape }}"
+              data-product-url="{{ product.url }}"
+              data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 240 }}{% endif %}"
+              data-label-favorite="{{ 'product.favorite_add' | t: title: product.title | escape }}"
+              data-label-unfavorite="{{ 'product.favorite_remove' | t: title: product.title | escape }}"
+              data-label-favorite-text="{{ 'product.favorite_button' | t | escape }}"
+              data-label-unfavorite-text="{{ 'product.favorited_button' | t | escape }}"
+              aria-label="{{ 'product.favorite_add' | t: title: product.title | escape }}"
+              aria-pressed="false"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg>
+              <span data-favorite-label>{{ 'product.favorite_button' | t }}</span>
+            </button>
           </div>
           <div class="main-product__inventory-proof" data-product-stock role="status" aria-live="polite" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 5 5 4-4 8 8"></path><path d="M14 16h6v-6"></path></svg>
