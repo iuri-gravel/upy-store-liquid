@@ -232,10 +232,15 @@ summary {
   cursor: pointer;
 }
 
-.site-header {
+.shopify-section:has(> .site-header) {
   position: sticky;
   z-index: 50;
   top: 0;
+}
+
+.site-header {
+  position: relative;
+  z-index: 50;
   border-bottom: 1px solid transparent;
   background: color-mix(in srgb, var(--upy-canvas) 96%, transparent);
   transition: box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
