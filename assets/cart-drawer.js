@@ -270,6 +270,10 @@
   dialog.addEventListener("click", async (event) => {
     const target = event.target instanceof Element ? event.target : null;
     if (!target) return;
+    if (target.closest("[data-dialog-close]")) {
+      if (dialog.open) dialog.close();
+      return;
+    }
     const item = target.closest("[data-cart-item]");
 
     const removeLink = target.closest("[data-cart-remove]");
