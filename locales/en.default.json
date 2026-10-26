@@ -134,7 +134,9 @@
     "size_chart_tops_alt": "Tops size chart",
     "enlarged_image": "Enlarged image",
     "close_enlarged_image": "Close enlarged image",
-    "available_sizes": "Available sizes"
+    "available_sizes": "Available sizes",
+    "reviews_eyebrow": "Real opinions",
+    "reviews_heading": "Customer reviews"
   },
   "footer": {
     "brand_description": "Women's activewear with comfort, style, and freedom. For women who live in motion.",
@@ -203,7 +205,8 @@
     "footer_youtube": "YouTube URL",
     "footer_tiktok": "TikTok URL",
     "footer_pinterest": "Pinterest URL",
-    "home_hero": "Homepage hero"
+    "home_hero": "Homepage hero",
+    "product_reviews": "Product reviews"
   },
   "settings_schema": {
     "brand": "Brand colors",

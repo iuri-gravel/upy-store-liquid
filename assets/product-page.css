@@ -242,6 +242,35 @@
 .main-product__technology-list li { display: flex; align-items: center; gap: 0.65rem; }
 .main-product__technology-list img { width: 2.5rem; height: 2.5rem; object-fit: contain; }
 .main-product__app-block:empty { display: none; }
+.product-reviews {
+  padding: clamp(3.5rem, 7vw, 6rem) 1rem clamp(3.5rem, 7vw, 6rem);
+  border-top: 1px solid rgb(28 25 26 / 10%);
+  background: var(--upy-canvas, #f3f0ed);
+  color: var(--upy-ink, #1c191a);
+}
+.product-reviews__inner { width: min(100%, 66rem); margin-inline: auto; }
+.product-reviews__header { margin: 0 0 clamp(2rem, 4vw, 3rem); text-align: center; }
+.product-reviews__eyebrow {
+  margin: 0 0 0.55rem;
+  color: #8a847d;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.product-reviews__heading {
+  margin: 0;
+  font-family: var(--upy-font-heading, "Poppins", sans-serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+.product-reviews__app-blocks,
+.product-reviews__app-block { min-width: 0; width: 100%; }
+.product-reviews__app-block:empty { display: none; }
 .main-product__dialog,
 .main-product__lightbox { max-width: min(94vw, 58rem); max-height: 90vh; padding: 0; border: 0; background: var(--upy-canvas); color: var(--upy-ink); }
 .main-product__dialog::backdrop,

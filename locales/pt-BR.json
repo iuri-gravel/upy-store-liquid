@@ -134,7 +134,9 @@
     "size_chart_tops_alt": "Tabela de medidas de tops",
     "enlarged_image": "Imagem ampliada",
     "close_enlarged_image": "Fechar imagem ampliada",
-    "available_sizes": "Tamanhos disponíveis"
+    "available_sizes": "Tamanhos disponíveis",
+    "reviews_eyebrow": "Opiniões reais",
+    "reviews_heading": "Avaliações de clientes"
   },
   "footer": {
     "brand_description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
@@ -203,7 +205,8 @@
     "footer_youtube": "URL do YouTube",
     "footer_tiktok": "URL do TikTok",
     "footer_pinterest": "URL do Pinterest",
-    "home_hero": "Banner principal da página inicial"
+    "home_hero": "Banner principal da página inicial",
+    "product_reviews": "Avaliações do produto"
   },
   "settings_schema": {
     "brand": "Cores da marca",

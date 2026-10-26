@@ -1,0 +1,38 @@
+{% if section.blocks.size > 0 %}
+  <section
+    id="ProductReviews-{{ section.id }}"
+    class="product-reviews"
+    aria-labelledby="ProductReviewsHeading-{{ section.id }}"
+  >
+    <div class="product-reviews__inner">
+      <header class="product-reviews__header">
+        <p class="product-reviews__eyebrow">{{ 'product.reviews_eyebrow' | t }}</p>
+        <h2 id="ProductReviewsHeading-{{ section.id }}" class="product-reviews__heading">
+          {{ 'product.reviews_heading' | t }}
+        </h2>
+      </header>
+
+      <div class="product-reviews__app-blocks">
+        {% for block in section.blocks %}
+          {% if block.type == '@app' %}
+            <div class="product-reviews__app-block" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.product_reviews",
+  "tag": "section",
+  "class": "shopify-section-product-reviews",
+  "limit": 1,
+  "blocks": [
+    { "type": "@app" }
+  ]
+}
+{% endschema %}

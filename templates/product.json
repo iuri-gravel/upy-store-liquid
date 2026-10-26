@@ -6,6 +6,12 @@
         "size_chart": "auto"
       }
     },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {},
+      "block_order": [],
+      "settings": {}
+    },
     "recommendations": {
       "type": "product-recommendations",
       "settings": {
@@ -23,6 +29,7 @@
   },
   "order": [
     "main",
+    "reviews",
     "recommendations",
     "recently-viewed"
   ]
