@@ -250,9 +250,19 @@
               <p data-stock-out hidden>{{ 'product.stock_sold_out' | t }}</p>
             </div>
           </div>
-          <div class="main-product__trust">
-            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.5 8.3-8 10-4.5-1.7-8-5-8-10V6z"></path><path d="m8.5 12 2.2 2.2 4.8-5"></path></svg>{{ 'product.secure_purchase' | t }}</span>
-            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h12v11H3zM15 11h4l3 3v4h-7z"></path><circle cx="7.5" cy="19" r="1.8"></circle><circle cx="18.5" cy="19" r="1.8"></circle></svg>{{ 'product.shipping_checkout' | t }}</span>
+          <div class="main-product__trust" aria-label="{{ 'product.purchase_benefits' | t | escape }}">
+            <div class="main-product__trust-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+              <p>{{ 'product.free_shipping_over' | t }}</p>
+            </div>
+            <div class="main-product__trust-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5"></path><path d="M4 17v-5h5"></path><path d="M5.6 9a7 7 0 0 1 11.6-2L20 12"></path><path d="M18.4 15a7 7 0 0 1-11.6 2L4 12"></path></svg>
+              <p>{{ 'product.returns_30_days' | t }}</p>
+            </div>
+            <div class="main-product__trust-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"></path></svg>
+              <p>{{ 'product.secure_purchase' | t }}</p>
+            </div>
           </div>
         {% endform %}
 
