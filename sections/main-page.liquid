@@ -76,6 +76,8 @@
   </div>
 {% elsif page.handle == 'frete-e-entregas' %}
   {% render 'shipping-page' %}
+{% elsif page.handle == 'trocas-e-devolucoes' %}
+  {% render 'returns-page' %}
 {% else %}
   <section class="main-page">
     <div class="main-page__inner">
@@ -648,6 +650,189 @@
     background: #b95c34;
   }
 
+  .shipping-page__nav .shipping-page__button--accent {
+    color: #fff;
+  }
+
+  .returns-page__form-panel {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    border: 1px solid #ddd6ce;
+    padding: 1.25rem;
+    background: #faf9f7;
+  }
+
+  .returns-page__form-intro {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+  }
+
+  .returns-page__form-eyebrow {
+    margin: 0;
+    color: var(--upy-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .returns-page__form-intro h2 {
+    margin: 0;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .returns-page__form-intro > p:not(.returns-page__form-eyebrow) {
+    margin: 0;
+    color: #5f5a55;
+    font-size: 0.875rem;
+    line-height: 1.8;
+  }
+
+  .returns-page__form-hints {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    color: #5f5a55;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    list-style: none;
+  }
+
+  .returns-page__form-hints li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .returns-page__form-hints svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 1.25rem;
+    margin-top: 0.1rem;
+    color: var(--upy-accent);
+  }
+
+  .returns-page__contact-email {
+    width: fit-content;
+    color: var(--upy-ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-underline-offset: 4px;
+  }
+
+  .returns-page__form {
+    display: grid;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+
+  .returns-page__form-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .returns-page__field {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+    color: var(--upy-ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .returns-page__field input,
+  .returns-page__field select,
+  .returns-page__field textarea {
+    width: 100%;
+    min-height: 3rem;
+    border: 1px solid #d8d3cd;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    color: var(--upy-ink);
+    font: inherit;
+    font-weight: 400;
+  }
+
+  .returns-page__field textarea {
+    min-height: 11rem;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .returns-page__field input::placeholder,
+  .returns-page__field textarea::placeholder {
+    color: #9b958f;
+    opacity: 1;
+  }
+
+  .returns-page__field input:focus-visible,
+  .returns-page__field select:focus-visible,
+  .returns-page__field textarea:focus-visible,
+  .returns-page__submit:focus-visible {
+    outline: 2px solid var(--upy-accent);
+    outline-offset: 2px;
+  }
+
+  .returns-page__notice {
+    border: 1px solid #cbd8b3;
+    padding: 0.875rem 1rem;
+    background: #f5f8ef;
+    color: #566132;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .returns-page__notice--error {
+    border-color: #e5c7b8;
+    background: #fff8f4;
+    color: #6f4633;
+  }
+
+  .returns-page__notice ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .returns-page__submit {
+    display: inline-flex;
+    min-height: 3.25rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border: 0;
+    padding: 0.875rem 1.5rem;
+    background: var(--upy-accent);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background-color 180ms ease, opacity 180ms ease;
+  }
+
+  .returns-page__submit:hover {
+    background: #b95c34;
+  }
+
+  .returns-page__submit:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .returns-page__legal {
+    margin: 0;
+    color: #77716b;
+    font-size: 0.75rem;
+    line-height: 1.65;
+  }
+
   .main-page {
     min-height: 40vh;
     background: var(--upy-canvas);
@@ -711,6 +896,20 @@
 
     .shipping-page__card-grid--single {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .returns-page__form-panel {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+      gap: 3.5rem;
+      padding: 2.5rem;
+    }
+
+    .returns-page__form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .returns-page__submit {
+      width: fit-content;
     }
 
     .shipping-page__actions {
@@ -814,6 +1013,37 @@
     frame.hidden = false;
     overlay.hidden = true;
   });
+
+  document.addEventListener('input', function (event) {
+    var input = event.target.closest('[data-returns-phone]');
+    if (!input) return;
+
+    var digits = input.value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) {
+      input.value = digits;
+    } else if (digits.length <= 6) {
+      input.value = '(' + digits.slice(0, 2) + ') ' + digits.slice(2);
+    } else if (digits.length <= 10) {
+      input.value = '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 6) + '-' + digits.slice(6);
+    } else {
+      input.value = '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 7) + '-' + digits.slice(7);
+    }
+  });
+
+  document.addEventListener('submit', function (event) {
+    var form = event.target.closest('#ReturnsSupportForm');
+    if (!form) return;
+
+    var button = form.querySelector('[data-returns-submit]');
+    var label = button && button.querySelector('span');
+    if (!button || !label) return;
+
+    button.disabled = true;
+    label.textContent = button.dataset.submittingLabel || label.textContent;
+  });
+
+  var returnsSuccess = document.querySelector('[data-returns-success]');
+  if (returnsSuccess) returnsSuccess.focus({ preventScroll: true });
 {% endjavascript %}
 
 {% schema %}

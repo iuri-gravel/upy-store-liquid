@@ -1,0 +1,196 @@
+{% doc %}
+Renders the Upy Store exchanges, returns, and customer request page.
+{% enddoc %}
+
+{% assign returns_nav_keys = 'returns_page.nav_exchanges|returns_page.nav_conditions|returns_page.nav_returns|returns_page.nav_defects|returns_page.nav_review|returns_page.nav_refunds|returns_page.nav_request' | split: '|' %}
+{% assign returns_nav_ids = 'trocas|condicoes|devolucoes|defeitos|analise|reembolso|formulario' | split: '|' %}
+{% assign conditions_list = 'returns_page.conditions_list' | t | split: '|' %}
+{% assign return_details = 'returns_page.return_details' | t | split: '|' %}
+{% assign defect_details = 'returns_page.defect_details' | t | split: '|' %}
+{% assign review_details = 'returns_page.review_details' | t | split: '|' %}
+{% assign refund_details = 'returns_page.refund_details' | t | split: '|' %}
+{% assign request_categories = 'returns_page.categories' | t | split: '|' %}
+
+<div class="shipping-page returns-page">
+  <header class="shipping-page__hero">
+    <div class="shipping-page__hero-inner">
+      <p class="shipping-page__eyebrow">{{ 'returns_page.eyebrow' | t }}</p>
+      <h1 class="shipping-page__title">{{ 'returns_page.title' | t }}</h1>
+      <p class="shipping-page__description">{{ 'returns_page.description' | t }}</p>
+      <p class="shipping-page__updated">{{ 'returns_page.updated' | t }}</p>
+    </div>
+  </header>
+
+  <div class="shipping-page__container">
+    <div class="shipping-page__layout">
+      <aside class="shipping-page__aside">
+        <nav class="shipping-page__nav" aria-label="{{ 'returns_page.nav_label' | t }}">
+          <p class="shipping-page__nav-title">{{ 'returns_page.nav_heading' | t }}</p>
+          <ul>
+            {% for nav_key in returns_nav_keys %}
+              {% assign nav_id = returns_nav_ids[forloop.index0] %}
+              <li><a href="#{{ nav_id }}">{{ nav_key | t }}</a></li>
+            {% endfor %}
+          </ul>
+          <a class="shipping-page__button shipping-page__button--accent" href="#formulario">{{ 'returns_page.request_button' | t }}</a>
+        </nav>
+      </aside>
+
+      <article class="shipping-page__panel">
+        <div class="shipping-page__summary" aria-label="{{ 'returns_page.summary_label' | t }}">
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5"/><path d="M4.8 9A8 8 0 0 1 18.4 6L20 8"/><path d="M4 17v-5h5"/><path d="M19.2 15A8 8 0 0 1 5.6 18L4 16"/></svg>
+            </span>
+            <span>{{ 'returns_page.summary_exchange' | t }}</span>
+          </div>
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <span>{{ 'returns_page.summary_return' | t }}</span>
+          </div>
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <span>{{ 'returns_page.summary_rights' | t }}</span>
+          </div>
+        </div>
+
+        <section class="shipping-page__section" id="trocas">
+          <h2>{{ 'returns_page.exchanges_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.exchanges_copy_1' | t }}</p>
+            <p>{{ 'returns_page.exchanges_copy_2' | t }}</p>
+            <p>{{ 'returns_page.exchanges_copy_3' | t }}</p>
+            <p>{{ 'returns_page.exchanges_copy_4' | t }}</p>
+          </div>
+          <div class="shipping-page__card-grid">
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5"/><path d="M4.8 9A8 8 0 0 1 18.4 6L20 8"/><path d="M4 17v-5h5"/><path d="M19.2 15A8 8 0 0 1 5.6 18L4 16"/></svg></span>
+              <div><h3>{{ 'returns_page.size_exchange_title' | t }}</h3><p>{{ 'returns_page.size_exchange_text' | t }}</p></div>
+            </div>
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.4 7.7 7.6 4.4 7.6-4.4"/><path d="M12 12.1V21"/></svg></span>
+              <div><h3>{{ 'returns_page.product_exchange_title' | t }}</h3><p>{{ 'returns_page.product_exchange_text' | t }}</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="condicoes">
+          <h2>{{ 'returns_page.conditions_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.conditions_copy' | t }}</p>
+            <p>{{ 'returns_page.conditions_intro' | t }}</p>
+            <ul>{% for item in conditions_list %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div class="shipping-page__note shipping-page__note--warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 4.2 2.7 17.4A1.8 1.8 0 0 0 4.3 20h15.4a1.8 1.8 0 0 0 1.6-2.6L13.7 4.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <p>{{ 'returns_page.conditions_note' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="devolucoes">
+          <h2>{{ 'returns_page.returns_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.returns_copy_1' | t }}</p>
+            <p>{{ 'returns_page.returns_copy_2' | t }}</p>
+            <ul>{% for item in return_details %}<li>{{ item }}</li>{% endfor %}</ul>
+            <p>{{ 'returns_page.returns_copy_3' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="defeitos">
+          <h2>{{ 'returns_page.defects_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.defects_copy_1' | t }}</p>
+            <p>{{ 'returns_page.defects_copy_2' | t }}</p>
+            <ul>{% for item in defect_details %}<li>{{ item }}</li>{% endfor %}</ul>
+            <p>{{ 'returns_page.defects_copy_3' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="analise">
+          <h2>{{ 'returns_page.review_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.review_copy_1' | t }}</p>
+            <p>{{ 'returns_page.review_copy_2' | t }}</p>
+            <p>{{ 'returns_page.review_copy_3' | t }}</p>
+            <ul>{% for item in review_details %}<li>{{ item }}</li>{% endfor %}</ul>
+            <p>{{ 'returns_page.review_copy_4' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="reembolso">
+          <h2>{{ 'returns_page.refunds_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            <p>{{ 'returns_page.refunds_copy' | t }}</p>
+            <ul>{% for item in refund_details %}<li>{{ item }}</li>{% endfor %}</ul>
+            <p>{{ 'returns_page.refunds_copy_2' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="formulario">
+          <div class="returns-page__form-panel">
+            <div class="returns-page__form-intro">
+              <p class="returns-page__form-eyebrow">{{ 'returns_page.form_eyebrow' | t }}</p>
+              <h2>{{ 'returns_page.form_title' | t }}</h2>
+              <p>{{ 'returns_page.form_intro' | t }}</p>
+              <ul class="returns-page__form-hints">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.4 7.7 7.6 4.4 7.6-4.4"/></svg><span>{{ 'returns_page.form_hint_order' | t }}</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>{{ 'returns_page.form_hint_email' | t }}</span></li>
+              </ul>
+              <a class="returns-page__contact-email" href="mailto:contato@upystore.com.br">contato@upystore.com.br</a>
+            </div>
+
+            {% form 'contact', id: 'ReturnsSupportForm', class: 'returns-page__form' %}
+              {% if form.posted_successfully? %}
+                <div class="returns-page__notice" role="status" tabindex="-1" data-returns-success>{{ 'returns_page.form_success' | t }}</div>
+              {% endif %}
+              {% if form.errors %}
+                <div class="returns-page__notice returns-page__notice--error" role="alert">{{ form.errors | default_errors }}</div>
+              {% endif %}
+
+              <div class="returns-page__form-grid">
+                <label class="returns-page__field" for="ReturnsName">{{ 'returns_page.field_name' | t }}
+                  <input id="ReturnsName" type="text" name="contact[name]" autocomplete="name" minlength="2" maxlength="100" required>
+                </label>
+                <label class="returns-page__field" for="ReturnsEmail">{{ 'returns_page.field_email' | t }}
+                  <input id="ReturnsEmail" type="email" name="contact[email]" autocomplete="email" maxlength="160" required>
+                </label>
+                <label class="returns-page__field" for="ReturnsPhone">{{ 'returns_page.field_phone' | t }}
+                  <input id="ReturnsPhone" type="tel" name="contact[phone]" autocomplete="tel" placeholder="(00) 00000-0000" pattern="\([0-9]{2}\) [0-9]{4,5}-[0-9]{4}" maxlength="15" required data-returns-phone>
+                </label>
+                <label class="returns-page__field" for="ReturnsOrder">{{ 'returns_page.field_order' | t }}
+                  <input id="ReturnsOrder" type="text" name="contact[order_number]" maxlength="50" placeholder="{{ 'returns_page.order_placeholder' | t }}" required>
+                </label>
+              </div>
+
+              <label class="returns-page__field" for="ReturnsCategory">{{ 'returns_page.field_category' | t }}
+                <select id="ReturnsCategory" name="contact[category]" required>
+                  <option value="" selected disabled>{{ 'returns_page.category_placeholder' | t }}</option>
+                  {% for category in request_categories %}<option value="{{ category | escape }}">{{ category }}</option>{% endfor %}
+                </select>
+              </label>
+
+              <label class="returns-page__field" for="ReturnsSubject">{{ 'returns_page.field_subject' | t }}
+                <input id="ReturnsSubject" type="text" name="contact[subject]" minlength="3" maxlength="150" required>
+              </label>
+
+              <label class="returns-page__field" for="ReturnsMessage">{{ 'returns_page.field_message' | t }}
+                <textarea id="ReturnsMessage" name="contact[body]" minlength="10" maxlength="4000" rows="7" placeholder="{{ 'returns_page.message_placeholder' | t }}" required></textarea>
+              </label>
+
+              <button class="returns-page__submit" type="submit" data-returns-submit data-submitting-label="{{ 'returns_page.form_submitting' | t | escape }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                <span>{{ 'returns_page.form_submit' | t }}</span>
+              </button>
+              <p class="returns-page__legal">{{ 'returns_page.form_legal' | t }}</p>
+            {% endform %}
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+</div>
