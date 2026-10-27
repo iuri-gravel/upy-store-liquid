@@ -1,0 +1,199 @@
+{% doc %}
+Renders the Upy Store shipping and delivery information page.
+{% enddoc %}
+
+{% assign shipping_nav_keys = 'shipping_page.nav_calculation|shipping_page.nav_delivery_time|shipping_page.nav_processing|shipping_page.nav_tracking|shipping_page.nav_address|shipping_page.nav_attempts|shipping_page.nav_delays|shipping_page.nav_lost|shipping_page.nav_help' | split: '|' %}
+{% assign shipping_nav_ids = 'calculo-frete|prazo|processamento|rastreamento|endereco|tentativas|atrasos|extravios|contato' | split: '|' %}
+{% assign calculation_copy = 'shipping_page.calculation_copy' | t | split: '||' %}
+{% assign calculation_factors = 'shipping_page.calculation_factors' | t | split: '|' %}
+{% assign delivery_time_copy = 'shipping_page.delivery_time_copy' | t | split: '||' %}
+{% assign delivery_time_steps = 'shipping_page.delivery_time_steps' | t | split: '|' %}
+{% assign processing_copy = 'shipping_page.processing_copy' | t | split: '||' %}
+{% assign processing_steps = 'shipping_page.processing_steps' | t | split: '|' %}
+{% assign tracking_copy = 'shipping_page.tracking_copy' | t | split: '||' %}
+{% assign tracking_events = 'shipping_page.tracking_events' | t | split: '|' %}
+{% assign address_copy = 'shipping_page.address_copy' | t | split: '||' %}
+{% assign address_fields = 'shipping_page.address_fields' | t | split: '|' %}
+{% assign attempts_copy = 'shipping_page.attempts_copy' | t | split: '||' %}
+{% assign delivery_tips = 'shipping_page.delivery_tips' | t | split: '|' %}
+{% assign delay_copy = 'shipping_page.delay_copy' | t | split: '||' %}
+{% assign delay_reasons = 'shipping_page.delay_reasons' | t | split: '|' %}
+{% assign lost_copy = 'shipping_page.lost_copy' | t | split: '||' %}
+{% assign lost_checks = 'shipping_page.lost_checks' | t | split: '|' %}
+{% assign help_copy = 'shipping_page.help_copy' | t | split: '||' %}
+{% assign help_details = 'shipping_page.help_details' | t | split: '|' %}
+
+<div class="shipping-page">
+  <header class="shipping-page__hero">
+    <div class="shipping-page__hero-inner">
+      <p class="shipping-page__eyebrow">{{ 'shipping_page.eyebrow' | t }}</p>
+      <h1 class="shipping-page__title">{{ 'shipping_page.title' | t }}</h1>
+      <p class="shipping-page__description">{{ 'shipping_page.description' | t }}</p>
+      <p class="shipping-page__updated">{{ 'shipping_page.updated' | t }}</p>
+    </div>
+  </header>
+
+  <div class="shipping-page__container">
+    <div class="shipping-page__layout">
+      <aside class="shipping-page__aside">
+        <nav class="shipping-page__nav" aria-label="{{ 'shipping_page.nav_label' | t }}">
+          <p class="shipping-page__nav-title">{{ 'shipping_page.nav_heading' | t }}</p>
+          <ul>
+            {% for nav_key in shipping_nav_keys %}
+              {% assign nav_id = shipping_nav_ids[forloop.index0] %}
+              <li><a href="#shipping-{{ nav_id }}">{{ nav_key | t }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </aside>
+
+      <article class="shipping-page__panel">
+        <div class="shipping-page__summary" aria-label="{{ 'shipping_page.summary_label' | t }}">
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></svg>
+            </span>
+            <span>{{ 'shipping_page.summary_calculated' | t }}</span>
+          </div>
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/><path d="M8.5 10.5h4.8"/><path d="M10.9 8.1v4.8"/></svg>
+            </span>
+            <span>{{ 'shipping_page.summary_tracking' | t }}</span>
+          </div>
+          <div class="shipping-page__summary-item">
+            <span class="shipping-page__icon-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.4 7.7 7.6 4.4 7.6-4.4"/><path d="M12 12.1V21"/><path d="m9 8.8 6-3.5"/></svg>
+            </span>
+            <span>{{ 'shipping_page.summary_delivery' | t }}</span>
+          </div>
+        </div>
+
+        <section class="shipping-page__section" id="shipping-calculo-frete">
+          <h2>{{ 'shipping_page.calculation_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in calculation_copy %}<p>{{ paragraph }}</p>{% endfor %}
+            <ul>{% for item in calculation_factors %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div class="shipping-page__card-grid">
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              </span>
+              <div><h3>{{ 'shipping_page.postcode_title' | t }}</h3><p>{{ 'shipping_page.postcode_text' | t }}</p></div>
+            </div>
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></svg>
+              </span>
+              <div><h3>{{ 'shipping_page.promotion_title' | t }}</h3><p>{{ 'shipping_page.promotion_text' | t }}</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-prazo">
+          <h2>{{ 'shipping_page.delivery_time_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in delivery_time_copy %}<p>{{ paragraph }}</p>{% endfor %}
+            <ul>{% for item in delivery_time_steps %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div class="shipping-page__note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+            <p>{{ 'shipping_page.delivery_time_note' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-processamento">
+          <h2>{{ 'shipping_page.processing_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in processing_copy %}<p>{{ paragraph }}</p>{% endfor %}
+            <ul>{% for item in processing_steps %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div class="shipping-page__card-grid shipping-page__card-grid--single">
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.4 7.7 7.6 4.4 7.6-4.4"/><path d="M12 12.1V21"/><path d="m9 8.8 6-3.5"/></svg>
+              </span>
+              <div><h3>{{ 'shipping_page.preparing_title' | t }}</h3><p>{{ 'shipping_page.preparing_text' | t }}</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-rastreamento">
+          <h2>{{ 'shipping_page.tracking_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in tracking_copy %}<p>{{ paragraph }}</p>{% endfor %}
+            <ul>{% for item in tracking_events %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div class="shipping-page__card-grid shipping-page__card-grid--single">
+            <div class="shipping-page__card">
+              <span class="shipping-page__icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h4a4 4 0 0 0 4-4V9a4 4 0 0 1 4-4"/><path d="M12 12h3"/></svg>
+              </span>
+              <div><h3>{{ 'shipping_page.carrier_updates_title' | t }}</h3><p>{{ 'shipping_page.carrier_updates_text' | t }}</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-endereco">
+          <h2>{{ 'shipping_page.address_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in address_copy %}
+              {% if forloop.index == 2 %}<p>{{ paragraph }}</p><ul>{% for item in address_fields %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ paragraph }}</p>{% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-tentativas">
+          <h2>{{ 'shipping_page.attempts_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in attempts_copy %}
+              {% if forloop.index == 2 %}<p>{{ paragraph }}</p><ul>{% for item in delivery_tips %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ paragraph }}</p>{% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-atrasos">
+          <h2>{{ 'shipping_page.delays_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in delay_copy %}
+              {% if forloop.index == 2 %}<p>{{ paragraph }}</p><ul>{% for item in delay_reasons %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ paragraph }}</p>{% endif %}
+            {% endfor %}
+          </div>
+          <div class="shipping-page__note shipping-page__note--warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 4.2 2.7 17.4A1.8 1.8 0 0 0 4.3 20h15.4a1.8 1.8 0 0 0 1.6-2.6L13.7 4.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <p>{{ 'shipping_page.delays_note' | t }}</p>
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-extravios">
+          <h2>{{ 'shipping_page.lost_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in lost_copy %}
+              {% if forloop.index == 2 %}<p>{{ paragraph }}</p><ul>{% for item in lost_checks %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ paragraph }}</p>{% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="shipping-page__section" id="shipping-contato">
+          <h2>{{ 'shipping_page.help_title' | t }}</h2>
+          <div class="shipping-page__copy">
+            {% for paragraph in help_copy %}
+              {% if forloop.index == 2 %}<p>{{ paragraph }}</p><ul>{% for item in help_details %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>{{ paragraph }}</p>{% endif %}
+            {% endfor %}
+          </div>
+          <div class="shipping-page__contact">
+            <div>
+              <p class="shipping-page__contact-title">{{ 'shipping_page.contact_title' | t }}</p>
+              <p>{{ 'shipping_page.contact_text' | t }}</p>
+            </div>
+            <div class="shipping-page__actions">
+              <a class="shipping-page__button shipping-page__button--outline" href="mailto:contato@upystore.com.br">{{ 'shipping_page.email_button' | t }}</a>
+              <a class="shipping-page__button shipping-page__button--accent" href="/pages/trocas-e-devolucoes">{{ 'shipping_page.returns_button' | t }}</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+</div>
