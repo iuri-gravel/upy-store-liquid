@@ -2,6 +2,8 @@
 Renders legal and privacy information pages stored in Shopify Pages.
 {% enddoc %}
 
+{% render 'information-page-styles' %}
+
 {% case page.handle %}
   {% when 'politica-de-privacidade' %}
     {% assign policy_eyebrow = 'legal_pages.privacy_eyebrow' | t %}

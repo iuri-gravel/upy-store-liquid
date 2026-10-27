@@ -1,0 +1,77 @@
+<section class="main-search" data-home-launches>
+  <header class="main-search__header">
+    <h1>{{ 'search.title' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search__form">
+      <label class="visually-hidden" for="SearchPageInput">{{ 'search.label' | t }}</label>
+      <input id="SearchPageInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t | escape }}" required>
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit">{{ 'search.label' | t }}</button>
+    </form>
+    {% if search.performed %}
+      <p role="status">{{ 'search.count' | t: count: search.results_count, terms: search.terms | escape }}</p>
+    {% endif %}
+  </header>
+  {% if search.performed %}
+    {% paginate search.results by 24 %}
+      {% if search.results_count > 0 %}
+        <div class="home-launches__carousel main-search__carousel" data-launches-carousel>
+          <div class="home-launches__track main-search__grid" data-launches-track role="list" aria-label="{{ 'search.title' | t | escape }}">
+            {% for result in search.results %}
+              {% assign card_eager = false %}
+              {% if forloop.index <= 2 %}{% assign card_eager = true %}{% endif %}
+              <div class="home-launches__slide" data-launch-slide role="listitem">
+                {% if result.object_type == 'product' %}
+                  {% render 'home-launch-product-card', product: result, image_sizes: '(min-width: 1024px) 25vw, 50vw', eager: card_eager %}
+                {% else %}
+                  <a class="main-search__text-result" href="{{ result.url }}">
+                    <h2>{{ result.title | escape }}</h2>
+                    <p>{{ result.content | strip_html | truncatewords: 35 | escape }}</p>
+                  </a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% if paginate.pages > 1 %}
+          <nav class="main-search__pagination" aria-label="{{ 'collection.pagination' | t | escape }}">
+            {% if paginate.previous %}<a href="{{ paginate.previous.url }}">{{ 'collection.previous_page' | t }}</a>{% endif %}
+            <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
+            {% if paginate.next %}<a href="{{ paginate.next.url }}">{{ 'collection.next_page' | t }}</a>{% endif %}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="main-search__empty">
+          <h2>{{ 'search.empty_title' | t }}</h2>
+          <p>{{ 'search.empty_description' | t }}</p>
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  .main-search { max-width: 1440px; margin-inline: auto; padding: 2rem 1rem 4rem; }
+  .main-search__header { margin-bottom: 2rem; }
+  .main-search__header h1 { margin: 0 0 1rem; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300; line-height: 1.15; }
+  .main-search__form { display: flex; max-width: 40rem; gap: 0.5rem; }
+  .main-search__form input { min-width: 0; flex: 1; width: 100%; min-height: 2.75rem; padding: 0.65rem; border: 1px solid var(--upy-line); background: transparent; color: inherit; font: inherit; font-size: 1rem; }
+  .main-search__form button { padding: 0.65rem 1rem; border: 1px solid var(--upy-ink); background: var(--upy-ink); color: var(--upy-canvas); font: inherit; cursor: pointer; }
+  .main-search .main-search__carousel { margin: 0; }
+  .main-search .main-search__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 0.75rem; padding: 0; overflow: visible; scroll-snap-type: none; }
+  .main-search .home-launches__slide { min-width: 0; width: auto; }
+  .main-search__text-result { display: block; padding: 1rem; border: 1px solid var(--upy-line); overflow-wrap: anywhere; }
+  .main-search__text-result h2 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 500; }
+  .main-search__text-result p { font-size: 0.875rem; line-height: 1.6; }
+  .main-search__empty { padding-block: 2rem; }
+  .main-search__pagination { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; margin-top: 2.5rem; }
+  .main-search__pagination a { min-height: 2.75rem; padding: 0.65rem; border: 1px solid var(--upy-line); }
+  @media (min-width: 768px) { .main-search { padding-inline: 2rem; } .main-search .main-search__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .main-search .main-search__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.25rem; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Resultados de busca",
+  "settings": []
+}
+{% endschema %}

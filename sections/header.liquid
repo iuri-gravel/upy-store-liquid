@@ -325,7 +325,7 @@
     </div>
   </dialog>
 
-  <dialog class="site-header__dialog site-header__search-dialog" id="HeaderSearchDialog" aria-label="Pesquisa de produtos, cores e tamanhos" data-search-dialog data-predictive-url="{{ routes.predictive_search_url | append: '.json' }}" data-search-queries="Sugestões de busca" data-search-products="Produtos disponíveis" data-search-collections="Coleções" data-search-empty="Nenhum produto, coleção ou sugestão encontrado." data-search-error="Não foi possível carregar as sugestões. Pressione Enter para ver os resultados." data-search-all="Ver todos os resultados">
+  <dialog class="site-header__dialog site-header__search-dialog" id="HeaderSearchDialog" aria-label="Pesquisa de produtos, cores e tamanhos" data-search-dialog data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-predictive-url="{{ routes.predictive_search_url | append: '.json' }}" data-search-queries="Sugestões de busca" data-search-products="Produtos disponíveis" data-search-collections="Coleções" data-search-empty="Nenhum produto, coleção ou sugestão encontrado." data-search-error="Não foi possível carregar as sugestões. Pressione Enter para ver os resultados." data-search-all="Ver todos os resultados">
     <div class="site-header__search-panel">
       <form class="site-header__search-form" action="{{ routes.search_url }}" method="get" role="search">
         <label class="visually-hidden" for="HeaderSearchInput">Pesquisa de produtos, cores e tamanhos</label>

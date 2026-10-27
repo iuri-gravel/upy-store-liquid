@@ -56,6 +56,196 @@
   {% endif %}
 </section>
 
+
+{% stylesheet %}
+.home-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 27 / 40;
+  overflow: hidden;
+  background: #e5e1dd;
+  color: #fff;
+}
+
+.home-hero__track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.home-hero__track::-webkit-scrollbar {
+  display: none;
+}
+
+.home-hero__slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.home-hero__picture,
+.home-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-hero__image {
+  object-fit: cover;
+}
+
+.home-hero::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(0 0 0 / 65%), rgb(0 0 0 / 20%) 55%, rgb(0 0 0 / 15%));
+  content: "";
+  pointer-events: none;
+}
+
+.home-hero__copy {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 4rem 1rem;
+  pointer-events: none;
+  text-align: center;
+}
+
+.home-hero__copy-inner {
+  width: min(100%, 48rem);
+}
+
+.home-hero__copy .upy-section-label {
+  color: #f4e1c6;
+}
+
+.home-hero__copy .upy-display-title {
+  margin: 1rem auto 0;
+}
+
+.home-hero__copy .upy-body-copy {
+  max-width: 36rem;
+  margin: 1.5rem auto 0;
+  color: rgb(255 255 255 / 90%);
+}
+
+.home-hero__controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1rem 1.5rem;
+  pointer-events: none;
+}
+
+.home-hero__arrow {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  width: 3rem;
+  min-width: 3rem;
+  height: 3rem;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: rgb(28 25 26 / 42%);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.home-hero__arrow:hover {
+  transform: translateY(-50%) scale(1.06);
+  background: rgb(28 25 26 / 62%);
+}
+
+.home-hero__arrow:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.home-hero__arrow--previous {
+  left: clamp(1rem, 2.5vw, 2rem);
+}
+
+.home-hero__arrow--next {
+  right: clamp(1rem, 2.5vw, 2rem);
+}
+
+.home-hero__arrow svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.home-hero__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.home-hero__dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 1px solid rgb(255 255 255 / 85%);
+  border-radius: 999px;
+  padding: 0;
+  background: rgb(255 255 255 / 30%);
+  cursor: pointer;
+  transition: width 220ms ease, background-color 220ms ease;
+}
+
+.home-hero__dot.is-active {
+  width: 2rem;
+  background: #fff;
+}
+
+@media (min-width: 768px) {
+  .home-hero {
+    aspect-ratio: 16 / 9;
+  }
+
+  .home-hero__controls {
+    padding-bottom: 2rem;
+  }
+
+}
+
+@media (max-width: 479px) {
+
+  .home-hero__arrow {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+}
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:sections.home_hero",

@@ -401,5 +401,13 @@
     "color_accent": "Accent",
     "color_footer": "Footer background",
     "color_footer_text": "Footer text"
+  },
+  "search": {
+    "title": "Search results",
+    "label": "Search",
+    "placeholder": "Product, color or size",
+    "count": "Found {{ count }} results for “{{ terms }}”",
+    "empty_title": "No results found",
+    "empty_description": "Try another product name, color, size or reference."
   }
 }

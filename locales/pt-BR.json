@@ -401,5 +401,13 @@
     "color_accent": "Cor de destaque",
     "color_footer": "Fundo do rodapé",
     "color_footer_text": "Texto do rodapé"
+  },
+  "search": {
+    "title": "Resultados da busca",
+    "label": "Pesquisar",
+    "placeholder": "Produto, cor ou tamanho",
+    "count": "Encontramos {{ count }} resultados para “{{ terms }}”",
+    "empty_title": "Nenhum resultado encontrado",
+    "empty_description": "Tente outro nome, cor, tamanho ou referência."
   }
 }

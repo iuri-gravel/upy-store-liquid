@@ -74,11 +74,11 @@
         {% if section.settings.information_menu != blank %}
           {% for link in section.settings.information_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
         {% else %}
-          <li><a href="{{ privacy_policy_url }}">{{ 'legal_pages.privacy_policy_label' | t | replace: 'Rodapé', 'Política de Privacidade' | escape }}</a></li>
-          <li><a href="/pages/politica-de-cookies">{{ 'legal_pages.cookie_policy_label' | t | replace: 'Rodapé', 'Política de Cookies' | escape }}</a></li>
-          <li><a href="{{ terms_url }}">{{ 'legal_pages.terms_label' | t | replace: 'Rodapé', 'Termos de Uso' | escape }}</a></li>
+          <li><a href="{{ privacy_policy_url }}">{{ 'legal_pages.privacy_policy_label' | t | escape }}</a></li>
+          <li><a href="/pages/politica-de-cookies">{{ 'legal_pages.cookie_policy_label' | t | escape }}</a></li>
+          <li><a href="{{ terms_url }}">{{ 'legal_pages.terms_label' | t | escape }}</a></li>
         {% endif %}
-        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_preferences_label' | t | replace: 'Rodapé', 'Preferências de cookies' | escape }}</button></li>
+        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_preferences_label' | t | escape }}</button></li>
       </ul>
     </nav>
 
@@ -114,10 +114,10 @@
         {% endfor %}
         {% unless has_pix %}<span class="site-footer__pix-mark">◆ PIX</span>{% endunless %}
         <a class="site-footer__security-badge" href="https://transparencyreport.google.com/safe-browsing/search?url=https://upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar a Upy Store no Google Safe Browsing">
-          <img src="{{ 'logo-google-safe-browsing.png' | asset_url }}" alt="Google Safe Browsing" width="160" height="45" loading="lazy">
+          <img src="{{ 'logo-google-safe-browsing.webp' | asset_url }}" alt="Google Safe Browsing" width="160" height="45" loading="lazy">
         </a>
         <a class="site-footer__security-badge site-footer__security-badge--ssl" href="https://www.sslshopper.com/ssl-checker.html#hostname=upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar certificado SSL da Upy Store">
-          <img src="{{ 'ssl-secured.png' | asset_url }}" alt="SSL Secured" width="120" height="40" loading="lazy">
+          <img src="{{ 'ssl-secured.webp' | asset_url }}" alt="SSL Secured" width="120" height="40" loading="lazy">
         </a>
       </div>
     </div>
@@ -131,36 +131,36 @@
         <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10c0-.6-.5-1-1.1-1.1a4.2 4.2 0 0 1-3.8-3.8c-.1-.6-.5-1.1-1.1-1.1A4.2 4.2 0 0 1 12 2Z"/><path d="M8 10h.01M12 14h.01M8 16h.01"/></svg>
       </span>
       <div class="site-cookie-banner__text">
-        <h2 id="cookie-banner-title">{{ 'legal_pages.cookie_banner_title' | t | replace: 'Rodapé', 'Sua privacidade é importante' | escape }}</h2>
-        <p id="cookie-banner-description">{{ 'legal_pages.cookie_banner_description' | t | replace: 'Rodapé', 'Usamos cookies necessários para o funcionamento da loja e, com sua autorização, cookies de análise, preferências e marketing.' | escape }}</p>
-        <button class="site-cookie-banner__manage" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_banner_manage' | t | replace: 'Rodapé', 'Gerenciar preferências' | escape }}</button>
+        <h2 id="cookie-banner-title">{{ 'legal_pages.cookie_banner_title' | t | escape }}</h2>
+        <p id="cookie-banner-description">{{ 'legal_pages.cookie_banner_description' | t | escape }}</p>
+        <button class="site-cookie-banner__manage" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_banner_manage' | t | escape }}</button>
       </div>
     </div>
     <div class="site-cookie-banner__actions">
-      <button class="site-cookie-banner__reject" type="button" data-cookie-banner-reject>{{ 'legal_pages.cookie_reject' | t | replace: 'Rodapé', 'Rejeitar não essenciais' | escape }}</button>
-      <button class="site-cookie-banner__accept" type="button" data-cookie-banner-accept>{{ 'legal_pages.cookie_banner_accept' | t | replace: 'Rodapé', 'Aceitar todos' | escape }}</button>
+      <button class="site-cookie-banner__reject" type="button" data-cookie-banner-reject>{{ 'legal_pages.cookie_reject' | t | escape }}</button>
+      <button class="site-cookie-banner__accept" type="button" data-cookie-banner-accept>{{ 'legal_pages.cookie_banner_accept' | t | escape }}</button>
     </div>
   </div>
 </section>
 
-<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'legal_pages.cookie_saved' | t | replace: 'Rodapé', 'Suas preferências foram salvas.' | escape }}" data-error-message="{{ 'legal_pages.cookie_error' | t | replace: 'Rodapé', 'Não foi possível carregar as preferências de privacidade. Tente novamente.' | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'legal_pages.cookie_saved' | t | escape }}" data-error-message="{{ 'legal_pages.cookie_error' | t | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
   <div class="site-footer__cookie-header">
     <div>
-      <h2 id="cookie-preferences-title">{{ 'legal_pages.cookie_preferences_label' | t | replace: 'Rodapé', 'Preferências de cookies' | escape }}</h2>
-      <p id="cookie-preferences-description">{{ 'legal_pages.cookie_intro' | t | replace: 'Rodapé', 'Escolha quais categorias de cookies não essenciais podem ser utilizadas durante sua navegação.' | escape }}</p>
+      <h2 id="cookie-preferences-title">{{ 'legal_pages.cookie_preferences_label' | t | escape }}</h2>
+      <p id="cookie-preferences-description">{{ 'legal_pages.cookie_intro' | t | escape }}</p>
     </div>
-    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="{{ 'legal_pages.close_preferences' | t | replace: 'Rodapé', 'Fechar preferências de cookies' | escape }}">×</button>
+    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="{{ 'legal_pages.close_preferences' | t | escape }}">×</button>
   </div>
   <div class="site-footer__cookie-options">
-    <p class="site-footer__cookie-option"><span><strong>{{ 'legal_pages.cookie_necessary' | t | replace: 'Rodapé', 'Cookies necessários' | escape }}</strong><small>{{ 'legal_pages.cookie_necessary_description' | t | replace: 'Rodapé', 'Essenciais para autenticação, segurança, sacola e finalização da compra.' | escape }}</small></span><span class="site-footer__cookie-always">{{ 'legal_pages.cookie_always_active' | t | replace: 'Rodapé', 'Sempre ativos' | escape }}</span></p>
-    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>{{ 'legal_pages.cookie_preferences_category' | t | replace: 'Rodapé', 'Cookies de preferências' | escape }}</strong><small>{{ 'legal_pages.cookie_preferences_description' | t | replace: 'Rodapé', 'Lembram suas configurações para personalizar sua experiência.' | escape }}</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
-    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>{{ 'legal_pages.cookie_analytics' | t | replace: 'Rodapé', 'Cookies de análise' | escape }}</strong><small>{{ 'legal_pages.cookie_analytics_description' | t | replace: 'Rodapé', 'Ajudam a entender como a loja é utilizada e melhorar navegação e desempenho.' | escape }}</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
-    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>{{ 'legal_pages.cookie_marketing' | t | replace: 'Rodapé', 'Cookies de marketing' | escape }}</strong><small>{{ 'legal_pages.cookie_marketing_description' | t | replace: 'Rodapé', 'Podem medir campanhas e apresentar comunicações mais relevantes.' | escape }}</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
+    <p class="site-footer__cookie-option"><span><strong>{{ 'legal_pages.cookie_necessary' | t | escape }}</strong><small>{{ 'legal_pages.cookie_necessary_description' | t | escape }}</small></span><span class="site-footer__cookie-always">{{ 'legal_pages.cookie_always_active' | t | escape }}</span></p>
+    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>{{ 'legal_pages.cookie_preferences_category' | t | escape }}</strong><small>{{ 'legal_pages.cookie_preferences_description' | t | escape }}</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
+    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>{{ 'legal_pages.cookie_analytics' | t | escape }}</strong><small>{{ 'legal_pages.cookie_analytics_description' | t | escape }}</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
+    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>{{ 'legal_pages.cookie_marketing' | t | escape }}</strong><small>{{ 'legal_pages.cookie_marketing_description' | t | escape }}</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
     <p class="site-footer__cookie-status" data-cookie-preferences-status role="status" aria-live="polite"></p>
   </div>
   <div class="site-footer__cookie-actions">
-    <button type="button" data-cookie-preferences-reject>{{ 'legal_pages.cookie_reject' | t | replace: 'Rodapé', 'Rejeitar não essenciais' | escape }}</button>
-    <button type="button" data-cookie-preferences-save>{{ 'legal_pages.cookie_save' | t | replace: 'Rodapé', 'Salvar preferências' | escape }}</button>
+    <button type="button" data-cookie-preferences-reject>{{ 'legal_pages.cookie_reject' | t | escape }}</button>
+    <button type="button" data-cookie-preferences-save>{{ 'legal_pages.cookie_save' | t | escape }}</button>
   </div>
 </dialog>
 

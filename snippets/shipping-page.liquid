@@ -2,6 +2,8 @@
 Renders the Upy Store shipping and delivery information page.
 {% enddoc %}
 
+{% render 'information-page-styles' %}
+
 {% assign shipping_nav_keys = 'shipping_page.nav_calculation|shipping_page.nav_delivery_time|shipping_page.nav_processing|shipping_page.nav_tracking|shipping_page.nav_address|shipping_page.nav_attempts|shipping_page.nav_delays|shipping_page.nav_lost|shipping_page.nav_help' | split: '|' %}
 {% assign shipping_nav_ids = 'calculo-frete|prazo|processamento|rastreamento|endereco|tentativas|atrasos|extravios|contato' | split: '|' %}
 {% assign calculation_copy = 'shipping_page.calculation_copy' | t | split: '||' %}

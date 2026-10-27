@@ -8,6 +8,10 @@
   assign composition_field = product.metafields.custom.composition
   assign composition = composition_field.value
   assign technologies = product.metafields.custom.technologies.value
+  assign pinned_video = product.media | where: 'media_type', 'video' | first
+  if pinned_video == blank
+    assign pinned_video = product.media | where: 'media_type', 'external_video' | first
+  endif
   assign product_form_id = 'ProductForm-' | append: section.id
 
   for option in product.options_with_values
@@ -91,40 +95,26 @@
         <div class="main-product__media-stage">
           <div class="main-product__media-grid" data-media-grid>
           {% for media in product.media %}
-            {% capture media_color_keys %}|{% endcapture %}
             {% assign media_loading = 'lazy' %}
             {% if forloop.first %}{% assign media_loading = 'eager' %}{% endif %}
-            {% if color_option_index >= 0 %}
-              {% for media_variant in product.variants %}
-                {% if media_variant.featured_media.id == media.id %}
-                  {% assign media_color = media_variant.options[color_option_index] | handleize %}
-                  {% assign media_variant_is_image_only = false %}
-                  {% if size_option_index >= 0 %}
-                    {% assign media_variant_size = media_variant.options[size_option_index] | downcase | strip %}
-                    {% if media_variant_size == 'img 1' or media_variant_size == 'img 2' %}{% assign media_variant_is_image_only = true %}{% endif %}
-                  {% endif %}
-                  {% assign media_is_default_image = false %}
-                  {% if media.preview_image.id == product.featured_image.id or media.preview_image.id == product.images.first.id %}{% assign media_is_default_image = true %}{% endif %}
-                  {% unless media_variant_is_image_only and media_is_default_image %}
-                    {% capture media_color_keys %}{{ media_color_keys }}{{ media_color }}|{% endcapture %}
-                  {% endunless %}
-                {% endif %}
-              {% endfor %}
-            {% endif %}
             <figure
-              class="main-product__media{% if forloop.first %} is-active{% endif %}{% if media.media_type == 'video' or media.media_type == 'external_video' %} main-product__media--video{% endif %}"
+              class="main-product__media{% if forloop.first %} is-active{% endif %}{% if pinned_video != blank and media.id == pinned_video.id %} main-product__media--video{% endif %}"
               data-product-media
               data-media-index="{{ forloop.index0 }}"
               data-media-id="{{ media.id }}"
               data-media-type="{{ media.media_type }}"
-              data-media-colors="{{ media_color_keys | escape }}"
+              data-media-default="{% if media.id == product.featured_media.id %}true{% else %}false{% endif %}"
               {% unless forloop.first %}hidden{% endunless %}
             >
               {% case media.media_type %}
                 {% when 'image' %}
                   {{ media | image_url: width: 1800 | image_tag: widths: '480, 720, 960, 1200, 1600, 1800', sizes: '(min-width: 1000px) 32vw, 100vw', loading: media_loading, alt: media.alt | default: product.title | escape }}
                 {% when 'video' %}
-                  {{ media | media_tag: autoplay: true, loop: true, muted: true, controls: true, image_size: '1200x' }}
+                  {% if media.id == pinned_video.id %}
+                    {{ media | media_tag: autoplay: true, loop: true, muted: true, controls: true, image_size: '1200x' }}
+                  {% else %}
+                    {{ media | media_tag: controls: true, preload: 'none', image_size: '1200x' }}
+                  {% endif %}
                 {% when 'external_video' %}
                   {{ media | external_video_tag }}
                 {% when 'model' %}
@@ -135,7 +125,7 @@
               <button class="main-product__zoom" type="button" data-open-lightbox aria-label="{{ 'product.enlarge_image' | t: number: forloop.index, title: product.title | escape }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5M10.8 7.5v6.6M7.5 10.8h6.6"></path></svg>
               </button>
-              {% if media.media_type == 'video' or media.media_type == 'external_video' %}
+              {% if pinned_video != blank and media.id == pinned_video.id %}
                 <button class="main-product__video-close" type="button" data-video-dismiss aria-label="Fechar vídeo">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
                 </button>
@@ -367,10 +357,10 @@
       </div>
       {% if chart_kind == 'bottoms' %}
         {% assign chart_alt = 'product.size_chart_bottoms_alt' | t %}
-        {{ 'product-size-chart-bottom.png' | asset_url | image_tag: loading: 'lazy', alt: chart_alt }}
+        <img src="{{ 'product-size-chart-bottom.webp' | asset_url }}" alt="{{ chart_alt | escape }}" width="1254" height="1254" loading="lazy" decoding="async">
       {% else %}
         {% assign chart_alt = 'product.size_chart_tops_alt' | t %}
-        {{ 'product-size-chart-top.png' | asset_url | image_tag: loading: 'lazy', alt: chart_alt }}
+        <img src="{{ 'product-size-chart-top.webp' | asset_url }}" alt="{{ chart_alt | escape }}" width="1254" height="1254" loading="lazy" decoding="async">
       {% endif %}
     </div>
   </dialog>

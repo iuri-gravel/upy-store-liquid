@@ -315,9 +315,9 @@
     position: absolute;
     z-index: 3;
     right: 0.75rem;
-    bottom: 0.75rem;
+    bottom: -0.5rem;
     display: block;
-    width: min(38vw, 9rem);
+    width: min(32vw, 8rem);
     aspect-ratio: 9 / 16;
     border-radius: 0.75rem;
     box-shadow: 0 8px 24px rgb(28 25 26 / 24%);

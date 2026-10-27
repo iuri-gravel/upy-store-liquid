@@ -16,7 +16,7 @@
     offwhite: "#f3efe6", pink: "#ec4899", preta: "#111111", preto: "#111111",
     rosa: "#e94791", roxo: "#75449b", terracota: "#d8a66f", verde: "#68684d",
     vermelho: "#d32f2f", vinho: "#752f43", navy: "#2b3f5f", blue: "#2b3f5f",
-    red: "#d32f2f", black: "#111111", white: "#ffffff", brown: "#8c5a3c",
+    red: "#d32f2f", white: "#ffffff", brown: "#8c5a3c",
   };
   const rootUrl = window.Shopify?.routes?.root || "/";
   const endpoint = (path) => `${rootUrl.replace(/\/?$/, "/")}${path}`;
@@ -111,6 +111,20 @@
       body: JSON.stringify(data),
     });
     return parseJsonResponse(response);
+  };
+
+  let pendingAdd = Promise.resolve();
+  window.UpyTheme.cart = {
+    add: (items) => {
+      const request = pendingAdd.then(async () => {
+        const result = await postCart("add", { items, ...sectionsPayload() });
+        renderCartSections(result);
+        if (!dialog.open) header.querySelector('[data-dialog-open="cart"]')?.click();
+        return result;
+      });
+      pendingAdd = request.catch(() => {});
+      return request;
+    },
   };
 
   const updateLine = async (key, quantity) => {

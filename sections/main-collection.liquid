@@ -139,8 +139,11 @@
       <div class="home-launches__carousel main-collection__carousel" data-launches-carousel>
         <div class="home-launches__track main-collection__grid" data-launches-track role="list" aria-label="{{ collection.title | escape }}">
           {% for collection_product in collection.products %}
+            {% assign card_eager = false %}
+            {% if forloop.index <= 2 %}{% assign card_eager = true %}{% endif %}
+            {% capture collection_image_sizes %}(min-width: 1024px) {{ 100 | divided_by: section.settings.desktop_columns }}vw, 50vw{% endcapture %}
             <div class="home-launches__slide main-collection__slide" role="listitem" data-launch-slide>
-              {% render 'home-launch-product-card', product: collection_product %}
+              {% render 'home-launch-product-card', product: collection_product, image_sizes: collection_image_sizes, eager: card_eager %}
             </div>
           {% endfor %}
         </div>

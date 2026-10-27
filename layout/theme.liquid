@@ -34,9 +34,8 @@
         --upy-footer-text: {{ settings.color_footer_text }};
       }
     </style>
-    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script src="{{ 'theme.js' | asset_url }}" data-home-script="{{ 'home.js' | asset_url }}" data-cards-script="{{ 'product-cards.js' | asset_url }}" data-recent-script="{{ 'recently-viewed.js' | asset_url }}" defer></script>
     <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
-    <script src="{{ 'recently-viewed.js' | asset_url }}" defer></script>
     <script src="{{ 'footer.js' | asset_url }}" defer></script>
     {{ content_for_header }}
   </head>

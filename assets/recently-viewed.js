@@ -250,40 +250,49 @@
     return article;
   };
 
+
+  const productRequests = new Map();
+  const fetchProduct = (handle) => {
+    if (productRequests.has(handle)) return productRequests.get(handle);
+    const endpoint = rootPath().replace(/\/?$/, "/") + "products/" + encodeURIComponent(handle) + ".js";
+    const request = fetch(endpoint, { credentials: "same-origin", headers: { Accept: "application/json" } })
+      .then((response) => response.ok ? response.json() : null).catch(() => null);
+    productRequests.set(handle, request);
+    return request;
+  };
   const initializeSections = (scope = document) => {
     scope.querySelectorAll("[data-recently-viewed]").forEach((section) => {
       if (section.dataset.initialized === "true") return;
       section.dataset.initialized = "true";
       const grid = section.querySelector("[data-recently-viewed-grid]");
       if (!grid) return;
-      const currentId = String(body.dataset.recentProductId || "");
-      const entries = readHistory().filter((entry) => entry.id !== currentId && entry.handle).slice(0, historyLimit);
-      if (!entries.length) return;
-      const root = rootPath().replace(/\/?$/, "/");
-      const requests = entries.map(async (entry) => {
-        try {
-          const endpoint = `${root}products/${encodeURIComponent(entry.handle)}.js`;
-          const response = await fetch(endpoint, { credentials: "same-origin", headers: { Accept: "application/json" } });
-          if (!response.ok) return null;
-          const product = await response.json();
-          if (currentId && String(product.id) === currentId) return null;
-          return { product, entry };
-        } catch {
-          return null;
+      const load = async () => {
+        const currentId = String(body.dataset.recentProductId || "");
+        const entries = readHistory().filter((entry) => entry.id !== currentId && entry.handle).slice(0, historyLimit);
+        const limit = Math.min(historyLimit, Math.max(1, Number(section.dataset.productLimit) || 4));
+        const products = [];
+        let offset = 0;
+        while (offset < entries.length && products.length < limit) {
+          const batch = entries.slice(offset, offset + limit - products.length);
+          offset += batch.length;
+          const results = await Promise.all(batch.map(async (entry) => ({ product: await fetchProduct(entry.handle), entry })));
+          products.push(...results.filter(({ product }) => product && String(product.id) !== currentId));
         }
-      });
-      Promise.all(requests).then((results) => {
-        const products = results.filter(Boolean).slice(0, Number(section.dataset.productLimit) || 4);
-        products.forEach(({ product, entry }) => {
-          const card = createCard(product, entry);
-          if (card) grid.append(card);
-        });
+        products.forEach(({ product, entry }) => { const card = createCard(product, entry); if (card) grid.append(card); });
         if (grid.childElementCount) {
           section.hidden = false;
           const status = section.querySelector("[data-recently-viewed-status]");
-          if (status) status.textContent = `${grid.childElementCount} produtos vistos recentemente`;
+          if (status) status.textContent = grid.childElementCount + " produtos vistos recentemente";
         }
-      });
+      };
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect();
+          void load();
+        }, { rootMargin: "600px" });
+        observer.observe(section.closest(".shopify-section") || section.parentElement);
+      } else void load();
     });
   };
 
