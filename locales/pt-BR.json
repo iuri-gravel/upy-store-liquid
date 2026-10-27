@@ -334,6 +334,15 @@
     "contact_hours": "Nosso atendimento funciona de segunda a sexta-feira, das 8h às 17h30.",
     "contact_button": "Entrar em contato"
   },
+  "legal_pages": {
+    "privacy_eyebrow": "Privacidade e proteção de dados",
+    "privacy_description": "Esta política explica como a Upy Store coleta, utiliza, compartilha, armazena e protege dados pessoais durante a utilização de nosso site, conta do cliente, carrinho e processo de compra.",
+    "cookies_eyebrow": "Transparência e controle",
+    "cookies_description": "Esta política explica como a Upy Store utiliza cookies e tecnologias semelhantes, quais categorias podem ser utilizadas e como você pode controlar suas preferências.",
+    "terms_eyebrow": "Condições de utilização",
+    "terms_description": "Estes termos estabelecem as regras para acesso e utilização do site, da conta do cliente e dos serviços de comércio eletrônico oferecidos pela Upy Store.",
+    "updated": "Última atualização: 27 de outubro de 2026"
+  },
   "footer": {
     "brand_description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
     "newsletter_heading": "Receba Novidades",

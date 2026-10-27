@@ -1,0 +1,29 @@
+{% doc %}
+Renders legal and privacy information pages stored in Shopify Pages.
+{% enddoc %}
+
+{% case page.handle %}
+  {% when 'politica-de-privacidade' %}
+    {% assign policy_eyebrow = 'legal_pages.privacy_eyebrow' | t %}
+    {% assign policy_description = 'legal_pages.privacy_description' | t %}
+  {% when 'politica-de-cookies' %}
+    {% assign policy_eyebrow = 'legal_pages.cookies_eyebrow' | t %}
+    {% assign policy_description = 'legal_pages.cookies_description' | t %}
+  {% when 'termos-de-uso' %}
+    {% assign policy_eyebrow = 'legal_pages.terms_eyebrow' | t %}
+    {% assign policy_description = 'legal_pages.terms_description' | t %}
+{% endcase %}
+
+<div class="shipping-page legal-policy-page">
+  <header class="shipping-page__hero">
+    <div class="shipping-page__hero-inner">
+      <p class="shipping-page__eyebrow">{{ policy_eyebrow }}</p>
+      <h1 class="shipping-page__title">{{ page.title | escape }}</h1>
+      <p class="shipping-page__description">{{ policy_description }}</p>
+      <p class="shipping-page__updated">{{ 'legal_pages.updated' | t }}</p>
+    </div>
+  </header>
+  <div class="shipping-page__container">
+    {{ page.content }}
+  </div>
+</div>

@@ -80,6 +80,8 @@
   {% render 'returns-page' %}
 {% elsif page.handle == 'faq' %}
   {% render 'faq-page' %}
+{% elsif page.handle == 'politica-de-privacidade' or page.handle == 'politica-de-cookies' or page.handle == 'termos-de-uso' %}
+  {% render 'legal-policy-page' %}
 {% else %}
   <section class="main-page">
     <div class="main-page__inner">

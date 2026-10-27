@@ -66,19 +66,19 @@
       </ul>
     </nav>
 
-    {% assign privacy_policy_url = shop.privacy_policy.url | default: '/policies/privacy-policy' %}
-    {% assign terms_url = shop.terms_of_service.url | default: '/policies/terms-of-service' %}
+    {% assign privacy_policy_url = '/pages/politica-de-privacidade' %}
+    {% assign terms_url = '/pages/termos-de-uso' %}
     <nav class="site-footer__column" aria-label="Informações">
       <h2>Informações</h2>
       <ul>
         {% if section.settings.information_menu != blank %}
           {% for link in section.settings.information_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
         {% else %}
-          <li><a href="{{ privacy_policy_url }}">Política de Privacidade</a></li>
-          <li><a href="/pages/politica-de-cookies">Política de Cookies</a></li>
-          <li><a href="{{ terms_url }}">Termos de Uso</a></li>
+          <li><a href="{{ privacy_policy_url }}">{{ 'footer.privacy_policy' | t }}</a></li>
+          <li><a href="/pages/politica-de-cookies">{{ 'footer.cookie_policy' | t }}</a></li>
+          <li><a href="{{ terms_url }}">{{ 'footer.terms' | t }}</a></li>
         {% endif %}
-        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>Preferências de cookies</button></li>
+        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>{{ 'footer.cookie_preferences' | t }}</button></li>
       </ul>
     </nav>
 
@@ -124,24 +124,24 @@
   </div>
 </footer>
 
-<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="Suas preferências foram salvas." data-error-message="Não foi possível carregar as preferências de privacidade. Tente novamente." aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'footer.cookie_saved' | t | escape }}" data-error-message="{{ 'footer.cookie_error' | t | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
   <div class="site-footer__cookie-header">
     <div>
-      <h2 id="cookie-preferences-title">Preferências de cookies</h2>
-      <p id="cookie-preferences-description">Escolha quais categorias de cookies não essenciais podem ser utilizadas durante sua navegação.</p>
+      <h2 id="cookie-preferences-title">{{ 'footer.cookie_preferences' | t }}</h2>
+      <p id="cookie-preferences-description">{{ 'footer.cookie_intro' | t }}</p>
     </div>
-    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="Fechar preferências de cookies">×</button>
+    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="{{ 'footer.close_preferences' | t | escape }}">×</button>
   </div>
   <div class="site-footer__cookie-options">
-    <p class="site-footer__cookie-option"><span><strong>Cookies necessários</strong><small>Essenciais para autenticação, segurança, sacola e finalização da compra.</small></span><span class="site-footer__cookie-always">Sempre ativos</span></p>
-    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>Cookies de preferências</strong><small>Lembram suas configurações para personalizar sua experiência.</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
-    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>Cookies de análise</strong><small>Ajudam a entender como a loja é utilizada e melhorar navegação e desempenho.</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
-    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>Cookies de marketing</strong><small>Podem medir campanhas e apresentar comunicações mais relevantes.</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
+    <p class="site-footer__cookie-option"><span><strong>{{ 'footer.cookie_necessary' | t }}</strong><small>{{ 'footer.cookie_necessary_description' | t }}</small></span><span class="site-footer__cookie-always">{{ 'footer.cookie_always_active' | t }}</span></p>
+    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>{{ 'footer.cookie_preferences_category' | t }}</strong><small>{{ 'footer.cookie_preferences_description' | t }}</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
+    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>{{ 'footer.cookie_analytics' | t }}</strong><small>{{ 'footer.cookie_analytics_description' | t }}</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
+    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>{{ 'footer.cookie_marketing' | t }}</strong><small>{{ 'footer.cookie_marketing_description' | t }}</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
     <p class="site-footer__cookie-status" data-cookie-preferences-status role="status" aria-live="polite"></p>
   </div>
   <div class="site-footer__cookie-actions">
-    <button type="button" data-cookie-preferences-reject>Rejeitar não essenciais</button>
-    <button type="button" data-cookie-preferences-save>Salvar preferências</button>
+    <button type="button" data-cookie-preferences-reject>{{ 'footer.cookie_reject' | t }}</button>
+    <button type="button" data-cookie-preferences-save>{{ 'footer.cookie_save' | t }}</button>
   </div>
 </dialog>
 
