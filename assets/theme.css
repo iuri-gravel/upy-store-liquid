@@ -902,24 +902,6 @@ summary {
   color: rgb(255 255 255 / 90%);
 }
 
-.home-hero__collection-link {
-  position: absolute;
-  z-index: 3;
-  bottom: 3.5rem;
-  left: 1.25rem;
-  display: inline-flex;
-  min-height: 2.5rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  background: #fff;
-  color: var(--upy-ink);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .home-hero__controls {
   position: absolute;
   z-index: 4;
@@ -1045,10 +1027,6 @@ summary {
 @media (min-width: 768px) {
   .home-hero {
     aspect-ratio: 16 / 9;
-  }
-
-  .home-hero__collection-link {
-    display: none;
   }
 
   .home-hero__controls {
@@ -3216,7 +3194,7 @@ summary {
   .site-header__inner {
     width: auto;
     margin-inline: clamp(2rem, 2.3vw, 3rem);
-    min-height: 6rem;
+    min-height: 4.5rem;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: 1.5rem;
   }
@@ -3236,26 +3214,26 @@ summary {
 
   .site-header__desktop-links > li > a,
   .site-header__nav-trigger {
-    font-size: 0.82rem;
+    font-size: 0.7rem;
   }
 
   .site-header__logo {
     position: static;
-    width: 8rem;
-    height: 6rem;
+    width: 5.75rem;
+    height: 5.75rem;
     grid-column: 2;
     transform: none;
   }
 
   .site-header__logo-image {
-    width: 8rem;
+    width: 5.75rem;
     max-width: none;
-    height: 8rem;
+    height: 5.75rem;
   }
 
   .site-header__actions {
     grid-column: 3;
-    gap: clamp(0.4rem, 1vw, 1.1rem);
+    gap: 1rem;
   }
 
   .site-header__search-trigger {
@@ -3297,14 +3275,19 @@ summary {
     gap: 2rem;
   }
 
+  .site-header__desktop-links > li > a,
+  .site-header__nav-trigger {
+    font-size: 0.75rem;
+  }
+
   .site-header__left {
     gap: 1.25rem;
   }
 
   .site-header__search-trigger {
-    width: min(19rem, 19vw);
+    width: 15rem;
     min-width: 15rem;
-    flex-basis: min(19rem, 19vw);
+    flex-basis: 15rem;
     justify-content: space-between;
     margin-right: 0.25rem;
     border: 1px solid rgb(28 25 26 / 45%);
@@ -4527,7 +4510,7 @@ summary {
   inset-inline: 0.75rem;
   bottom: 0.75rem;
   border: 1px solid #ddd6ce;
-  background: #fff;
+  background: var(--upy-canvas);
   color: var(--upy-ink);
   box-shadow: 0 1.125rem 3.75rem rgb(28 25 26 / 18%);
 }

@@ -57,8 +57,6 @@
       "label": "Upy Store highlights",
       "slide": "Slide",
       "slide_count": "{{ current }} of {{ total }}",
-      "view_collection": "Shop collection",
-      "view_collection_named": "Explore the {{ title }} collection",
       "choose_slide": "Choose a banner",
       "go_to_slide": "Go to banner {{ number }}",
       "previous": "Previous banner",

@@ -123,6 +123,11 @@
         dot.hidden = !show;
         dot.setAttribute("aria-current", String(show && mediaItem === visible[0]));
       });
+      const hasMultipleImages = visible.length > 1;
+      page.querySelector(".main-product__gallery-controls")?.toggleAttribute("hidden", !hasMultipleImages);
+      page.querySelectorAll("[data-gallery-previous], [data-gallery-next]").forEach((button) => {
+        button.hidden = !hasMultipleImages;
+      });
       if (visible.length) {
         const current = variants.find((variant) => normalize(variant.options[colorIndex]) === normalize(color) && variant.featuredMediaId);
         if (current) {

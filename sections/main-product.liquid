@@ -88,7 +88,8 @@
   <div class="main-product__layout">
     <div class="main-product__gallery" data-product-gallery aria-label="{{ 'product.gallery' | t: title: product.title | escape }}">
       {% if product.media.size > 0 %}
-        <div class="main-product__media-grid" data-media-grid>
+        <div class="main-product__media-stage">
+          <div class="main-product__media-grid" data-media-grid>
           {% for media in product.media limit: 12 %}
             {% capture media_color_keys %}|{% endcapture %}
             {% assign media_loading = 'lazy' %}
@@ -136,16 +137,23 @@
               </button>
             </figure>
           {% endfor %}
+          </div>
+          {% if product.media.size > 1 %}
+            <button class="main-product__gallery-arrow main-product__gallery-arrow--previous" type="button" data-gallery-previous aria-label="{{ 'product.previous_image' | t | escape }}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5-6.5 6.5 6.5 6.5" /></svg>
+            </button>
+            <button class="main-product__gallery-arrow main-product__gallery-arrow--next" type="button" data-gallery-next aria-label="{{ 'product.next_image' | t | escape }}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5.5 6.5 6.5-6.5 6.5" /></svg>
+            </button>
+          {% endif %}
         </div>
         {% if product.media.size > 1 %}
           <div class="main-product__gallery-controls">
-            <button type="button" data-gallery-previous aria-label="{{ 'product.previous_image' | t | escape }}">‹</button>
             <div class="main-product__gallery-dots" data-gallery-dots aria-label="{{ 'product.choose_image' | t | escape }}">
               {% for media in product.media limit: 12 %}
                 <button type="button" data-gallery-dot data-media-index="{{ forloop.index0 }}" aria-label="{{ 'product.view_image' | t: number: forloop.index | escape }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
               {% endfor %}
             </div>
-            <button type="button" data-gallery-next aria-label="{{ 'product.next_image' | t | escape }}">›</button>
           </div>
         {% endif %}
       {% else %}

@@ -57,8 +57,6 @@
       "label": "Destaques da Upy Store",
       "slide": "Slide",
       "slide_count": "{{ current }} de {{ total }}",
-      "view_collection": "Ver coleção",
-      "view_collection_named": "Conhecer coleção {{ title }}",
       "choose_slide": "Escolher imagem do banner",
       "go_to_slide": "Ir para a imagem {{ number }}",
       "previous": "Ver imagem anterior",
