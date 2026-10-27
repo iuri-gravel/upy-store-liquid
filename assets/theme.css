@@ -3336,6 +3336,30 @@ summary {
   }
 }
 
+@media (max-width: 767px) {
+  .site-header__logo,
+  .site-header__logo-image {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+@media (min-width: 421px) and (max-width: 600px) {
+  .site-header__logo {
+    left: 47%;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header__logo {
+    position: static;
+    left: auto;
+    grid-column: 2;
+    justify-self: center;
+    transform: none;
+  }
+}
+
 .home-video-products {
   overflow: hidden;
   border-top: 1px solid var(--upy-line);
