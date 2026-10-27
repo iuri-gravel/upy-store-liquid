@@ -361,7 +361,11 @@
     "cookie_reject": "Reject non-essential",
     "cookie_save": "Save preferences",
     "cookie_saved": "Your preferences have been saved.",
-    "cookie_error": "We couldn't load privacy preferences. Please try again."
+    "cookie_error": "We couldn't load privacy preferences. Please try again.",
+    "cookie_banner_title": "Your privacy matters",
+    "cookie_banner_description": "We use necessary cookies to run the store and, with your permission, analytics, preference, and marketing cookies.",
+    "cookie_banner_manage": "Manage preferences",
+    "cookie_banner_accept": "Accept all"
   },
   "sections": {
     "announcement_bar": "Announcement bar",

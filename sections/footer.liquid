@@ -124,6 +124,25 @@
   </div>
 </footer>
 
+<section class="site-cookie-banner" data-cookie-banner hidden role="dialog" aria-modal="false" aria-labelledby="cookie-banner-title" aria-describedby="cookie-banner-description">
+  <div class="site-cookie-banner__inner">
+    <div class="site-cookie-banner__copy">
+      <span class="site-cookie-banner__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10c0-.6-.5-1-1.1-1.1a4.2 4.2 0 0 1-3.8-3.8c-.1-.6-.5-1.1-1.1-1.1A4.2 4.2 0 0 1 12 2Z"/><path d="M8 10h.01M12 14h.01M8 16h.01"/></svg>
+      </span>
+      <div class="site-cookie-banner__text">
+        <h2 id="cookie-banner-title">{{ 'legal_pages.cookie_banner_title' | t | replace: 'Rodapé', 'Sua privacidade é importante' | escape }}</h2>
+        <p id="cookie-banner-description">{{ 'legal_pages.cookie_banner_description' | t | replace: 'Rodapé', 'Usamos cookies necessários para o funcionamento da loja e, com sua autorização, cookies de análise, preferências e marketing.' | escape }}</p>
+        <button class="site-cookie-banner__manage" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_banner_manage' | t | replace: 'Rodapé', 'Gerenciar preferências' | escape }}</button>
+      </div>
+    </div>
+    <div class="site-cookie-banner__actions">
+      <button class="site-cookie-banner__reject" type="button" data-cookie-banner-reject>{{ 'legal_pages.cookie_reject' | t | replace: 'Rodapé', 'Rejeitar não essenciais' | escape }}</button>
+      <button class="site-cookie-banner__accept" type="button" data-cookie-banner-accept>{{ 'legal_pages.cookie_banner_accept' | t | replace: 'Rodapé', 'Aceitar todos' | escape }}</button>
+    </div>
+  </div>
+</section>
+
 <dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'legal_pages.cookie_saved' | t | replace: 'Rodapé', 'Suas preferências foram salvas.' | escape }}" data-error-message="{{ 'legal_pages.cookie_error' | t | replace: 'Rodapé', 'Não foi possível carregar as preferências de privacidade. Tente novamente.' | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
   <div class="site-footer__cookie-header">
     <div>

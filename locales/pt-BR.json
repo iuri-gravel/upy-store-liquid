@@ -361,7 +361,11 @@
     "cookie_reject": "Rejeitar não essenciais",
     "cookie_save": "Salvar preferências",
     "cookie_saved": "Suas preferências foram salvas.",
-    "cookie_error": "Não foi possível carregar as preferências de privacidade. Tente novamente."
+    "cookie_error": "Não foi possível carregar as preferências de privacidade. Tente novamente.",
+    "cookie_banner_title": "Sua privacidade é importante",
+    "cookie_banner_description": "Usamos cookies necessários para o funcionamento da loja e, com sua autorização, cookies de análise, preferências e marketing.",
+    "cookie_banner_manage": "Gerenciar preferências",
+    "cookie_banner_accept": "Aceitar todos"
   },
   "sections": {
     "announcement_bar": "Barra de anúncios",

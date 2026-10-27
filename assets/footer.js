@@ -1,6 +1,7 @@
 (() => {
   const initializeCookiePreferences = () => {
     const dialog = document.querySelector("[data-cookie-preferences-dialog]");
+    const banner = document.querySelector("[data-cookie-banner]");
     if (!dialog) return;
 
     const status = dialog.querySelector("[data-cookie-preferences-status]");
@@ -36,6 +37,16 @@
       if (status) status.textContent = dialog.dataset.errorMessage || "";
     };
 
+    const updateBannerVisibility = (privacy) => {
+      if (!banner) return;
+
+      try {
+        banner.hidden = typeof privacy.shouldShowBanner !== "function" || !privacy.shouldShowBanner();
+      } catch {
+        banner.hidden = true;
+      }
+    };
+
     const openPreferences = async () => {
       if (!dialog.open) dialog.showModal();
       if (status) status.textContent = "";
@@ -63,9 +74,15 @@
           ]),
         );
 
-        privacy.setTrackingConsent(consent, () => {
+        privacy.setTrackingConsent(consent, (result) => {
+          if (result?.error) {
+            showError();
+            return;
+          }
+
           if (status) status.textContent = dialog.dataset.savedMessage || "";
-          window.setTimeout(() => dialog.close(), 500);
+          if (banner) banner.hidden = true;
+          if (dialog.open) window.setTimeout(() => dialog.close(), 500);
         });
       } catch {
         showError();
@@ -74,6 +91,15 @@
 
     document.querySelectorAll("[data-cookie-preferences-open]").forEach((button) => {
       button.addEventListener("click", openPreferences);
+    });
+
+    banner?.querySelector("[data-cookie-banner-accept]")?.addEventListener("click", () => {
+      controls.forEach((control) => { control.checked = true; });
+      savePreferences(true);
+    });
+    banner?.querySelector("[data-cookie-banner-reject]")?.addEventListener("click", () => {
+      controls.forEach((control) => { control.checked = false; });
+      savePreferences(false);
     });
 
     dialog.querySelector("[data-cookie-preferences-close]")?.addEventListener("click", () => dialog.close());
@@ -85,6 +111,13 @@
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
     });
+
+    if (banner) {
+      banner.hidden = true;
+      loadPrivacyApi().then(updateBannerVisibility).catch(() => {
+        banner.hidden = true;
+      });
+    }
   };
 
   if (document.readyState === "loading") {
