@@ -74,11 +74,11 @@
         {% if section.settings.information_menu != blank %}
           {% for link in section.settings.information_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
         {% else %}
-          <li><a href="{{ privacy_policy_url }}">{{ 'footer.privacy_policy' | t }}</a></li>
-          <li><a href="/pages/politica-de-cookies">{{ 'footer.cookie_policy' | t }}</a></li>
-          <li><a href="{{ terms_url }}">{{ 'footer.terms' | t }}</a></li>
+          <li><a href="{{ privacy_policy_url }}">{{ 'legal_pages.privacy_policy_label' | t | replace: 'Rodapé', 'Política de Privacidade' | escape }}</a></li>
+          <li><a href="/pages/politica-de-cookies">{{ 'legal_pages.cookie_policy_label' | t | replace: 'Rodapé', 'Política de Cookies' | escape }}</a></li>
+          <li><a href="{{ terms_url }}">{{ 'legal_pages.terms_label' | t | replace: 'Rodapé', 'Termos de Uso' | escape }}</a></li>
         {% endif %}
-        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>{{ 'footer.cookie_preferences' | t }}</button></li>
+        <li><button class="site-footer__cookie-link" type="button" data-cookie-preferences-open>{{ 'legal_pages.cookie_preferences_label' | t | replace: 'Rodapé', 'Preferências de cookies' | escape }}</button></li>
       </ul>
     </nav>
 
@@ -124,24 +124,24 @@
   </div>
 </footer>
 
-<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'footer.cookie_saved' | t | escape }}" data-error-message="{{ 'footer.cookie_error' | t | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+<dialog class="site-footer__cookie-dialog" data-cookie-preferences-dialog data-saved-message="{{ 'legal_pages.cookie_saved' | t | replace: 'Rodapé', 'Suas preferências foram salvas.' | escape }}" data-error-message="{{ 'legal_pages.cookie_error' | t | replace: 'Rodapé', 'Não foi possível carregar as preferências de privacidade. Tente novamente.' | escape }}" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
   <div class="site-footer__cookie-header">
     <div>
-      <h2 id="cookie-preferences-title">{{ 'footer.cookie_preferences' | t }}</h2>
-      <p id="cookie-preferences-description">{{ 'footer.cookie_intro' | t }}</p>
+      <h2 id="cookie-preferences-title">{{ 'legal_pages.cookie_preferences_label' | t | replace: 'Rodapé', 'Preferências de cookies' | escape }}</h2>
+      <p id="cookie-preferences-description">{{ 'legal_pages.cookie_intro' | t | replace: 'Rodapé', 'Escolha quais categorias de cookies não essenciais podem ser utilizadas durante sua navegação.' | escape }}</p>
     </div>
-    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="{{ 'footer.close_preferences' | t | escape }}">×</button>
+    <button class="site-footer__cookie-close" type="button" data-cookie-preferences-close aria-label="{{ 'legal_pages.close_preferences' | t | replace: 'Rodapé', 'Fechar preferências de cookies' | escape }}">×</button>
   </div>
   <div class="site-footer__cookie-options">
-    <p class="site-footer__cookie-option"><span><strong>{{ 'footer.cookie_necessary' | t }}</strong><small>{{ 'footer.cookie_necessary_description' | t }}</small></span><span class="site-footer__cookie-always">{{ 'footer.cookie_always_active' | t }}</span></p>
-    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>{{ 'footer.cookie_preferences_category' | t }}</strong><small>{{ 'footer.cookie_preferences_description' | t }}</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
-    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>{{ 'footer.cookie_analytics' | t }}</strong><small>{{ 'footer.cookie_analytics_description' | t }}</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
-    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>{{ 'footer.cookie_marketing' | t }}</strong><small>{{ 'footer.cookie_marketing_description' | t }}</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
+    <p class="site-footer__cookie-option"><span><strong>{{ 'legal_pages.cookie_necessary' | t | replace: 'Rodapé', 'Cookies necessários' | escape }}</strong><small>{{ 'legal_pages.cookie_necessary_description' | t | replace: 'Rodapé', 'Essenciais para autenticação, segurança, sacola e finalização da compra.' | escape }}</small></span><span class="site-footer__cookie-always">{{ 'legal_pages.cookie_always_active' | t | replace: 'Rodapé', 'Sempre ativos' | escape }}</span></p>
+    <label class="site-footer__cookie-option" for="cookie-preference-setting"><span><strong>{{ 'legal_pages.cookie_preferences_category' | t | replace: 'Rodapé', 'Cookies de preferências' | escape }}</strong><small>{{ 'legal_pages.cookie_preferences_description' | t | replace: 'Rodapé', 'Lembram suas configurações para personalizar sua experiência.' | escape }}</small></span><input id="cookie-preference-setting" type="checkbox" data-cookie-preference="preferences"></label>
+    <label class="site-footer__cookie-option" for="cookie-analytics-setting"><span><strong>{{ 'legal_pages.cookie_analytics' | t | replace: 'Rodapé', 'Cookies de análise' | escape }}</strong><small>{{ 'legal_pages.cookie_analytics_description' | t | replace: 'Rodapé', 'Ajudam a entender como a loja é utilizada e melhorar navegação e desempenho.' | escape }}</small></span><input id="cookie-analytics-setting" type="checkbox" data-cookie-preference="analytics"></label>
+    <label class="site-footer__cookie-option" for="cookie-marketing-setting"><span><strong>{{ 'legal_pages.cookie_marketing' | t | replace: 'Rodapé', 'Cookies de marketing' | escape }}</strong><small>{{ 'legal_pages.cookie_marketing_description' | t | replace: 'Rodapé', 'Podem medir campanhas e apresentar comunicações mais relevantes.' | escape }}</small></span><input id="cookie-marketing-setting" type="checkbox" data-cookie-preference="marketing"></label>
     <p class="site-footer__cookie-status" data-cookie-preferences-status role="status" aria-live="polite"></p>
   </div>
   <div class="site-footer__cookie-actions">
-    <button type="button" data-cookie-preferences-reject>{{ 'footer.cookie_reject' | t }}</button>
-    <button type="button" data-cookie-preferences-save>{{ 'footer.cookie_save' | t }}</button>
+    <button type="button" data-cookie-preferences-reject>{{ 'legal_pages.cookie_reject' | t | replace: 'Rodapé', 'Rejeitar não essenciais' | escape }}</button>
+    <button type="button" data-cookie-preferences-save>{{ 'legal_pages.cookie_save' | t | replace: 'Rodapé', 'Salvar preferências' | escape }}</button>
   </div>
 </dialog>
 
@@ -176,7 +176,7 @@
       "type": "textarea",
       "id": "description",
       "label": "t:sections.footer_description",
-      "default": "t:footer.brand_description"
+      "default": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento."
     },
     {
       "type": "link_list",
@@ -197,7 +197,7 @@
       "type": "text",
       "id": "support_hours",
       "label": "t:sections.footer_support_hours",
-      "default": "t:footer.support_hours"
+      "default": "Atendimento de segunda a sexta-feira, das 8h às 17h30."
     },
     {
       "type": "text",
