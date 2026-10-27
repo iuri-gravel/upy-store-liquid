@@ -147,6 +147,26 @@
     "reviews_eyebrow": "Real opinions",
     "reviews_heading": "Customer reviews"
   },
+  "manifesto": {
+    "eyebrow": "About UPY",
+    "title_first": "You.",
+    "title_second": "In your own way.",
+    "description": "UPY was created to accompany your journey with ease, comfort, and authenticity. We make pieces that adapt to your rhythm and give you the freedom to live every moment with confidence and well-being.",
+    "video_caption": "Movement, freedom, and authenticity",
+    "watch_video": "Watch the video",
+    "video_preparing": "Video coming soon",
+    "video_title": "The UPY Manifesto video",
+    "video_poster_alt": "Cover image for the UPY Manifesto video",
+    "story_eyebrow": "Our way of being in the world",
+    "story_title": "1. Manifesto",
+    "paragraph_1": "We believe life happens in motion. Not only in the movement that quickens your pace or challenges your body, but also in the movement of choices, changes, and routines that make each day a new opportunity to be.",
+    "paragraph_2": "You live different moments, take on different roles, and move through different settings without ever ceasing to be yourself. UPY exists for you.",
+    "paragraph_3": "We create pieces that accompany this journey with ease, comfort, and authenticity. More than dressing you, we want to be part of real life: the moments between work and training, breakfast and the end of the day, plans and the unexpected.",
+    "paragraph_4": "We believe clothing should adapt to the rhythm of the person wearing it, offering the freedom to live every moment with confidence, ease, and well-being. Every detail at UPY is created with a purpose: to welcome, simplify, and accompany.",
+    "paragraph_5": "We believe no one should have to choose between comfort and elegance, functionality and style, movement and ease. With UPY, you can be all of these at once.",
+    "paragraph_6": "After all, your best self is never the one that chooses only one path, but the one that lives them all while staying true to who you are.",
+    "quote": "Being you. In your own way."
+  },
   "footer": {
     "brand_description": "Women's activewear with comfort, style, and freedom. For women who live in motion.",
     "newsletter_heading": "Get the latest news",

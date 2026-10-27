@@ -147,6 +147,26 @@
     "reviews_eyebrow": "Opiniões reais",
     "reviews_heading": "Avaliações de clientes"
   },
+  "manifesto": {
+    "eyebrow": "Sobre a UPY",
+    "title_first": "Você.",
+    "title_second": "Da forma que quiser.",
+    "description": "A UPY nasceu para acompanhar sua jornada com leveza, conforto e autenticidade. Criamos peças que se adaptam ao seu ritmo e oferecem liberdade para viver cada momento com confiança e bem-estar.",
+    "video_caption": "Movimento, liberdade e autenticidade",
+    "watch_video": "Assistir ao vídeo",
+    "video_preparing": "Vídeo em preparação",
+    "video_title": "Vídeo do Manifesto UPY",
+    "video_poster_alt": "Capa do vídeo do Manifesto UPY",
+    "story_eyebrow": "Nossa forma de estar no mundo",
+    "story_title": "1. Manifesto",
+    "paragraph_1": "Acreditamos que a vida acontece no movimento. Não apenas naquele que acelera os passos ou desafia o corpo, mas também no movimento das escolhas, das mudanças e da rotina que transforma cada dia em uma nova oportunidade de ser.",
+    "paragraph_2": "Você vive diferentes momentos, assume diferentes papéis e transita por diferentes cenários sem deixar de ser quem é. É para você que a UPY existe.",
+    "paragraph_3": "Criamos peças que acompanham essa jornada com leveza, conforto e autenticidade. Mais do que vestir, queremos fazer parte da vida real daquela que acontece entre o trabalho e o treino, entre o café da manhã e o fim do dia, entre os planos e os imprevistos.",
+    "paragraph_4": "Acreditamos que uma roupa deve se adaptar ao ritmo de quem a veste, oferecendo liberdade para viver cada momento com confiança, naturalidade e bem-estar. Cada detalhe da UPY nasce com um propósito: acolher, simplificar e acompanhar.",
+    "paragraph_5": "Porque acreditamos que ninguém deveria precisar escolher entre conforto e elegância, entre funcionalidade e estilo, entre movimento e leveza. Com a UPY, você pode ser tudo isso ao mesmo tempo.",
+    "paragraph_6": "Afinal, a sua melhor versão nunca é aquela que escolhe apenas um caminho, mas a que vive todos eles sendo fiel a quem você é.",
+    "quote": "Sendo você. Da forma que quiser."
+  },
   "footer": {
     "brand_description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
     "newsletter_heading": "Receba Novidades",

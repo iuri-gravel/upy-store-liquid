@@ -1,0 +1,458 @@
+{% if page.handle == 'manifesto' %}
+  {% assign video_source = section.settings.video_url | default: 'https://www.youtube.com/shorts/owXwxEkc5PU' | strip %}
+  {% assign video_id = '' %}
+  {% if video_source contains 'youtu.be/' %}
+    {% assign video_id = video_source | split: 'youtu.be/' | last | split: '?' | first | split: '&' | first %}
+  {% elsif video_source contains '/shorts/' %}
+    {% assign video_id = video_source | split: '/shorts/' | last | split: '?' | first | split: '&' | first %}
+  {% elsif video_source contains 'watch?v=' %}
+    {% assign video_id = video_source | split: 'watch?v=' | last | split: '&' | first %}
+  {% elsif video_source contains '/embed/' %}
+    {% assign video_id = video_source | split: '/embed/' | last | split: '?' | first | split: '&' | first %}
+  {% elsif video_source.size == 11 %}
+    {% assign video_id = video_source %}
+  {% endif %}
+  {% assign video_id_length = video_id | size %}
+
+  <div class="manifesto">
+    <header class="manifesto__hero">
+      <div class="manifesto__hero-inner">
+        <p class="manifesto__eyebrow">{{ 'manifesto.eyebrow' | t }}</p>
+        <h1 class="manifesto__title">
+          <span>{{ 'manifesto.title_first' | t }}</span>
+          <span>{{ 'manifesto.title_second' | t }}</span>
+        </h1>
+        <p class="manifesto__intro">{{ 'manifesto.description' | t }}</p>
+      </div>
+    </header>
+
+    <div class="manifesto__content">
+      <div class="manifesto__media" data-manifesto-video>
+        {% if section.settings.video_poster != blank %}
+          {% assign video_poster_alt = 'manifesto.video_poster_alt' | t %}
+          {{ section.settings.video_poster | image_url: width: 1800 | image_tag: class: 'manifesto__poster', alt: video_poster_alt, loading: 'lazy', widths: '640, 960, 1280, 1600, 1800', sizes: '(min-width: 1200px) 1024px, calc(100vw - 2rem)' }}
+        {% else %}
+          <div class="manifesto__art" aria-hidden="true">
+            <span>UPY</span>
+          </div>
+        {% endif %}
+        <div class="manifesto__video-frame" data-manifesto-frame hidden></div>
+        <div class="manifesto__video-overlay" data-manifesto-overlay>
+          <p>{{ 'manifesto.video_caption' | t }}</p>
+          <button
+            class="manifesto__play"
+            type="button"
+            data-manifesto-play
+            data-video-id="{{ video_id | escape }}"
+            data-video-title="{{ 'manifesto.video_title' | t | escape }}"
+            {% if video_id_length != 11 %}disabled{% endif %}
+          >
+            <span class="manifesto__play-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="m9 6 10 6-10 6z" fill="currentColor" /></svg>
+            </span>
+            {% if video_id_length == 11 %}
+              {{ 'manifesto.watch_video' | t }}
+            {% else %}
+              {{ 'manifesto.video_preparing' | t }}
+            {% endif %}
+          </button>
+        </div>
+      </div>
+
+      <article class="manifesto__story">
+        <p class="manifesto__story-eyebrow">{{ 'manifesto.story_eyebrow' | t }}</p>
+        <h2>{{ 'manifesto.story_title' | t }}</h2>
+        <div class="manifesto__copy">
+          <p>{{ 'manifesto.paragraph_1' | t }}</p>
+          <p>{{ 'manifesto.paragraph_2' | t }}</p>
+          <p>{{ 'manifesto.paragraph_3' | t }}</p>
+          <p>{{ 'manifesto.paragraph_4' | t }}</p>
+          <p>{{ 'manifesto.paragraph_5' | t }}</p>
+          <p>{{ 'manifesto.paragraph_6' | t }}</p>
+          <p class="manifesto__quote">{{ 'manifesto.quote' | t }}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+{% else %}
+  <section class="main-page">
+    <div class="main-page__inner">
+      <h1>{{ page.title | escape }}</h1>
+      <div class="main-page__content rte">{{ page.content }}</div>
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .manifesto {
+    background: var(--upy-canvas);
+    color: var(--upy-ink);
+  }
+
+  .manifesto__hero {
+    border-bottom: 1px solid rgb(255 255 255 / 15%);
+    background: #1c191a;
+    color: #fff;
+  }
+
+  .manifesto__hero-inner {
+    width: min(100% - 2rem, 1440px);
+    margin-inline: auto;
+    padding-block: 2.5rem;
+    text-align: center;
+  }
+
+  .manifesto__eyebrow,
+  .manifesto__story-eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .manifesto__eyebrow {
+    color: rgb(255 255 255 / 75%);
+  }
+
+  .manifesto__title {
+    margin: 1rem 0 0;
+    font-size: clamp(2rem, 5.4vw, 3.75rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: -0.04em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .manifesto__title span {
+    display: block;
+  }
+
+  .manifesto__intro {
+    max-width: 38rem;
+    margin: 1.5rem auto 0;
+    color: rgb(255 255 255 / 80%);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .manifesto__content {
+    width: min(100% - 2rem, 1440px);
+    margin-inline: auto;
+    padding-block: 2.5rem;
+  }
+
+  .manifesto__media {
+    position: relative;
+    width: min(100%, 64rem);
+    aspect-ratio: 16 / 9;
+    margin-inline: auto;
+    overflow: hidden;
+    background: #1c191a;
+    box-shadow: 0 24px 70px rgb(28 25 26 / 16%);
+  }
+
+  .manifesto__art,
+  .manifesto__poster,
+  .manifesto__video-frame,
+  .manifesto__video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .manifesto__art {
+    display: grid;
+    overflow: hidden;
+    place-items: center;
+    background: #1c191a;
+  }
+
+  .manifesto__art::before,
+  .manifesto__art::after {
+    position: absolute;
+    width: 58%;
+    height: 115%;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .manifesto__art::before {
+    top: -45%;
+    left: -12%;
+  }
+
+  .manifesto__art::after {
+    right: 5%;
+    bottom: -58%;
+    width: 62%;
+    height: 125%;
+  }
+
+  .manifesto__art span {
+    color: rgb(255 255 255 / 4%);
+    font-size: clamp(4rem, 15vw, 11rem);
+    font-weight: 300;
+    letter-spacing: -0.08em;
+  }
+
+  .manifesto__poster {
+    object-fit: cover;
+    transition: transform 700ms ease;
+  }
+
+  .manifesto__media:hover .manifesto__poster {
+    transform: scale(1.015);
+  }
+
+  .manifesto__video-frame[hidden] {
+    display: none;
+  }
+
+  .manifesto__video-frame iframe {
+    border: 0;
+  }
+
+  .manifesto__video-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: linear-gradient(0deg, rgb(0 0 0 / 60%), rgb(0 0 0 / 15%) 60%, rgb(0 0 0 / 20%));
+    color: #fff;
+    text-align: center;
+  }
+
+  .manifesto__video-overlay[hidden] {
+    display: none;
+  }
+
+  .manifesto__video-overlay p {
+    margin: 0;
+    color: rgb(255 255 255 / 75%);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .manifesto__play {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid rgb(255 255 255 / 75%);
+    padding: 0.7rem 1.25rem;
+    background: rgb(0 0 0 / 10%);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  }
+
+  .manifesto__play:hover:not(:disabled) {
+    border-color: #fff;
+    background: #fff;
+    color: #1c191a;
+  }
+
+  .manifesto__play:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  .manifesto__play:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .manifesto__play-icon {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+  }
+
+  .manifesto__play-icon svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .manifesto__story {
+    width: min(100%, 48rem);
+    margin: 0 auto;
+    padding-top: 3rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .manifesto__story-eyebrow {
+    color: var(--upy-accent);
+  }
+
+  .manifesto__story h2 {
+    margin: 1rem 0 0;
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .manifesto__copy {
+    margin-top: 2rem;
+    color: #5f5a55;
+    font-size: 1rem;
+    line-height: 2;
+  }
+
+  .manifesto__copy p {
+    margin: 0 0 1.5rem;
+  }
+
+  .manifesto__copy .manifesto__quote {
+    margin: 2rem 0 0;
+    border-left: 2px solid var(--upy-accent);
+    padding-left: 1.25rem;
+    color: var(--upy-ink);
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .main-page {
+    min-height: 40vh;
+    background: var(--upy-canvas);
+    color: var(--upy-ink);
+  }
+
+  .main-page__inner {
+    width: min(100% - 2rem, 80rem);
+    margin-inline: auto;
+    padding-block: clamp(3rem, 8vw, 7rem);
+  }
+
+  .main-page__inner h1 {
+    margin: 0 0 2rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: -0.04em;
+  }
+
+  .main-page__content {
+    max-width: 48rem;
+    color: #5f5a55;
+    line-height: 1.9;
+  }
+
+  .main-page__content p {
+    margin: 0 0 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .manifesto__hero-inner,
+    .manifesto__content {
+      width: min(100% - 3rem, 1440px);
+    }
+
+    .manifesto__hero-inner {
+      padding-block: 4rem;
+    }
+
+    .manifesto__content {
+      padding-block: 3.5rem;
+    }
+
+    .manifesto__story {
+      padding-top: 4rem;
+    }
+
+    .manifesto__copy {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .manifesto__hero-inner,
+    .manifesto__content {
+      width: min(100% - 4rem, 1440px);
+    }
+
+    .manifesto__hero-inner {
+      padding-block: 6rem;
+    }
+
+    .manifesto__content {
+      padding-block: 5rem;
+    }
+
+    .manifesto__story {
+      padding-top: 5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .manifesto__poster,
+    .manifesto__play {
+      transition-duration: 0.01ms;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-manifesto-play]');
+    if (!button) return;
+
+    var videoId = button.dataset.videoId || '';
+    if (!/^[\w-]{11}$/.test(videoId)) return;
+
+    var container = button.closest('[data-manifesto-video]');
+    var frame = container.querySelector('[data-manifesto-frame]');
+    var overlay = container.querySelector('[data-manifesto-overlay]');
+    var iframe = document.createElement('iframe');
+
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
+    iframe.title = button.dataset.videoTitle || 'UPY Manifesto video';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.loading = 'eager';
+
+    frame.replaceChildren(iframe);
+    frame.hidden = false;
+    overlay.hidden = true;
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.main_page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "t:sections.manifesto_video_url",
+      "default": "https://www.youtube.com/shorts/owXwxEkc5PU"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "t:sections.manifesto_video_poster"
+    }
+  ]
+}
+{% endschema %}
