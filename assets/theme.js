@@ -206,12 +206,31 @@
       container.append(link);
     };
 
+    const appendQuerySuggestions = (container, queries) => {
+      if (!queries.length) return;
+
+      const queryGroup = document.createElement("section");
+      queryGroup.className = "site-header__suggestion-queries";
+      appendHeading(queryGroup, searchDialog.dataset.searchQueries);
+      queries.forEach((item) => {
+        const link = document.createElement("a");
+        const queryText = item.text || "";
+        link.className = "site-header__suggestion-query";
+        link.href = item.url || `${searchDialog.querySelector("form").action}?${new URLSearchParams({ q: queryText })}`;
+        link.textContent = queryText;
+        link.setAttribute("role", "option");
+        queryGroup.append(link);
+      });
+      container.append(queryGroup);
+    };
+
     const renderResults = (payload, query) => {
       const data = payload?.resources?.results || {};
+      const queries = Array.isArray(data.queries) ? data.queries : [];
       const products = Array.isArray(data.products) ? data.products : [];
       const collections = Array.isArray(data.collections) ? data.collections : [];
       results.replaceChildren();
-      if (!products.length && !collections.length) {
+      if (!queries.length && !products.length && !collections.length) {
         results.textContent = searchDialog.dataset.searchEmpty;
         results.hidden = false;
         input.setAttribute("aria-expanded", "true");
@@ -220,6 +239,7 @@
 
       const layout = document.createElement("div");
       layout.className = "site-header__suggestion-layout";
+      appendQuerySuggestions(layout, queries);
       if (collections.length) {
         const collectionGroup = document.createElement("section");
         collectionGroup.className = "site-header__suggestion-collections";
@@ -259,8 +279,9 @@
         const url = new URL(searchDialog.dataset.predictiveUrl, window.location.origin);
         url.search = new URLSearchParams({
           q: query,
-          "resources[type]": "product,collection",
-          "resources[limit]": "6",
+          "resources[type]": "query,product,collection",
+          "resources[limit]": "4",
+          "resources[limit_scope]": "each",
           "resources[options][unavailable_products]": "hide",
         }).toString();
         try {

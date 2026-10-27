@@ -104,13 +104,19 @@
       style: "currency",
       currency: page.dataset.currency || "BRL",
     }).format(Number(cents || 0) / 100);
+    let floatingVideoDismissed = false;
     const setGallery = (color) => {
       const media = Array.from(page.querySelectorAll("[data-product-media]"));
       const colorKey = keyFor(color);
       const colorMatches = colorKey ? media.filter((item) => item.dataset.mediaColors?.includes(`|${colorKey}|`)) : [];
-      const visible = colorMatches.length
+      const colorCandidates = colorMatches.length
         ? media.filter((item) => colorMatches.includes(item) || item.dataset.mediaType !== "image")
         : media;
+      const candidates = floatingVideoDismissed
+        ? colorCandidates.filter((item) => !item.classList.contains("main-product__media--video"))
+        : colorCandidates;
+      const visibleImages = new Set(candidates.filter((item) => item.dataset.mediaType === "image").slice(0, 6));
+      const visible = candidates.filter((item) => item.dataset.mediaType !== "image" || visibleImages.has(item));
       media.forEach((item) => {
         const show = visible.includes(item);
         item.hidden = !show;
@@ -267,6 +273,24 @@
     };
     page.querySelector("[data-gallery-previous]")?.addEventListener("click", () => shiftGallery(-1));
     page.querySelector("[data-gallery-next]")?.addEventListener("click", () => shiftGallery(1));
+    const mobileVideoBreakpoint = window.matchMedia("(max-width: 999px)");
+    const floatingVideos = Array.from(page.querySelectorAll(".main-product__media--video"));
+    floatingVideos.forEach((media) => {
+      const video = media.querySelector("video");
+      if (video) {
+        const updateVideoControls = () => { video.controls = !mobileVideoBreakpoint.matches; };
+        updateVideoControls();
+        mobileVideoBreakpoint.addEventListener("change", updateVideoControls);
+      }
+    });
+    page.querySelectorAll("[data-video-dismiss]").forEach((button) => button.addEventListener("click", () => {
+      floatingVideoDismissed = true;
+      floatingVideos.forEach((media) => {
+        media.hidden = true;
+        media.querySelector("video")?.pause();
+        media.querySelectorAll("iframe").forEach((frame) => { frame.src = "about:blank"; });
+      });
+    }));
     const mediaGrid = page.querySelector("[data-media-grid]");
     let touchStart = null;
     mediaGrid?.addEventListener("touchstart", (event) => {
@@ -411,6 +435,15 @@
     updateSticky();
     refreshFavorite();
     update();
+    floatingVideos.forEach((media) => {
+      const video = media.querySelector("video");
+      if (!video || media.hidden) return;
+      video.muted = true;
+      video.playsInline = true;
+      video.loop = true;
+      const playback = video.play();
+      playback?.catch?.(() => {});
+    });
   });
 
   document.querySelectorAll("[data-product-recommendations]").forEach(async (section) => {

@@ -2440,6 +2440,13 @@ summary {
   font-weight: 500;
 }
 
+.site-header__search-hint {
+  margin: 0.45rem 0 0;
+  color: #77716b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .site-header__search-quick-links {
   display: flex;
   flex-wrap: wrap;
@@ -2460,7 +2467,15 @@ summary {
 
 .site-header__suggestion-layout {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
+}
+
+.site-header__suggestion-queries {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .site-header__suggestion-heading {
@@ -2480,6 +2495,23 @@ summary {
 
 .site-header__suggestion-collections .site-header__suggestion-heading {
   width: 100%;
+}
+
+.site-header__suggestion-queries .site-header__suggestion-heading {
+  width: 100%;
+}
+
+.site-header__suggestion-query {
+  border: 1px solid var(--upy-line);
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.site-header__suggestion-query:hover,
+.site-header__suggestion-query:focus-visible {
+  border-color: var(--upy-ink);
+  background: rgb(28 25 26 / 4%);
 }
 
 .site-header__suggestion-collection {
@@ -2531,6 +2563,7 @@ summary {
 }
 
 .site-header__suggestion-all {
+  grid-column: 1 / -1;
   justify-self: start;
   border-bottom: 1px solid currentColor;
   padding-block: 0.25rem;
@@ -3172,10 +3205,6 @@ summary {
 }
 
 @media (min-width: 640px) {
-  .site-header__suggestion-layout {
-    grid-template-columns: minmax(12rem, 0.75fr) minmax(0, 2fr);
-  }
-
   .site-header__suggestion-products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

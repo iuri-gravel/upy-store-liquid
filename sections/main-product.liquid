@@ -90,7 +90,7 @@
       {% if product.media.size > 0 %}
         <div class="main-product__media-stage">
           <div class="main-product__media-grid" data-media-grid>
-          {% for media in product.media limit: 12 %}
+          {% for media in product.media %}
             {% capture media_color_keys %}|{% endcapture %}
             {% assign media_loading = 'lazy' %}
             {% if forloop.first %}{% assign media_loading = 'eager' %}{% endif %}
@@ -112,7 +112,7 @@
               {% endfor %}
             {% endif %}
             <figure
-              class="main-product__media{% if forloop.first %} is-active{% endif %}"
+              class="main-product__media{% if forloop.first %} is-active{% endif %}{% if media.media_type == 'video' or media.media_type == 'external_video' %} main-product__media--video{% endif %}"
               data-product-media
               data-media-index="{{ forloop.index0 }}"
               data-media-id="{{ media.id }}"
@@ -124,7 +124,7 @@
                 {% when 'image' %}
                   {{ media | image_url: width: 1800 | image_tag: widths: '480, 720, 960, 1200, 1600, 1800', sizes: '(min-width: 1000px) 32vw, 100vw', loading: media_loading, alt: media.alt | default: product.title | escape }}
                 {% when 'video' %}
-                  {{ media | media_tag: controls: true, image_size: '1200x' }}
+                  {{ media | media_tag: autoplay: true, loop: true, muted: true, controls: true, image_size: '1200x' }}
                 {% when 'external_video' %}
                   {{ media | external_video_tag }}
                 {% when 'model' %}
@@ -135,6 +135,11 @@
               <button class="main-product__zoom" type="button" data-open-lightbox aria-label="{{ 'product.enlarge_image' | t: number: forloop.index, title: product.title | escape }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5M10.8 7.5v6.6M7.5 10.8h6.6"></path></svg>
               </button>
+              {% if media.media_type == 'video' or media.media_type == 'external_video' %}
+                <button class="main-product__video-close" type="button" data-video-dismiss aria-label="Fechar vídeo">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+                </button>
+              {% endif %}
             </figure>
           {% endfor %}
           </div>
@@ -150,7 +155,7 @@
         {% if product.media.size > 1 %}
           <div class="main-product__gallery-controls">
             <div class="main-product__gallery-dots" data-gallery-dots aria-label="{{ 'product.choose_image' | t | escape }}">
-              {% for media in product.media limit: 12 %}
+              {% for media in product.media %}
                 <button type="button" data-gallery-dot data-media-index="{{ forloop.index0 }}" aria-label="{{ 'product.view_image' | t: number: forloop.index | escape }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
               {% endfor %}
             </div>

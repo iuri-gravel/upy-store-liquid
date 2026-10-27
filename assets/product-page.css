@@ -41,6 +41,8 @@
   background: #e9e3de;
   aspect-ratio: 4 / 5;
 }
+.main-product__media--video { grid-column: 2; grid-row: 1; }
+.main-product__video-close { display: none; }
 .main-product__media > img,
 .main-product__media > video,
 .main-product__media > iframe,
@@ -309,6 +311,34 @@
   .main-product__media { display: none; width: 100%; aspect-ratio: 4 / 5; }
   .main-product__media.is-active { display: block; }
   .main-product__media[hidden] { display: none; }
+  .main-product__media--video:not([hidden]) {
+    position: absolute;
+    z-index: 3;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: block;
+    width: min(38vw, 9rem);
+    aspect-ratio: 9 / 16;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 24px rgb(28 25 26 / 24%);
+  }
+  .main-product__media--video .main-product__zoom { display: none; }
+  .main-product__video-close {
+    position: absolute;
+    z-index: 1;
+    top: 0.45rem;
+    right: 0.45rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(28 25 26 / 72%);
+    color: #fff;
+    cursor: pointer;
+  }
+  .main-product__video-close svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
   .main-product__zoom { opacity: 1; }
   .main-product__gallery-arrow {
     position: absolute;
