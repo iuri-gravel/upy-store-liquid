@@ -1,0 +1,77 @@
+{% doc %}
+Renders the Upy Store frequently asked questions page.
+{% enddoc %}
+
+{% assign faq_categories = 'faq_page.category_all|faq_page.category_orders|faq_page.category_delivery|faq_page.category_exchanges|faq_page.category_products|faq_page.category_payments' | split: '|' %}
+{% assign faq_item_categories = 'faq_page.category_orders|faq_page.category_delivery|faq_page.category_exchanges|faq_page.category_products|faq_page.category_payments' | split: '|' %}
+{% assign faq_questions = 'faq_page.question_1|faq_page.question_2|faq_page.question_3|faq_page.question_4|faq_page.question_5' | split: '|' %}
+{% assign faq_answers = 'faq_page.answer_1|faq_page.answer_2|faq_page.answer_3|faq_page.answer_4|faq_page.answer_5' | split: '|' %}
+
+<main class="faq-page" data-faq-root>
+  <section class="faq-page__hero">
+    <div class="faq-page__hero-inner">
+      <span class="faq-page__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7"/><path d="M12 17h.01"/></svg>
+      </span>
+      <p class="faq-page__eyebrow">{{ 'faq_page.eyebrow' | t }}</p>
+      <h1 class="faq-page__title">{{ 'faq_page.title' | t }}</h1>
+      <p class="faq-page__description">{{ 'faq_page.description' | t }}</p>
+      <label class="faq-page__search-wrap">
+        <span class="visually-hidden">{{ 'faq_page.search_label' | t }}</span>
+        <svg class="faq-page__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+        <input class="faq-page__search" type="search" placeholder="{{ 'faq_page.search_placeholder' | t }}" data-faq-search>
+      </label>
+    </div>
+  </section>
+
+  <section class="faq-page__content" aria-label="{{ 'faq_page.list_label' | t }}">
+    <div class="faq-page__categories" role="group" aria-label="{{ 'faq_page.categories_label' | t }}">
+      {% for category_key in faq_categories %}
+        {% assign category_index = forloop.index0 | minus: 1 %}
+        {% if forloop.first %}
+          <button class="faq-page__category" type="button" data-faq-category="all" aria-pressed="true">{{ category_key | t }}</button>
+        {% else %}
+          {% assign category_value = faq_item_categories[category_index] | t %}
+          <button class="faq-page__category" type="button" data-faq-category="{{ category_value | downcase | escape }}" aria-pressed="false">{{ category_key | t }}</button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="faq-page__list">
+      {% for question_key in faq_questions %}
+        {% assign item_index = forloop.index0 %}
+        {% assign answer_key = faq_answers[item_index] %}
+        {% assign item_category_key = faq_item_categories[item_index] %}
+        {% assign item_category = item_category_key | t %}
+        {% assign answer_id = 'faq-answer-' | append: forloop.index %}
+        <article class="faq-page__item" data-faq-item data-faq-item-category="{{ item_category | downcase | escape }}">
+          <h2>
+            <button class="faq-page__question" type="button" id="faq-question-{{ forloop.index }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="{{ answer_id }}" data-faq-question>
+              <span class="faq-page__question-copy">
+                <span class="faq-page__question-category">{{ item_category }}</span>
+                <span class="faq-page__question-title">{{ question_key | t }}</span>
+              </span>
+              <svg class="faq-page__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </h2>
+          <div class="faq-page__answer" id="{{ answer_id }}" aria-labelledby="faq-question-{{ forloop.index }}" data-faq-answer{% unless forloop.first %} hidden{% endunless %}>
+            <p>{{ answer_key | t }}</p>
+          </div>
+        </article>
+      {% endfor %}
+
+      <div class="faq-page__empty" data-faq-empty hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7"/><path d="M12 17h.01"/></svg>
+        <h2>{{ 'faq_page.empty_title' | t }}</h2>
+        <p>{{ 'faq_page.empty_description' | t }}</p>
+      </div>
+    </div>
+
+    <aside class="faq-page__contact">
+      <p class="faq-page__contact-eyebrow">{{ 'faq_page.contact_eyebrow' | t }}</p>
+      <h2>{{ 'faq_page.contact_title' | t }}</h2>
+      <p class="faq-page__contact-hours">{{ 'faq_page.contact_hours' | t }}</p>
+      <a class="faq-page__contact-button" href="mailto:contato@upystore.com.br">{{ 'faq_page.contact_button' | t }}</a>
+    </aside>
+  </section>
+</main>
