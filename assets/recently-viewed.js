@@ -202,7 +202,7 @@
       swatches.className = "home-recent__swatches";
       swatches.setAttribute("role", "group");
       swatches.setAttribute("aria-label", `Cores disponíveis para ${product.title || "produto"}`);
-      colors.slice(0, 5).forEach((color) => {
+      colors.forEach((color) => {
         const button = document.createElement("button");
         button.className = "home-recent__swatch";
         button.type = "button";
@@ -218,12 +218,6 @@
         button.append(dot);
         swatches.append(button);
       });
-      if (colors.length > 5) {
-        const more = document.createElement("span");
-        more.className = "home-recent__swatch-more";
-        more.textContent = `+${colors.length - 5}`;
-        swatches.append(more);
-      }
       details.append(swatches);
     }
 

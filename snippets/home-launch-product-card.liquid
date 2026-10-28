@@ -170,7 +170,6 @@ Renders a product card with variant colors, favorites and quick add.
     {% if launch_color_count > 0 %}
       <div class="home-launches__swatches" role="group" aria-label="Cores disponíveis para {{ product.title | escape }}">
         {% assign launch_seen_colors = '|' %}
-        {% assign launch_rendered_colors = 0 %}
         {% for launch_product_variant in product.variants %}
           {% assign launch_variant_color = blank %}
           {% assign launch_variant_size = blank %}
@@ -184,14 +183,10 @@ Renders a product card with variant colors, favorites and quick add.
             {% capture launch_color_token %}|{{ launch_variant_color }}|{% endcapture %}
             {% unless launch_seen_colors contains launch_color_token %}
               {% assign launch_seen_colors = launch_seen_colors | append: launch_variant_color | append: '|' %}
-              {% assign launch_rendered_colors = launch_rendered_colors | plus: 1 %}
-              {% if launch_rendered_colors <= 5 %}
-                {% render 'home-launch-product-color', product: product, color_name: launch_variant_color, color_option_index: launch_color_option_index, size_option_index: launch_size_option_index, selected_color: launch_selected_color, fallback_image: launch_card_image %}
-              {% endif %}
+              {% render 'home-launch-product-color', product: product, color_name: launch_variant_color, color_option_index: launch_color_option_index, size_option_index: launch_size_option_index, selected_color: launch_selected_color, fallback_image: launch_card_image %}
             {% endunless %}
           {% endif %}
         {% endfor %}
-        {% if launch_color_count > 5 %}<span class="home-launches__swatch-more">+{{ launch_color_count | minus: 5 }}</span>{% endif %}
       </div>
     {% endif %}
 
@@ -463,11 +458,6 @@ Renders a product card with variant colors, favorites and quick add.
 
 .home-launches__swatch:hover:not(.is-selected) .home-launches__swatch-dot {
   box-shadow: 0 0 0 1px #aaa49f;
-}
-
-.home-launches__swatch-more {
-  color: #77716c;
-  font-size: 0.7rem;
 }
 
 .home-launches__product-link {

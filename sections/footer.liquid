@@ -3,7 +3,7 @@
     <div class="page-width site-footer__signup-inner">
       <h2>{{ section.settings.newsletter_heading | default: 'Receba Novidades' | escape }}</h2>
       <p>{{ section.settings.newsletter_text | default: 'Cadastre-se e receba novidades exclusivas' | escape }}</p>
-      <a class="site-footer__register" href="{{ routes.account_url }}">{{ section.settings.register_label | default: 'Cadastrar' | escape }}</a>
+      <a class="site-footer__register" href="{{ routes.account_login_url }}">{{ section.settings.register_label | default: 'Cadastrar' | escape }}</a>
     </div>
   </div>
 

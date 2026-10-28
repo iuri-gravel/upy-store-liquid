@@ -1,0 +1,128 @@
+{% doc %}
+Renders the branded account registration landing page and links to Shopify customer accounts.
+@param {section} section - The page section settings.
+@example
+{% render 'register-page', section: section %}
+{% enddoc %}
+
+{% liquid
+  assign account_login_url = routes.account_login_url
+%}
+
+<section class="account-register">
+  <div class="account-register__layout page-width">
+    <div class="account-register__intro">
+      <p class="upy-section-label">{{ section.settings.register_eyebrow | escape }}</p>
+      <h1 class="upy-display-title">{{ section.settings.register_title | escape }}</h1>
+      <p class="upy-body-copy">{{ section.settings.register_description | escape }}</p>
+    </div>
+
+    <div class="account-register__card">
+      <p class="account-register__card-label">{{ section.settings.register_card_eyebrow | escape }}</p>
+      <h2>{{ section.settings.register_card_title | escape }}</h2>
+      <p class="account-register__card-copy">{{ section.settings.register_card_description | escape }}</p>
+      <a class="upy-button account-register__button" href="{{ account_login_url }}">
+        {{ section.settings.register_button_label | escape }}
+      </a>
+      <p class="account-register__privacy">{{ section.settings.register_privacy_note | escape }}</p>
+    </div>
+
+    <p class="account-register__login">
+      {{ section.settings.register_login_prompt | escape }}
+      <a href="{{ account_login_url }}">{{ section.settings.register_login_link | escape }}</a>
+    </p>
+  </div>
+</section>
+
+{% stylesheet %}
+  .account-register {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    background: var(--upy-canvas);
+    color: var(--upy-ink);
+  }
+
+  .account-register__layout {
+    display: grid;
+    max-width: 56rem;
+    justify-items: center;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .account-register__intro {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+  }
+
+  .account-register__intro .upy-display-title {
+    max-width: 14ch;
+  }
+
+  .account-register__card {
+    width: min(100%, 35rem);
+    padding: clamp(1.5rem, 5vw, 3rem);
+    border: 1px solid var(--upy-line);
+    background: rgb(255 255 255 / 36%);
+    text-align: left;
+  }
+
+  .account-register__card-label {
+    margin: 0 0 0.75rem;
+    color: #77716b;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+  }
+
+  .account-register__card h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .account-register__card-copy {
+    margin: 0.8rem 0 1.5rem;
+    color: #5f5a56;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .account-register__button {
+    width: 100%;
+    background: var(--upy-accent);
+    color: #fff;
+  }
+
+  .account-register__privacy {
+    margin: 1rem 0 0;
+    color: #77716b;
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .account-register__login {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .account-register__login a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (max-width: 639px) {
+    .account-register {
+      padding-block: 3rem;
+    }
+
+    .account-register__layout {
+      gap: 1.5rem;
+    }
+
+    .account-register__card {
+      padding: 1.25rem;
+    }
+  }
+{% endstylesheet %}

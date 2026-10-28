@@ -208,7 +208,7 @@
       </button>
 
       {% if shop.customer_accounts_enabled %}
-        <a class="icon-button site-header__account" href="{{ routes.account_url }}" aria-label="Minha conta">
+        <a class="icon-button site-header__account" href="{{ shop.secure_url | append: routes.account_url }}" aria-label="Minha conta">
           {% if customer %}
             <span class="site-header__account-initial" aria-hidden="true">{{ customer.first_name | default: customer.email | slice: 0, 1 | upcase }}</span>
           {% else %}
@@ -332,16 +332,11 @@
         <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
         <input id="HeaderSearchInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ section.settings.search_placeholder | escape }}" role="combobox" aria-expanded="false" aria-controls="HeaderSearchResults" aria-autocomplete="list" autocomplete="off" data-predictive-search-input>
         <input type="hidden" name="options[prefix]" value="last">
-        <button class="site-header__search-submit" type="submit" aria-label="Pesquisar produtos">Pesquisar produtos</button>
-        <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar" data-dialog-close>
-          <svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
-        </button>
       </form>
       <div class="site-header__search-content">
         <div class="site-header__search-initial" data-search-initial>
           <p class="site-header__eyebrow">Explore a Upy</p>
           <h2>Encontre o que você procura na UPY</h2>
-          <p class="site-header__search-hint">Digite pelo menos 2 caracteres para buscar por produto, cor, tamanho ou referência.</p>
           {% if primary_menu != blank %}
             <div class="site-header__search-quick-links">
               {% for link in primary_menu.links limit: 8 %}

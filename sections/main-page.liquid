@@ -8,6 +8,8 @@
   {% render 'faq-page' %}
 {% elsif page.handle == 'politica-de-privacidade' or page.handle == 'politica-de-cookies' or page.handle == 'termos-de-uso' %}
   {% render 'legal-policy-page' %}
+{% elsif page.handle == 'cadastro' %}
+  {% render 'register-page', section: section %}
 {% else %}
   <section class="main-page">
     <div class="main-page__inner">
@@ -62,6 +64,66 @@
       "type": "image_picker",
       "id": "video_poster",
       "label": "t:sections.manifesto_video_poster"
+    },
+    {
+      "type": "text",
+      "id": "register_eyebrow",
+      "label": "t:sections.register_eyebrow",
+      "default": "CONTA UPY"
+    },
+    {
+      "type": "text",
+      "id": "register_title",
+      "label": "t:sections.register_title",
+      "default": "Crie sua conta Upy"
+    },
+    {
+      "type": "textarea",
+      "id": "register_description",
+      "label": "t:sections.register_description",
+      "default": "Acompanhe seus pedidos e tenha uma experiência mais prática na loja."
+    },
+    {
+      "type": "text",
+      "id": "register_card_eyebrow",
+      "label": "t:sections.register_card_eyebrow",
+      "default": "CADASTRO SEGURO NA SHOPIFY"
+    },
+    {
+      "type": "text",
+      "id": "register_card_title",
+      "label": "t:sections.register_card_title",
+      "default": "Crie ou acesse sua conta"
+    },
+    {
+      "type": "textarea",
+      "id": "register_card_description",
+      "label": "t:sections.register_card_description",
+      "default": "Continue para a área de contas da Shopify para criar ou acessar seu cadastro da Upy."
+    },
+    {
+      "type": "text",
+      "id": "register_button_label",
+      "label": "t:sections.register_button_label",
+      "default": "CONTINUAR PARA A SHOPIFY"
+    },
+    {
+      "type": "textarea",
+      "id": "register_privacy_note",
+      "label": "t:sections.register_privacy_note",
+      "default": "O cadastro é concluído diretamente pela Shopify, que vincula as informações à sua conta na loja."
+    },
+    {
+      "type": "text",
+      "id": "register_login_prompt",
+      "label": "t:sections.register_login_prompt",
+      "default": "Já tem uma conta?"
+    },
+    {
+      "type": "text",
+      "id": "register_login_link",
+      "label": "t:sections.register_login_link",
+      "default": "Entrar"
     }
   ]
 }
