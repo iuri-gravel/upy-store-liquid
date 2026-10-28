@@ -204,8 +204,19 @@
                     {% for option_value in option.values %}
                       {% assign color_value = option_value.name | default: option_value %}
                       {% assign color_key = color_value | handleize %}
+                      {% assign color_variant_image = blank %}
+                      {% for color_variant in product.variants %}
+                        {% if color_variant.options[color_option_index] == color_value and color_variant.featured_media.preview_image != blank %}
+                          {% assign color_variant_image = color_variant.featured_media.preview_image %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
                       <button type="button" class="main-product__swatch" data-option-button data-option-value="{{ color_value | escape }}" data-color-key="{{ color_key }}" aria-label="{{ 'product.select_color' | t: color: color_value | escape }}" aria-pressed="false" title="{{ color_value | escape }}">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">
+                          {% if color_variant_image != blank %}
+                            {{ color_variant_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 120, 160', sizes: '2.75rem', alt: '' }}
+                          {% endif %}
+                        </span>
                       </button>
                     {% endfor %}
                   </div>

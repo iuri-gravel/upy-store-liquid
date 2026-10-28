@@ -22,9 +22,12 @@
     if (assorted || parts.length > 1) {
       const colors = assorted ? ["#111", "#d32f2f", "#2667d9", "#ec4899", "#35945b", "#f4d83d"] : parts.map((part) => namedColors[keyFor(part)] || "#d3d1cd");
       button.style.setProperty("--swatch-color", `conic-gradient(${colors.map((color, index) => `${color} ${index * 100 / colors.length}% ${(index + 1) * 100 / colors.length}%`).join(",")})`);
+      button.style.setProperty("--swatch-border-color", colors[0] || "#d3d1cd");
       return;
     }
-    button.style.setProperty("--swatch-color", namedColors[keyFor(name)] || (window.CSS?.supports("color", name) ? name : "#d3d1cd"));
+    const color = namedColors[keyFor(name)] || (window.CSS?.supports("color", name) ? name : "#d3d1cd");
+    button.style.setProperty("--swatch-color", color);
+    button.style.setProperty("--swatch-border-color", color);
   };
 
   document.querySelectorAll("[data-product-page]").forEach((page) => {
