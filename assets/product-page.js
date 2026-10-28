@@ -120,25 +120,21 @@
       style: "currency",
       currency: page.dataset.currency || "BRL",
     }).format(Number(cents || 0) / 100);
-    let floatingVideoDismissed = false;
     let lastGalleryKey = "";
     let currentGallery = [];
-    const navigableMedia = () => galleryMedia.filter((item) => !item.hidden && (!mobileVideoBreakpoint.matches || !item.classList.contains("main-product__media--video")));
+    const navigableMedia = () => galleryMedia.filter((item) => !item.hidden);
     const setGallery = (color) => {
       const media = galleryMedia;
       const colorKey = keyFor(color);
-      const selectionKey = colorKey + "|" + floatingVideoDismissed + "|" + mobileVideoBreakpoint.matches;
+      const selectionKey = colorKey + "|" + mobileVideoBreakpoint.matches;
       if (selectionKey === lastGalleryKey) return currentGallery;
       const colorMatches = mediaByColor.get(colorKey) || new Set();
       const colorCandidates = colorMatches.size
         ? media.filter((item) => colorMatches.has(item) || item.dataset.mediaType !== "image")
         : media;
-      const candidates = floatingVideoDismissed && mobileVideoBreakpoint.matches
-        ? colorCandidates.filter((item) => !item.classList.contains("main-product__media--video"))
-        : colorCandidates;
-      const visibleImages = new Set(candidates.filter((item) => item.dataset.mediaType === "image").slice(0, 6));
-      const visible = candidates.filter((item) => item.dataset.mediaType !== "image" || visibleImages.has(item));
-      const firstVisible = visible.find((item) => !mobileVideoBreakpoint.matches || !item.classList.contains("main-product__media--video"));
+      const visibleImages = new Set(colorCandidates.filter((item) => item.dataset.mediaType === "image").slice(0, 6));
+      const visible = colorCandidates.filter((item) => item.dataset.mediaType !== "image" || visibleImages.has(item));
+      const firstVisible = visible.find((item) => item.dataset.mediaType === "image") || visible[0];
       media.forEach((item) => {
         const show = visible.includes(item);
         item.hidden = !show;
@@ -147,7 +143,7 @@
       const dots = galleryDots;
       dots.forEach((dot) => {
         const mediaItem = mediaByIndex.get(dot.dataset.mediaIndex);
-        const show = Boolean(mediaItem && visible.includes(mediaItem) && (!mobileVideoBreakpoint.matches || !mediaItem.classList.contains("main-product__media--video")));
+        const show = Boolean(mediaItem && visible.includes(mediaItem));
         dot.hidden = !show;
         dot.setAttribute("aria-current", String(show && mediaItem === firstVisible));
       });
@@ -263,7 +259,7 @@
         if (decrease) decrease.disabled = Number(quantityValue?.value || 1) <= 1;
       }
       const visibleMedia = setGallery(currentColor);
-      const firstSlide = visibleMedia.find((item) => !mobileVideoBreakpoint.matches || !item.classList.contains("main-product__media--video"));
+      const firstSlide = visibleMedia[0];
       if (focusMedia && firstSlide) activateMedia(firstSlide);
       selectionError.hidden = true;
       updateUrl();
@@ -298,23 +294,112 @@
     };
     page.querySelector("[data-gallery-previous]")?.addEventListener("click", () => shiftGallery(-1));
     page.querySelector("[data-gallery-next]")?.addEventListener("click", () => shiftGallery(1));
-    const floatingVideos = Array.from(page.querySelectorAll(".main-product__media--video"));
-    floatingVideos.forEach((media) => {
-      const video = media.querySelector("video");
-      if (video) {
-        const updateVideoControls = () => { video.controls = !mobileVideoBreakpoint.matches; };
-        updateVideoControls();
-        mobileVideoBreakpoint.addEventListener("change", updateVideoControls);
-      }
-    });
-    page.querySelectorAll("[data-video-dismiss]").forEach((button) => button.addEventListener("click", () => {
-      floatingVideoDismissed = true;
-      floatingVideos.forEach((media) => {
-        media.hidden = true;
-        media.querySelector("video")?.pause();
-        media.querySelectorAll("iframe").forEach((frame) => { frame.src = "about:blank"; });
+    const floatingVideos = Array.from(page.querySelectorAll("[data-product-floating-video]"));
+    const videoBackdrop = page.querySelector("[data-video-backdrop]");
+    floatingVideos.forEach((bubble) => {
+      let drag = null;
+      let wasDragged = false;
+      let collapsedGeometry = null;
+      const fitExpanded = () => {
+        const ratio = Number.parseFloat(bubble.style.getPropertyValue("--video-ratio")) || 0.5625;
+        const maxWidth = Math.max(1, Math.min(window.innerWidth - 32, window.innerWidth * 0.88, 896));
+        const maxHeight = Math.max(1, window.innerHeight - 32);
+        const width = Math.min(maxWidth, maxHeight * ratio);
+        const height = width / ratio;
+        bubble.style.width = `${width}px`;
+        bubble.style.height = `${height}px`;
+        bubble.style.left = `${(window.innerWidth - width) / 2}px`;
+        bubble.style.top = `${(window.innerHeight - height) / 2}px`;
+        bubble.style.right = "auto";
+        bubble.style.bottom = "auto";
+        bubble.style.transform = "none";
+      };
+      const setExpanded = (expanded) => {
+        if (expanded && !collapsedGeometry) {
+          collapsedGeometry = {
+            left: bubble.style.left,
+            top: bubble.style.top,
+            right: bubble.style.right,
+            bottom: bubble.style.bottom,
+            width: bubble.style.width,
+            height: bubble.style.height,
+            transform: bubble.style.transform,
+          };
+        }
+        bubble.classList.toggle("is-expanded", expanded);
+        bubble.setAttribute("aria-expanded", String(expanded));
+        bubble.setAttribute("aria-label", expanded ? "Reduzir vídeo do produto" : "Ampliar vídeo do produto");
+        if (videoBackdrop) videoBackdrop.hidden = !expanded;
+        if (expanded) {
+          fitExpanded();
+        } else if (collapsedGeometry) {
+          Object.entries(collapsedGeometry).forEach(([property, value]) => { bubble.style[property] = value; });
+          collapsedGeometry = null;
+        }
+      };
+      const toggleExpanded = () => setExpanded(!bubble.classList.contains("is-expanded"));
+      bubble.addEventListener("pointerdown", (event) => {
+        if (bubble.classList.contains("is-expanded") || (event.pointerType === "mouse" && event.button !== 0)) return;
+        wasDragged = false;
+        const rect = bubble.getBoundingClientRect();
+        drag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+        bubble.setPointerCapture(event.pointerId);
       });
-    }));
+      bubble.addEventListener("pointermove", (event) => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const deltaX = event.clientX - drag.startX;
+        const deltaY = event.clientY - drag.startY;
+        if (!drag.moved && Math.hypot(deltaX, deltaY) < 5) return;
+        drag.moved = true;
+        wasDragged = true;
+        bubble.classList.add("is-dragging");
+        const rect = bubble.getBoundingClientRect();
+        const left = Math.min(Math.max(8, drag.left + deltaX), window.innerWidth - rect.width - 8);
+        const top = Math.min(Math.max(8, drag.top + deltaY), window.innerHeight - rect.height - 8);
+        bubble.style.left = `${left}px`;
+        bubble.style.top = `${top}px`;
+        bubble.style.right = "auto";
+        bubble.style.bottom = "auto";
+      });
+      const finishDrag = (event) => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        if (bubble.hasPointerCapture(event.pointerId)) bubble.releasePointerCapture(event.pointerId);
+        bubble.classList.remove("is-dragging");
+        drag = null;
+      };
+      bubble.addEventListener("pointerup", finishDrag);
+      bubble.addEventListener("pointercancel", finishDrag);
+      bubble.addEventListener("click", () => {
+        if (wasDragged) {
+          wasDragged = false;
+          return;
+        }
+        toggleExpanded();
+      });
+      bubble.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        toggleExpanded();
+      });
+      const video = bubble.querySelector("video");
+      const frame = bubble.querySelector("iframe");
+      const setVideoRatio = () => {
+        const nativeRatio = video?.videoWidth && video?.videoHeight ? video.videoWidth / video.videoHeight : 0;
+        const frameWidth = Number(frame?.getAttribute("width")) || 0;
+        const frameHeight = Number(frame?.getAttribute("height")) || 0;
+        const frameRatio = frameWidth && frameHeight ? frameWidth / frameHeight : 0;
+        const ratio = nativeRatio || frameRatio || 0.5625;
+        if (ratio > 0 && Number.isFinite(ratio)) bubble.style.setProperty("--video-ratio", String(ratio));
+        if (bubble.classList.contains("is-expanded")) fitExpanded();
+      };
+      video?.addEventListener("loadedmetadata", setVideoRatio);
+      setVideoRatio();
+      window.addEventListener("resize", () => { if (bubble.classList.contains("is-expanded")) fitExpanded(); });
+      videoBackdrop?.addEventListener("click", () => setExpanded(false));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && bubble.classList.contains("is-expanded")) setExpanded(false);
+      });
+    });
     mobileVideoBreakpoint.addEventListener("change", () => { setGallery(colorIndex >= 0 ? selected[colorIndex] : ""); });
     const mediaGrid = page.querySelector("[data-media-grid]");
     let touchStart = null;
@@ -486,6 +571,7 @@
       video.muted = true;
       video.playsInline = true;
       video.loop = true;
+      video.controls = false;
       const playback = video.play();
       playback?.catch?.(() => {});
     });
