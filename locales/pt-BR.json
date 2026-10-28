@@ -9,7 +9,8 @@
  */
 {
   "accessibility": {
-    "skip_to_content": "Pular para o conteúdo"
+    "skip_to_content": "Pular para o conteúdo",
+    "whatsapp_contact": "Conversar com a UPY pelo WhatsApp"
   },
   "header": {
     "menu": "Abrir menu",

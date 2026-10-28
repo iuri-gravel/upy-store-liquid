@@ -295,6 +295,7 @@
     page.querySelector("[data-gallery-previous]")?.addEventListener("click", () => shiftGallery(-1));
     page.querySelector("[data-gallery-next]")?.addEventListener("click", () => shiftGallery(1));
     const floatingVideos = Array.from(page.querySelectorAll("[data-product-floating-video]"));
+    const siteHeader = document.querySelector("[data-site-header]");
     const videoBackdrop = page.querySelector("[data-video-backdrop]");
     floatingVideos.forEach((bubble) => {
       let drag = null;
@@ -355,7 +356,10 @@
         bubble.classList.add("is-dragging");
         const rect = bubble.getBoundingClientRect();
         const left = Math.min(Math.max(8, drag.left + deltaX), window.innerWidth - rect.width - 8);
-        const top = Math.min(Math.max(8, drag.top + deltaY), window.innerHeight - rect.height - 8);
+        const maxTop = Math.max(8, window.innerHeight - rect.height - 8);
+        const menuBottom = siteHeader?.getBoundingClientRect().bottom || 0;
+        const minTop = Math.min(Math.max(8, menuBottom + 8), maxTop);
+        const top = Math.min(Math.max(minTop, drag.top + deltaY), maxTop);
         bubble.style.left = `${left}px`;
         bubble.style.top = `${top}px`;
         bubble.style.right = "auto";

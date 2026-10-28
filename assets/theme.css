@@ -2893,3 +2893,44 @@ summary {
 
 .site-header__suggestion-product:focus-visible,
 .site-header__suggestion-collection:focus-visible { outline: 2px solid var(--upy-ink); outline-offset: 3px; }
+
+.site-whatsapp {
+  position: fixed;
+  z-index: 50;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  right: 1.25rem;
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 0.25rem 0.9rem rgb(0 0 0 / 22%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.site-whatsapp:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 0.4rem 1.1rem rgb(0 0 0 / 27%);
+}
+
+.site-whatsapp:focus-visible {
+  outline: 3px solid var(--upy-ink);
+  outline-offset: 3px;
+}
+
+.site-whatsapp svg { display: block; width: 1.85rem; height: 1.85rem; fill: currentColor; }
+
+@media (max-width: 639px) {
+  .site-whatsapp { right: 0.75rem; bottom: calc(1rem + env(safe-area-inset-bottom)); width: 3.25rem; height: 3.25rem; }
+  .site-whatsapp svg { width: 1.7rem; height: 1.7rem; }
+}
+
+@media (max-width: 999px) {
+  body:has(.main-product__sticky:not([hidden])) .site-whatsapp { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-whatsapp { transition-duration: 0.01ms; }
+}
