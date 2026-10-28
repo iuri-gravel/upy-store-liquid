@@ -196,13 +196,14 @@
   const readProperties = (item) => {
     try {
       const value = JSON.parse(item.querySelector("[data-cart-line-properties]")?.textContent || "{}");
-      return value && typeof value === "object" ? value : {};
+      return value && typeof value === "object" && !Array.isArray(value) ? value : {};
     } catch { return {}; }
   };
 
-  const stableProperties = (properties) => JSON.stringify(
-    Object.fromEntries(Object.entries(properties || {}).sort(([a], [b]) => a.localeCompare(b)))
-  );
+  const stableProperties = (properties) => {
+    const value = properties && typeof properties === "object" && !Array.isArray(properties) ? properties : {};
+    return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b))));
+  };
 
   const findCartLine = (cart, item, variantId, properties, sellingPlan) => {
     const exactKey = cart.items.find((line) => line.key === item.dataset.lineKey && String(line.variant_id) === String(variantId));
@@ -234,7 +235,7 @@
     try {
       const addData = { id: Number(selected.id), quantity, properties };
       if (sellingPlan) addData.selling_plan = Number(sellingPlan);
-      await postCart("add", addData);
+      await postCart("add", { items: [addData] });
       didAdd = true;
 
       const cartResponse = await fetch(endpoint("cart.js"), { headers: { Accept: "application/json" } });
