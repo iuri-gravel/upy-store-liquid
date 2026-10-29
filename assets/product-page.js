@@ -441,17 +441,6 @@
       lightboxContent?.replaceChildren();
     });
 
-    const sizeChart = page.querySelector("[data-size-chart-dialog]");
-    page.querySelector("[data-size-chart-open]")?.addEventListener("click", () => sizeChart?.showModal());
-    page.querySelector("[data-dialog-close]")?.addEventListener("click", () => sizeChart?.close());
-    sizeChart?.addEventListener("click", (event) => { if (event.target === sizeChart) sizeChart.close(); });
-    page.querySelector("[data-sizebay-open]")?.addEventListener("click", () => {
-      const sizebayButton = Array.from(page.querySelectorAll("#sizebay-container button, .vfr__button--clean"))
-        .find((button) => /descubra seu tamanho/i.test(button.textContent || ""));
-      if (sizebayButton) sizebayButton.click();
-      else sizeChart?.showModal();
-    });
-
     const favoriteButton = page.querySelector("[data-product-wishlist]");
     const wishlistKey = "upy-wishlist-v1";
     const readWishlist = () => {
@@ -606,51 +595,4 @@
     } else void loadRecommendations(section);
   });
 
-  const loadSizebay = async () => {
-    const container = document.querySelector("[data-product-sizebay]");
-    if (!container || document.querySelector("#sizebay-vfr-v4")) return;
-    const addScript = (id, src) => new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.id = id;
-      script.src = src;
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.append(script);
-    });
-    try {
-      await addScript("sizebay-vfr-v4", "https://static.sizebay.technology/8192/prescript.js");
-      const style = document.createElement("link");
-      style.rel = "stylesheet";
-      style.href = "https://static.sizebay.technology/8192/styles/styles_v4.css";
-      document.head.append(style);
-      await addScript("szb-vfr__base", "https://vfr-v3-production.sizebay.technology/V4/implantation/index.js");
-      if (typeof window.SizebayPrescript !== "function" || typeof window.Sizebay?.Implantation !== "function") return;
-      const config = window.SizebayPrescript();
-      const canonical = new URL(container.dataset.sizebayRoute || window.location.href, window.location.origin);
-      canonical.search = "";
-      canonical.hash = "";
-      const provided = typeof config.getPermalink === "function" ? config.getPermalink() : "";
-      const permalink = provided && new URL(provided, window.location.origin).pathname === canonical.pathname ? provided : canonical.toString();
-      window.Sizebay.Implantation({
-        permalink,
-        tenantId: config.getTenantId(),
-        buttons: config.getButtons(),
-        anchor: config.getAnchor(),
-        lang: config.getLanguage(),
-        recommendation: config.getRecommendationText(),
-      });
-    } catch { /* o botão de tabela manual continua disponível se a Sizebay não carregar */ }
-  };
-  const sizebayContainer = document.querySelector("[data-product-sizebay]");
-  if (sizebayContainer) {
-    if ("IntersectionObserver" in window) {
-      const observer = new IntersectionObserver((entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        observer.disconnect();
-        void loadSizebay();
-      }, { rootMargin: "400px" });
-      observer.observe(sizebayContainer);
-    } else void loadSizebay();
-  }
 })();

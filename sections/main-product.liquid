@@ -4,7 +4,6 @@
   assign color_option_index = -1
   assign size_option_index = -1
   assign breadcrumb_collection = product.collections.first
-  assign chart_kind = section.settings.size_chart
   assign composition_field = product.metafields.custom.composition
   assign composition = composition_field.value
   assign technology = metaobjects.technology.values | first
@@ -55,14 +54,6 @@
     assign selected_variant = product.variants.first
   endif
 
-  if chart_kind == 'auto'
-    assign product_title_normalized = product.title | downcase
-    if product_title_normalized contains 'short' or product_title_normalized contains 'calça' or product_title_normalized contains 'calca' or product_title_normalized contains 'legging'
-      assign chart_kind = 'bottoms'
-    else
-      assign chart_kind = 'tops'
-    endif
-  endif
 %}
 
 <section
@@ -75,7 +66,6 @@
   data-color-option-index="{{ color_option_index }}"
   data-size-option-index="{{ size_option_index }}"
   data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
-  data-chart-kind="{{ chart_kind }}"
   data-msg-add="{{ 'product.add_to_cart' | t | escape }}"
   data-msg-unavailable="{{ 'product.unavailable' | t | escape }}"
   data-msg-select-size="{{ 'product.select_size' | t | escape }}"
@@ -258,17 +248,7 @@
             {% endfor %}
           {% endunless %}
 
-          <div class="main-product__size-tools"{% if size_option_index < 0 %} hidden{% endif %}>
-            <button class="main-product__size-tool" type="button" data-sizebay-open>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18.5 12 13l9 5.5v2H3zM12 13V5m0 0L8.5 8.5M12 5l3.5 3.5"></path></svg>
-              {{ 'product.discover_size' | t }}
-            </button>
-            <button class="main-product__size-tool" type="button" data-size-chart-open>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v10H3zM7 7v3m4-3v2m4-2v3m4-3v2"></path></svg>
-              {{ 'product.size_chart' | t }}
-            </button>
-          </div>
-          <div id="sizebay-container" class="main-product__sizebay" data-sizebay-route="{{ canonical_url | escape }}" data-product-sizebay></div>
+          <div id="sizebay-container"></div>
 
           <div class="main-product__quantity-wrap">
             <label for="ProductQuantity-{{ section.id }}">{{ 'product.quantity' | t }}</label>
@@ -371,22 +351,6 @@
     </div>
   </div>
 
-  <dialog class="main-product__dialog" data-size-chart-dialog aria-labelledby="ProductSizeChartTitle-{{ section.id }}">
-    <div class="main-product__dialog-panel">
-      <div class="main-product__dialog-heading">
-        <h2 id="ProductSizeChartTitle-{{ section.id }}">{{ 'product.size_chart_title' | t }}</h2>
-        <button type="button" data-dialog-close aria-label="{{ 'product.close_size_chart' | t | escape }}">×</button>
-      </div>
-      {% if chart_kind == 'bottoms' %}
-        {% assign chart_alt = 'product.size_chart_bottoms_alt' | t %}
-        <img src="{{ 'product-size-chart-bottom.webp' | asset_url }}" alt="{{ chart_alt | escape }}" width="1254" height="1254" loading="lazy" decoding="async">
-      {% else %}
-        {% assign chart_alt = 'product.size_chart_tops_alt' | t %}
-        <img src="{{ 'product-size-chart-top.webp' | asset_url }}" alt="{{ chart_alt | escape }}" width="1254" height="1254" loading="lazy" decoding="async">
-      {% endif %}
-    </div>
-  </dialog>
-
   <dialog class="main-product__lightbox" data-product-lightbox aria-label="{{ 'product.enlarged_image' | t | escape }}">
     <button class="main-product__lightbox-close" type="button" data-lightbox-close aria-label="{{ 'product.close_enlarged_image' | t | escape }}">×</button>
     <div data-lightbox-content></div>
@@ -406,19 +370,6 @@
   "name": "t:sections.main_product",
   "tag": "section",
   "class": "shopify-section-main-product",
-  "settings": [
-    {
-      "type": "select",
-      "id": "size_chart",
-      "label": "t:sections.product_size_chart",
-      "options": [
-        { "value": "auto", "label": "t:sections.product_size_chart_auto" },
-        { "value": "tops", "label": "t:sections.product_size_chart_tops" },
-        { "value": "bottoms", "label": "t:sections.product_size_chart_bottoms" }
-      ],
-      "default": "auto"
-    }
-  ],
   "blocks": [
     { "type": "@app" }
   ]

@@ -212,22 +212,6 @@
 .main-product__size[aria-pressed="true"] { border-color: var(--upy-ink); background: var(--upy-ink); color: var(--upy-canvas); }
 .main-product__size:disabled { border-color: rgb(28 25 26 / 22%); color: #8a847d; text-decoration: line-through; cursor: not-allowed; }
 .main-product__select { min-height: 3rem; width: min(100%, 20rem); padding: 0.5rem 0.75rem; border: 1px solid rgb(28 25 26 / 45%); border-radius: 0; background: transparent; color: inherit; }
-.main-product__size-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: -0.2rem 0 1.2rem; }
-.main-product__size-tool {
-  display: flex;
-  min-height: 3.65rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.6rem 0.65rem;
-  border: 1px solid var(--upy-ink);
-  background: transparent;
-  font-weight: 500;
-  line-height: 1.35;
-  cursor: pointer;
-}
-.main-product__size-tool svg { width: 1.35rem; height: 1.35rem; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
-.main-product__sizebay { display: none; }
 .main-product__quantity-wrap { display: grid; width: fit-content; gap: 0.55rem; margin: 1rem 0 1.2rem; }
 .main-product__quantity-wrap > label { font-size: 0.95rem; font-weight: 500; }
 .main-product__quantity { display: grid; min-width: 11.8rem; grid-template-columns: 2.8rem 1fr 2.8rem; border: 1px solid var(--upy-ink); }
@@ -323,15 +307,8 @@
 .product-reviews__app-blocks,
 .product-reviews__app-block { min-width: 0; width: 100%; }
 .product-reviews__app-block:empty { display: none; }
-.main-product__dialog,
 .main-product__lightbox { max-width: min(94vw, 58rem); max-height: 90vh; padding: 0; border: 0; background: var(--upy-canvas); color: var(--upy-ink); }
-.main-product__dialog::backdrop,
 .main-product__lightbox::backdrop { background: rgb(14 13 13 / 72%); }
-.main-product__dialog-panel { overflow: auto; max-height: 90vh; padding: 1.25rem; }
-.main-product__dialog-panel > img { display: block; width: 100%; height: auto; }
-.main-product__dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
-.main-product__dialog-heading h2 { margin: 0; font-size: 1.35rem; font-weight: 400; }
-.main-product__dialog-heading button,
 .main-product__lightbox-close { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 0; background: transparent; font-size: 1.8rem; cursor: pointer; }
 .main-product__lightbox { width: min(95vw, 80rem); height: min(94vh, 65rem); max-width: 95vw; max-height: 94vh; overflow: visible; background: transparent; }
 .main-product__lightbox-close { position: absolute; z-index: 2; top: 0.5rem; right: 0.5rem; border-radius: 50%; background: var(--upy-canvas); }

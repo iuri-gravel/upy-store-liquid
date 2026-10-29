@@ -11,9 +11,7 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {
-        "size_chart": "auto"
-      }
+      "settings": {}
     },
     "reviews": {
       "type": "product-reviews",

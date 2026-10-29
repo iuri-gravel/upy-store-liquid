@@ -476,13 +476,18 @@ summary {
 
 .site-footer__logo {
   display: inline-flex;
-  margin-bottom: 1rem;
+  max-width: 100%;
+  vertical-align: top;
 }
 
 .site-footer__logo-image {
   display: block;
-  width: auto;
-  height: 2.75rem;
+  width: 6rem;
+  max-width: 100%;
+  height: auto;
+  max-height: 4rem;
+  object-fit: contain;
+  object-position: left center;
   filter: brightness(0) invert(1);
 }
 

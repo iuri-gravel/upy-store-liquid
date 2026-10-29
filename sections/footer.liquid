@@ -13,7 +13,7 @@
         {% if section.settings.logo != blank %}
           {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'site-footer__logo-image', alt: shop.name, widths: '120, 180, 240, 320, 420', sizes: '160px' }}
         {% else %}
-          <img class="site-footer__logo-image" src="{{ 'LOGOTIPO.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="2000" height="2000" loading="lazy">
+          <img class="site-footer__logo-image" src="{{ 'logo-wordmark.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="1640" height="636" loading="lazy">
         {% endif %}
       </a>
       <p>{{ section.settings.description | escape }}</p>
