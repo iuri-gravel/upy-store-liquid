@@ -1,0 +1,143 @@
+{% doc %}
+  Renders a floating UPY button with the social links configured in the footer.
+  @param {string} [instagram_url] - Instagram profile URL.
+  @param {string} [tiktok_url] - TikTok profile URL.
+  @param {string} [facebook_url] - Facebook page URL.
+{% enddoc %}
+
+{% if instagram_url != blank or tiktok_url != blank or facebook_url != blank %}
+  <details class="site-social" data-social-menu>
+    <summary class="site-social__toggle" aria-label="{{ 'accessibility.social_links' | t | escape }}" title="{{ 'accessibility.social_links' | t | escape }}">
+      <img class="site-social__brand" src="{{ 'favicon.svg' | asset_url }}" width="30" height="30" alt="" aria-hidden="true">
+      <svg class="site-social__close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+    </summary>
+    <nav class="site-social__links" aria-label="{{ 'accessibility.social_links' | t | escape }}">
+      {% if instagram_url != blank %}
+        <a class="site-social__link" href="{{ instagram_url | escape }}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>
+          <span>Instagram</span>
+        </a>
+      {% endif %}
+      {% if tiktok_url != blank %}
+        <a class="site-social__link" href="{{ tiktok_url | escape }}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8a4.9 4.9 0 0 1-1.2-3.2h-3.7v14.8a3.1 3.1 0 1 1-2.1-2.9v-3.8a6.8 6.8 0 1 0 5.8 6.7V9.9a8.5 8.5 0 0 0 5 1.6V7.8a4.9 4.9 0 0 1-3.8-2Z" /></svg>
+          <span>TikTok</span>
+        </a>
+      {% endif %}
+      {% if facebook_url != blank %}
+        <a class="site-social__link" href="{{ facebook_url | escape }}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h2V1.4c-.7-.1-1.7-.2-3-.2-3 0-5 1.8-5 5.2V9H7v4h3v8h4Z" /></svg>
+          <span>Facebook</span>
+        </a>
+      {% endif %}
+    </nav>
+  </details>
+{% endif %}
+
+{% stylesheet %}
+  .site-social {
+    position: fixed;
+    z-index: 49;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    left: max(1.25rem, env(safe-area-inset-left));
+    color: var(--upy-ink);
+  }
+
+  .site-social__toggle {
+    display: grid;
+    width: 3.5rem;
+    height: 3.5rem;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 50%;
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
+    box-shadow: 0 0.25rem 0.9rem rgb(0 0 0 / 22%);
+    cursor: pointer;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .site-social__toggle::-webkit-details-marker { display: none; }
+  .site-social__toggle::marker { content: ''; }
+  .site-social__brand { display: block; width: 1.875rem; height: 1.875rem; filter: invert(1); }
+  .site-social__close { display: none; width: 1.5rem; height: 1.5rem; }
+  .site-social[open] .site-social__brand { display: none; }
+  .site-social[open] .site-social__close { display: block; }
+
+  .site-social__links {
+    position: absolute;
+    bottom: calc(100% + 0.75rem);
+    left: 0;
+    width: 12rem;
+    max-width: calc(100vw - 2.5rem);
+    max-height: calc(100dvh - 9rem);
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid var(--upy-line);
+    border-radius: 1rem;
+    background: var(--upy-canvas);
+    box-shadow: 0 0.5rem 2rem rgb(28 25 26 / 15%);
+  }
+
+  .site-social__link {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.65rem;
+    color: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .site-social__link svg { width: 1.4rem; height: 1.4rem; flex-shrink: 0; }
+  .site-social__toggle:focus-visible,
+  .site-social__link:focus-visible { outline: 2px solid var(--upy-accent); outline-offset: 3px; }
+
+  @media (hover: hover) {
+    .site-social__toggle:hover { transform: translateY(-2px); box-shadow: 0 0.4rem 1.1rem rgb(0 0 0 / 27%); }
+    .site-social__link:hover { background: color-mix(in srgb, var(--upy-ink) 6%, transparent); color: var(--upy-accent); }
+  }
+
+  @media (max-width: 639px) {
+    .site-social { bottom: calc(1rem + env(safe-area-inset-bottom)); left: max(0.75rem, env(safe-area-inset-left)); }
+    .site-social__toggle { width: 3.25rem; height: 3.25rem; }
+    .site-social__brand { width: 1.75rem; height: 1.75rem; }
+  }
+
+  @media (max-width: 999px) {
+    body:has(.main-product__sticky:not([hidden])) .site-social { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+    body:has(.main-product__sticky:not([hidden])) .site-social__links { max-height: calc(100dvh - 13rem); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-social__toggle,
+    .site-social__link { transition: none; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('[data-social-menu][open]').forEach((menu) => {
+      if (!menu.contains(event.target) || event.target.closest('a')) menu.open = false;
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('[data-social-menu][open]').forEach((menu) => {
+      const focusInside = menu.contains(document.activeElement);
+      menu.open = false;
+      if (focusInside) {
+        event.preventDefault();
+        menu.querySelector('summary').focus();
+      }
+    });
+  });
+{% endjavascript %}

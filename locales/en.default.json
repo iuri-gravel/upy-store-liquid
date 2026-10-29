@@ -10,7 +10,8 @@
 {
   "accessibility": {
     "skip_to_content": "Skip to content",
-    "whatsapp_contact": "Chat with UPY on WhatsApp"
+    "whatsapp_contact": "Chat with UPY on WhatsApp",
+    "social_links": "UPY social media"
   },
   "header": {
     "menu": "Open menu",
