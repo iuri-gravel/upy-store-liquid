@@ -1,0 +1,19 @@
+{% doc %}
+Renders the populated icon and description pairs from a product technology metaobject.
+@param {metaobject} technology - The referenced technology metaobject.
+{% enddoc %}
+
+{% for field_number in (1..10) %}
+  {% assign icon_key = 'icone_' | append: field_number %}
+  {% assign description_key = 'descricao_' | append: field_number %}
+  {% assign icon_field = technology[icon_key] %}
+  {% assign description_field = technology[description_key] %}
+  {% assign technology_icon = icon_field.value %}
+  {% assign technology_label = description_field.value %}
+  {% if technology_icon != blank or technology_label != blank %}
+    <li>
+      {% if technology_icon != blank %}{{ technology_icon | image_url: width: 96 | image_tag: width: 40, height: 40, loading: 'lazy', alt: '' }}{% endif %}
+      {% if technology_label != blank %}<span>{{ technology_label | escape }}</span>{% endif %}
+    </li>
+  {% endif %}
+{% endfor %}

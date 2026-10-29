@@ -7,7 +7,7 @@
   assign chart_kind = section.settings.size_chart
   assign composition_field = product.metafields.custom.composition
   assign composition = composition_field.value
-  assign technologies = product.metafields.custom.technologies.value
+  assign technology = metaobjects.technology.values | first
   assign pinned_video = product.media | where: 'media_type', 'video' | first
   if pinned_video == blank
     assign pinned_video = product.media | where: 'media_type', 'external_video' | first
@@ -353,16 +353,9 @@
           <details class="main-product__accordion">
             <summary>{{ 'product.technology' | t }} <span aria-hidden="true">+</span></summary>
             <div class="main-product__accordion-content">
-              {% if technologies != blank %}
+              {% if technology != blank %}
                 <ul class="main-product__technology-list">
-                  {% for technology in technologies %}
-                    {% assign technology_label = technology.descricao_1.value | default: 'product.technology' | t %}
-                    {% assign technology_icon = technology.icone_1.value %}
-                    <li>
-                      {% if technology_icon != blank %}{{ technology_icon | image_url: width: 96 | image_tag: width: 40, height: 40, loading: 'lazy', alt: '' }}{% endif %}
-                      <span>{{ technology_label | escape }}</span>
-                    </li>
-                  {% endfor %}
+                  {% render 'technology-metaobject-items', technology: technology %}
                 </ul>
               {% else %}<p>{{ 'product.no_technologies' | t }}</p>{% endif %}
             </div>
