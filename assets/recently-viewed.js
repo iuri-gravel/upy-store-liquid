@@ -54,11 +54,11 @@
   const normalize = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
   const namedColors = {
     amarelo: "#f4d83d", azul: "#2b3f5f", "azul atena": "#2963af", "azul bebe": "#a8d8f0",
-    "azul bic": "#1d4ed8", "azul claro": "#8ecae6", "azul marinho": "#152544", "azul navy": "#2b3f5f",
+    "azul bic": "#1d4ed8", "azul claro": "#8ecae6", "azul marinho": "#152544", "azul navy": "#31415c",
     bege: "#d8c4a8", branco: "#ffffff", bordo: "#722f37", cafe: "#6f4e37", caramelo: "#b87845",
     chumbo: "#4b4f54", cinza: "#b8b8b8", coral: "#ef7b67", creme: "#eee1c6", dourado: "#c7a447",
     fucsia: "#d81b60", grafite: "#4a4a4a", laranja: "#d8a66f", lavanda: "#b5a1d8", lilas: "#ad82c4",
-    marinho: "#1d2cf5", marrom: "#d17e67", nude: "#d7ad91", offwhite: "#f3efe6", pink: "#ec4899",
+    marinho: "#1d2cf5", marrom: "#d17e67", navy: "#31415c", nude: "#d7ad91", offwhite: "#f3efe6", pink: "#ec4899",
     preta: "#111111", pretas: "#111111", preto: "#111111", rosa: "#e94791", "rosa bebe": "#f3b8ca",
     "rosa mesqueta": "#b3568c", "rosa mosqueta": "#b3568c", pessego: "#ef8688", roxo: "#75449b",
     terracota: "#d8a66f", verde: "#68684d", "verde militar": "#65734a", "verde babosa": "#89b2bb",

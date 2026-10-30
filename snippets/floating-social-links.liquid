@@ -112,7 +112,7 @@
   }
 
   @media (max-width: 999px) {
-    body:has(.main-product__sticky:not([hidden])) .site-social { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+    body:has(.main-product__sticky:not([hidden])) .site-social { bottom: calc(var(--product-sticky-height, 4.4rem) + 1rem); }
     body:has(.main-product__sticky:not([hidden])) .site-social__links { max-height: calc(100dvh - 13rem); }
   }
 

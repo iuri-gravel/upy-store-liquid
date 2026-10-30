@@ -2938,7 +2938,7 @@ summary {
 }
 
 @media (max-width: 999px) {
-  body:has(.main-product__sticky:not([hidden])) .site-whatsapp { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+  body:has(.main-product__sticky:not([hidden])) .site-whatsapp { bottom: calc(var(--product-sticky-height, 4.4rem) + 1rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
