@@ -426,6 +426,7 @@
   const loadPageFeatures = () => {
     loadFeature("homeScript", "[data-home-hero], [data-home-video-carousel], [data-home-categories], [data-buy-color]");
     loadFeature("cardsScript", "[data-home-launches]");
+    loadFeature("collectionColorsScript", "[data-collection-colors]");
     loadFeature("recentScript", "[data-recently-viewed], [data-recent-product-id], [data-launch-product-link]");
   };
   loadPageFeatures();

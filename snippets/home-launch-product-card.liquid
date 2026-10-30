@@ -62,12 +62,11 @@ Renders a product card with variant colors, favorites and quick add.
   endfor
 
   assign launch_selected_color = launch_first_color
-  if initial_variant != blank and launch_first_color != blank
-    assign launch_selected_color = launch_first_color
-  endif
 
   assign launch_card_image = product.featured_image
-  if initial_variant != blank and launch_first_color != blank and launch_color_option_index >= 0
+  if launch_selected_color != blank and launch_color_option_index >= 0
+    assign launch_card_image = blank
+    assign launch_selected_color_key = launch_selected_color | handleize
     for launch_product_variant in product.variants
       assign launch_variant_color = launch_product_variant.options[launch_color_option_index] | strip
       assign launch_variant_size = blank
@@ -75,10 +74,14 @@ Renders a product card with variant colors, favorites and quick add.
         assign launch_variant_size = launch_product_variant.options[launch_size_option_index] | downcase | strip
       endif
       assign launch_color_match = launch_variant_color | handleize
-      assign launch_first_color_key = launch_first_color | handleize
-      if launch_color_match == launch_first_color_key and launch_product_variant.image != blank and launch_variant_size != 'img 1' and launch_variant_size != 'img 2'
-        assign launch_card_image = launch_product_variant.image
-        break
+      if launch_color_match == launch_selected_color_key and launch_product_variant.image != blank
+        if launch_card_image == blank
+          assign launch_card_image = launch_product_variant.image
+        endif
+        if launch_variant_size != 'img 1' and launch_variant_size != 'img 2'
+          assign launch_card_image = launch_product_variant.image
+          break
+        endif
       endif
     endfor
   endif
@@ -97,11 +100,14 @@ Renders a product card with variant colors, favorites and quick add.
         {% assign launch_image_480 = launch_card_image | image_url: width: 480 %}
         {% assign launch_image_760 = launch_card_image | image_url: width: 760 %}
         {% assign launch_image_1000 = launch_card_image | image_url: width: 1000 %}
+      {% endif %}
         <img
           class="home-launches__image"
           data-launch-image
+          {% if launch_card_image != blank %}
           src="{{ launch_image_760 }}"
           srcset="{{ launch_image_480 }} 480w, {{ launch_image_760 }} 760w, {{ launch_image_1000 }} 1000w"
+          {% else %}hidden{% endif %}
           sizes="{{ card_image_sizes }}"
           alt="{{ product.title | escape }}{% if launch_selected_color != blank %} na cor {{ launch_selected_color | escape }}{% endif %}"
           width="500"
@@ -110,9 +116,7 @@ Renders a product card with variant colors, favorites and quick add.
           decoding="async"
           {% if product.featured_image == launch_card_image %}fetchpriority="auto"{% endif %}
         >
-      {% else %}
-        <span class="home-launches__image-placeholder" aria-hidden="true"></span>
-      {% endif %}
+        <span class="home-launches__image-placeholder" data-launch-image-placeholder{% if launch_card_image != blank %} hidden{% endif %}>Imagem indisponível nesta cor</span>
     </a>
 
     <button
@@ -183,7 +187,7 @@ Renders a product card with variant colors, favorites and quick add.
             {% capture launch_color_token %}|{{ launch_variant_color }}|{% endcapture %}
             {% unless launch_seen_colors contains launch_color_token %}
               {% assign launch_seen_colors = launch_seen_colors | append: launch_variant_color | append: '|' %}
-              {% render 'home-launch-product-color', product: product, color_name: launch_variant_color, color_option_index: launch_color_option_index, size_option_index: launch_size_option_index, selected_color: launch_selected_color, fallback_image: launch_card_image %}
+              {% render 'home-launch-product-color', product: product, color_name: launch_variant_color, color_option_index: launch_color_option_index, size_option_index: launch_size_option_index, selected_color: launch_selected_color %}
             {% endunless %}
           {% endif %}
         {% endfor %}
@@ -300,10 +304,20 @@ Renders a product card with variant colors, favorites and quick add.
 }
 
 .home-launches__image-placeholder {
-  display: block;
+  display: grid;
   width: 100%;
   height: 100%;
+  padding: 1rem;
+  place-items: center;
   background: #ece9e5;
+  color: #625d58;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.home-launches__image[hidden],
+.home-launches__image-placeholder[hidden] {
+  display: none;
 }
 
 .home-launches__wishlist {

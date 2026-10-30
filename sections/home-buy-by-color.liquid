@@ -16,22 +16,18 @@
             assign color_name = 'Preto'
             assign color_label = 'PRETO'
             assign fallback_color = '#111111'
-            assign color_filter_values = 'Preto,Preta,Pretos,Pretas'
           when 2
             assign color_name = 'Azul'
             assign color_label = 'AZUL'
             assign fallback_color = '#2B3F5F'
-            assign color_filter_values = 'Azul,Azuis'
           when 3
             assign color_name = 'Vinho'
             assign color_label = 'VINHO'
             assign fallback_color = '#752F43'
-            assign color_filter_values = 'Vinho,Vinhos,Bordo,Bordô'
           when 4
             assign color_name = 'Marrom'
             assign color_label = 'MARROM'
             assign fallback_color = '#704E35'
-            assign color_filter_values = 'Marrom,Marrons'
         endcase
 
         assign image_key = 'image_' | append: color_index
@@ -48,9 +44,8 @@
         if swatch_prefix != '#'
           assign swatch_color = fallback_color
         endif
-
-        assign encoded_filter_values = color_filter_values | url_encode
-        assign color_url = routes.all_products_collection_url | append: '?filter.v.option.cor=' | append: encoded_filter_values
+        assign color_query = color_name | url_encode
+        assign color_url = routes.all_products_collection_url | append: '?cor=' | append: color_query
       %}
 
       <article class="home-buy-color__item{% if forloop.first %} is-selected{% endif %}" data-buy-color-item data-color-index="{{ forloop.index0 }}" id="{{ section.id }}-color-{{ color_index }}" {% if forloop.first %}aria-current="true"{% endif %}>
@@ -93,19 +88,15 @@
               when 1
                 assign color_name = 'Preto'
                 assign fallback_color = '#111111'
-                assign color_filter_values = 'Preto,Preta,Pretos,Pretas'
               when 2
                 assign color_name = 'Azul'
                 assign fallback_color = '#2B3F5F'
-                assign color_filter_values = 'Azul,Azuis'
               when 3
                 assign color_name = 'Vinho'
                 assign fallback_color = '#752F43'
-                assign color_filter_values = 'Vinho,Vinhos,Bordo,Bordô'
               when 4
                 assign color_name = 'Marrom'
                 assign fallback_color = '#704E35'
-                assign color_filter_values = 'Marrom,Marrons'
             endcase
 
             assign color_key = 'cor_' | append: color_index
@@ -114,9 +105,8 @@
             if swatch_prefix != '#'
               assign swatch_color = fallback_color
             endif
-
-            assign encoded_filter_values = color_filter_values | url_encode
-            assign color_url = routes.all_products_collection_url | append: '?filter.v.option.cor=' | append: encoded_filter_values
+            assign color_query = color_name | url_encode
+            assign color_url = routes.all_products_collection_url | append: '?cor=' | append: color_query
           %}
           <a
             class="home-buy-color__swatch-link{% if forloop.first %} is-selected{% endif %}"

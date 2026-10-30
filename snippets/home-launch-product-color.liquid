@@ -1,3 +1,11 @@
+{% doc %}
+Renders a color swatch with the image assigned to that product color.
+@param {product} product - Product to display
+@param {string} color_name - Variant color
+@param {number} color_option_index - Index of the color option
+@param {number} size_option_index - Index of the size option, or -1
+@param {string} [selected_color] - Currently selected color
+{% enddoc %}
 {% liquid
   assign swatch_image = blank
   for color_variant in product.variants
@@ -24,10 +32,6 @@
         break
       endif
     endfor
-  endif
-
-  if swatch_image == blank
-    assign swatch_image = fallback_image
   endif
 
   assign swatch_image_480 = blank

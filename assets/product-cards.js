@@ -79,8 +79,133 @@
       button.setAttribute("aria-label", `${isSaved ? "Remover" : "Adicionar"} ${button.dataset.productTitle} ${isSaved ? "dos" : "aos"} favoritos`);
     });
   };
+  const setCardColor = (card, color, swatch, updateImage) => {
+    const normalizedColor = normalizeLaunchColor(color);
+    card.dataset.activeColor = color;
+    const label = card.querySelector("[data-launch-color-label]");
+    if (label) {
+      label.hidden = false;
+      label.textContent = displayLaunchColor(color);
+    }
+
+    if (swatch) {
+      card.querySelectorAll("[data-launch-color]").forEach((button) => {
+        const selected = button === swatch;
+        button.classList.toggle("is-selected", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+    }
+
+    if (updateImage && swatch) {
+      const image = card.querySelector("[data-launch-image]");
+      const placeholder = card.querySelector("[data-launch-image-placeholder]");
+      const src480 = swatch.getAttribute("data-image-480");
+      const src760 = swatch.getAttribute("data-image-760");
+      const src1000 = swatch.getAttribute("data-image-1000");
+      const src = src760 || src1000 || src480;
+      if (image) {
+        if (src) {
+          image.srcset = [src480 && `${src480} 480w`, src760 && `${src760} 760w`, src1000 && `${src1000} 1000w`].filter(Boolean).join(", ");
+          image.src = src;
+        } else {
+          image.removeAttribute("srcset");
+          image.removeAttribute("src");
+        }
+        image.hidden = !src;
+        image.alt = `${card.dataset.productTitle} na cor ${displayLaunchColor(color)}`;
+      }
+      if (placeholder) placeholder.hidden = Boolean(src);
+      const wishlist = card.querySelector("[data-launch-wishlist]");
+      if (wishlist) wishlist.dataset.productImage = src || "";
+    }
+
+    card.querySelectorAll("[data-launch-product-link]").forEach((link) => {
+      const baseUrl = link.dataset.productBaseUrl;
+      if (!baseUrl) return;
+      const url = new URL(baseUrl, window.location.origin);
+      if (color) url.searchParams.set("cor", color);
+      else url.searchParams.delete("cor");
+      link.href = `${url.pathname}${url.search}${url.hash}`;
+      const wishlist = card.querySelector("[data-launch-wishlist]");
+      if (wishlist) wishlist.dataset.productUrl = link.href;
+    });
+
+    card.querySelectorAll("[data-launch-size]").forEach((button) => {
+      const sizeColor = normalizeLaunchColor(button.dataset.sizeColor || "");
+      button.hidden = Boolean(sizeColor && sizeColor !== normalizedColor);
+    });
+  };
+
+  const initializeCard = (card) => {
+    if (card.dataset.cardInitialized === "true") return;
+    card.dataset.cardInitialized = "true";
+    card.querySelectorAll("[data-launch-swatch-dot]").forEach((dot) => {
+      dot.style.background = getLaunchColorValue(dot.dataset.colorName || "");
+    });
+    const activeColor = card.dataset.activeColor || "";
+    if (activeColor) setCardColor(card, activeColor, null, false);
+
+    card.querySelectorAll("[data-launch-color]").forEach((button) => {
+      button.addEventListener("click", () => setCardColor(card, button.dataset.colorName || "", button, true));
+    });
+
+    card.querySelectorAll("[data-launch-wishlist]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const items = readWishlist();
+        const productId = button.dataset.productId;
+        const alreadySaved = items.some((item) => String(item.id) === productId);
+        const nextItems = alreadySaved
+          ? items.filter((item) => String(item.id) !== productId)
+          : [...items, {
+              id: productId,
+              title: button.dataset.productTitle,
+              handle: button.dataset.productHandle,
+              url: button.dataset.productUrl,
+              image: button.dataset.productImage,
+            }];
+        writeWishlist(nextItems);
+      });
+    });
+
+    card.querySelectorAll("[data-launch-size]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        if (button.disabled || button.dataset.pending === "true") return;
+        const feedback = card.querySelector("[data-launch-cart-feedback]");
+        button.dataset.pending = "true";
+        button.disabled = true;
+        if (feedback) feedback.textContent = "Adicionando à sacola…";
+        const root = window.Shopify?.routes?.root || "/";
+        const endpoint = `${root.replace(/\/?$/, "/")}cart/add.js`;
+        try {
+          if (window.UpyTheme?.cart) {
+            await window.UpyTheme.cart.add([{ id: Number(button.dataset.variantId), quantity: 1 }]);
+            if (feedback) feedback.textContent = "";
+          } else {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Accept: "application/json" },
+              body: JSON.stringify({ id: Number(button.dataset.variantId), quantity: 1 }),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.description || result.message || "Não foi possível adicionar este tamanho.");
+            try { window.sessionStorage.setItem("upy-open-cart-after-launch-add", "true"); } catch {}
+            window.location.reload();
+          }
+          button.dataset.pending = "false";
+          button.disabled = false;
+        } catch (error) {
+          button.dataset.pending = "false";
+          button.disabled = false;
+          if (feedback) feedback.textContent = error instanceof Error ? error.message : "Não foi possível adicionar à sacola.";
+        }
+      });
+    });
+  };
+
   const initializeCards = (scope = document) => {
-    scope.querySelectorAll("[data-home-launches]").forEach((section) => {
+    const sections = scope.matches?.("[data-home-launches]") ? [scope] : scope.querySelectorAll("[data-home-launches]");
+    sections.forEach((section) => {
+      section.querySelectorAll("[data-launch-card]").forEach(initializeCard);
       if (section.dataset.cardsInitialized === "true") return;
       section.dataset.cardsInitialized = "true";
       const carousel = section.querySelector("[data-launches-carousel]");
@@ -122,122 +247,14 @@
       window.addEventListener("resize", updateCarousel, { passive: true });
       if ("ResizeObserver" in window) new ResizeObserver(updateCarousel).observe(track);
 
-      section.querySelectorAll("[data-launch-swatch-dot]").forEach((dot) => {
-        dot.style.background = getLaunchColorValue(dot.dataset.colorName || "");
-      });
 
-      const setCardColor = (card, color, swatch, updateImage) => {
-        const normalizedColor = normalizeLaunchColor(color);
-        card.dataset.activeColor = color;
-        const label = card.querySelector("[data-launch-color-label]");
-        if (label) {
-          label.hidden = false;
-          label.textContent = displayLaunchColor(color);
-        }
-
-        if (swatch) {
-          card.querySelectorAll("[data-launch-color]").forEach((button) => {
-            const selected = button === swatch;
-            button.classList.toggle("is-selected", selected);
-            button.setAttribute("aria-pressed", String(selected));
-          });
-        }
-
-        if (updateImage && swatch) {
-          const image = card.querySelector("[data-launch-image]");
-          if (image) {
-            const src = swatch.dataset.image760 || swatch.dataset.image1000 || swatch.dataset.image480;
-            const src480 = swatch.dataset.image480;
-            const src760 = swatch.dataset.image760;
-            const src1000 = swatch.dataset.image1000;
-            if (src) image.src = src;
-            if (src480 && src760 && src1000) image.srcset = `${src480} 480w, ${src760} 760w, ${src1000} 1000w`;
-            image.alt = `${card.dataset.productTitle} na cor ${displayLaunchColor(color)}`;
-          }
-        }
-
-        card.querySelectorAll("[data-launch-product-link]").forEach((link) => {
-          const baseUrl = link.dataset.productBaseUrl;
-          if (!baseUrl) return;
-          const url = new URL(baseUrl, window.location.origin);
-          if (color) url.searchParams.set("cor", color);
-          else url.searchParams.delete("cor");
-          link.href = `${url.pathname}${url.search}${url.hash}`;
-        });
-
-        card.querySelectorAll("[data-launch-size]").forEach((button) => {
-          const sizeColor = normalizeLaunchColor(button.dataset.sizeColor || "");
-          button.hidden = Boolean(sizeColor && sizeColor !== normalizedColor);
-        });
-      };
-
-      section.querySelectorAll("[data-launch-card]").forEach((card) => {
-        const activeColor = card.dataset.activeColor || "";
-        if (activeColor) setCardColor(card, activeColor, null, false);
-
-        card.querySelectorAll("[data-launch-color]").forEach((button) => {
-          button.addEventListener("click", () => setCardColor(card, button.dataset.colorName || "", button, true));
-        });
-
-        card.querySelectorAll("[data-launch-wishlist]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const items = readWishlist();
-            const productId = button.dataset.productId;
-            const alreadySaved = items.some((item) => String(item.id) === productId);
-            const nextItems = alreadySaved
-              ? items.filter((item) => String(item.id) !== productId)
-              : [...items, {
-                  id: productId,
-                  title: button.dataset.productTitle,
-                  handle: button.dataset.productHandle,
-                  url: button.dataset.productUrl,
-                  image: button.dataset.productImage,
-                }];
-            writeWishlist(nextItems);
-          });
-        });
-
-        card.querySelectorAll("[data-launch-size]").forEach((button) => {
-          button.addEventListener("click", async () => {
-            if (button.disabled || button.dataset.pending === "true") return;
-            const feedback = card.querySelector("[data-launch-cart-feedback]");
-            button.dataset.pending = "true";
-            button.disabled = true;
-            if (feedback) feedback.textContent = "Adicionando à sacola…";
-            const root = window.Shopify?.routes?.root || "/";
-            const endpoint = `${root.replace(/\/?$/, "/")}cart/add.js`;
-            try {
-              if (window.UpyTheme?.cart) {
-                await window.UpyTheme.cart.add([{ id: Number(button.dataset.variantId), quantity: 1 }]);
-                if (feedback) feedback.textContent = "";
-              } else {
-                const response = await fetch(endpoint, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json", Accept: "application/json" },
-                  body: JSON.stringify({ id: Number(button.dataset.variantId), quantity: 1 }),
-                });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.description || result.message || "Não foi possível adicionar este tamanho.");
-                try { window.sessionStorage.setItem("upy-open-cart-after-launch-add", "true"); } catch {}
-                window.location.reload();
-              }
-              button.dataset.pending = "false";
-              button.disabled = false;
-            } catch (error) {
-              button.dataset.pending = "false";
-              button.disabled = false;
-              if (feedback) feedback.textContent = error instanceof Error ? error.message : "Não foi possível adicionar à sacola.";
-            }
-          });
-        });
-      });
-
-      updateLaunchWishlistButtons();
       updateCarousel();
     });
-
+    updateLaunchWishlistButtons();
   };
+  window.UpyTheme.cards = { initialize: initializeCards, selectColor: setCardColor };
   initializeCards();
+  document.dispatchEvent(new Event("upy:cards:ready"));
   window.addEventListener("upy:wishlist:change", updateLaunchWishlistButtons);
   window.addEventListener("storage", (event) => { if (event.key === wishlistKey) updateLaunchWishlistButtons(); });
   document.addEventListener("shopify:section:load", (event) => initializeCards(event.target));

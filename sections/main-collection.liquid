@@ -18,7 +18,7 @@
   endfor
 %}
 
-<section class="main-collection" data-home-launches style="--collection-columns: {{ section.settings.desktop_columns }};">
+<section class="main-collection" data-home-launches data-collection-colors data-section-id="{{ section.id }}" style="--collection-columns: {{ section.settings.desktop_columns }};">
   <header class="main-collection__header">
     <nav class="main-collection__breadcrumbs" aria-label="{{ 'collection.breadcrumb' | t }}">
       <a href="{{ routes.root_url }}">{{ 'collection.home' | t }}</a>
@@ -45,7 +45,7 @@
         <svg class="main-collection__sort-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
       </label>
 
-      <p class="main-collection__count" aria-live="polite">
+      <p class="main-collection__count" data-collection-count aria-live="polite">
         Exibindo {{ collection.products_count }} {% if collection.products_count == 1 %}resultado{% else %}resultados{% endif %}
       </p>
     </div>
@@ -110,6 +110,14 @@
     {% endif %}
   </form>
 
+  <nav class="main-collection__active-filters" data-collection-color-filter aria-label="Filtrar por cor" hidden>
+    <a class="main-collection__chip" data-collection-color-clear href="{{ collection.url }}"><span data-collection-color-label></span> <span aria-hidden="true">×</span></a>
+  </nav>
+  <div class="main-collection__color-status" data-collection-color-status role="status" hidden>
+    <p data-collection-color-message></p>
+    <button class="main-collection__apply" data-collection-color-retry type="button" hidden>Tentar novamente</button>
+  </div>
+
   {% if active_filter_count > 0 %}
     <nav class="main-collection__active-filters" aria-label="{{ 'collection.active_filters' | t }}">
       {% for filter in collection.filters %}
@@ -135,7 +143,7 @@
   {% endif %}
 
   {% paginate collection.products by section.settings.products_per_page %}
-    {% if collection.products_count > 0 %}
+    <span data-collection-page-data data-page="{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page-size="{{ paginate.page_size }}" hidden></span>
       <div class="home-launches__carousel main-collection__carousel" data-launches-carousel>
         <div class="home-launches__track main-collection__grid" data-launches-track role="list" aria-label="{{ collection.title | escape }}">
           {% for collection_product in collection.products %}
@@ -148,21 +156,16 @@
           {% endfor %}
         </div>
       </div>
-    {% else %}
-      <div class="main-collection__empty">
+      <div class="main-collection__empty" data-collection-empty{% if collection.products_count > 0 %} hidden{% endif %}>
         <h2>{{ 'collection.empty_title' | t }}</h2>
         <p>{% if active_filter_count > 0 %}{{ 'collection.empty_filtered' | t }}{% else %}{{ 'collection.empty_description' | t }}{% endif %}</p>
         {% if active_filter_count > 0 %}<a href="{{ collection.url }}">{{ 'collection.clear_filters' | t }}</a>{% endif %}
       </div>
-    {% endif %}
-
-    {% if paginate.pages > 1 %}
-      <nav class="main-collection__pagination" aria-label="{{ 'collection.pagination' | t }}">
+      <nav class="main-collection__pagination" data-collection-pagination aria-label="{{ 'collection.pagination' | t }}"{% if paginate.pages <= 1 %} hidden{% endif %}>
         {% if paginate.previous %}<a href="{{ paginate.previous.url }}" aria-label="{{ 'collection.previous_page' | t }}">←</a>{% endif %}
         <span>{{ paginate.current_page }} / {{ paginate.pages }}</span>
         {% if paginate.next %}<a href="{{ paginate.next.url }}" aria-label="{{ 'collection.next_page' | t }}">→</a>{% endif %}
       </nav>
-    {% endif %}
   {% endpaginate %}
 </section>
 
@@ -172,6 +175,10 @@
     background: var(--upy-canvas);
     color: var(--upy-ink);
   }
+  .main-collection [hidden] { display: none !important; }
+  .main-collection[data-color-filter-state="loading"] .main-collection__carousel,
+  .main-collection[data-color-filter-state="error"] .main-collection__carousel { display: none; }
+  .main-collection__color-status { padding: 2rem 1.25rem; text-align: center; }
   .main-collection__header {
     padding: 1.25rem 2rem 0;
     background: var(--upy-ink);
