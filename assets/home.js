@@ -249,7 +249,7 @@
       let isPaused = false;
       let isPageVisible = !document.hidden;
 
-      const getMaxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const getMaxScroll = () => Math.max(0, viewport.scrollWidth - viewport.clientWidth);
 
       const renderDots = () => {
         if (!dotsContainer) return;

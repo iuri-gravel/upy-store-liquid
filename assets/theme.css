@@ -434,13 +434,13 @@ summary {
 
 .site-footer__register {
   display: inline-flex;
-  min-height: 2.8rem;
+  min-height: 3rem;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.45rem;
-  background: var(--upy-accent);
+  background: color-mix(in srgb, var(--upy-accent) 78%, #000);
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1;
@@ -450,7 +450,12 @@ summary {
 }
 
 .site-footer__register:hover {
-  background: color-mix(in srgb, var(--upy-accent) 82%, #000);
+  background: color-mix(in srgb, var(--upy-accent) 68%, #000);
+}
+
+.site-footer__register:focus-visible {
+  outline: 2px solid var(--upy-footer-text);
+  outline-offset: 4px;
 }
 
 .site-footer__main {
