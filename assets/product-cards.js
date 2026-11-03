@@ -1,6 +1,17 @@
 (() => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const touchQuickAdd = window.matchMedia("(max-width: 767px), (hover: none), (pointer: coarse)");
+  const hoverQuickAdd = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
   const { readWishlist, writeWishlist, wishlistKey } = window.UpyTheme;
+  let openQuickAddCard = null;
+  let quickAddId = 0;
+  const setQuickAddOpen = (card, open) => {
+    if (open && openQuickAddCard && openQuickAddCard !== card) setQuickAddOpen(openQuickAddCard, false);
+    card.classList.toggle("is-quick-add-open", open);
+    card.querySelector(".home-launches__image-link")?.setAttribute("aria-expanded", String(open));
+    if (open) openQuickAddCard = card;
+    else if (openQuickAddCard === card) openQuickAddCard = null;
+  };
   const launchColorMap = {
     amarelo: "#f4d83d",
     azul: "#2b3f5f",
@@ -145,6 +156,34 @@
     const activeColor = card.dataset.activeColor || "";
     if (activeColor) setCardColor(card, activeColor, null, false);
 
+    const imageLink = card.querySelector(".home-launches__image-link");
+    const quickAdd = card.querySelector("[data-launch-quick-add]");
+    if (imageLink && quickAdd && quickAdd.querySelector("[data-launch-size]")) {
+      quickAdd.id = `QuickAdd-${card.dataset.productId}-${++quickAddId}`;
+      imageLink.setAttribute("aria-controls", quickAdd.id);
+      imageLink.setAttribute("aria-expanded", "false");
+      imageLink.addEventListener("click", (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.detail === 0) return;
+        const isTouch = event.pointerType === "touch" || event.pointerType === "pen" || touchQuickAdd.matches;
+        if (!isTouch || card.classList.contains("is-quick-add-open")) return;
+        if (!Array.from(quickAdd.querySelectorAll("[data-launch-size]")).some((button) => !button.hidden)) return;
+        event.preventDefault();
+        setQuickAddOpen(card, true);
+      });
+      card.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse" && hoverQuickAdd.matches) setQuickAddOpen(card, true);
+      });
+      card.addEventListener("pointerleave", (event) => {
+        if (event.pointerType === "mouse" && hoverQuickAdd.matches && !card.querySelector(":focus-visible")) setQuickAddOpen(card, false);
+      });
+      card.addEventListener("focusin", (event) => {
+        if (event.target.matches(":focus-visible")) setQuickAddOpen(card, true);
+      });
+      card.addEventListener("focusout", (event) => {
+        if (!card.contains(event.relatedTarget)) setQuickAddOpen(card, false);
+      });
+    }
+
     card.querySelectorAll("[data-launch-color]").forEach((button) => {
       button.addEventListener("click", () => setCardColor(card, button.dataset.colorName || "", button, true));
     });
@@ -191,6 +230,7 @@
             try { window.sessionStorage.setItem("upy-open-cart-after-launch-add", "true"); } catch {}
             window.location.reload();
           }
+          setQuickAddOpen(card, false);
           button.dataset.pending = "false";
           button.disabled = false;
         } catch (error) {
@@ -255,6 +295,15 @@
   window.UpyTheme.cards = { initialize: initializeCards, selectColor: setCardColor };
   initializeCards();
   document.dispatchEvent(new Event("upy:cards:ready"));
+  document.addEventListener("pointerdown", (event) => {
+    if (openQuickAddCard && !openQuickAddCard.contains(event.target)) setQuickAddOpen(openQuickAddCard, false);
+  }, { passive: true });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !openQuickAddCard) return;
+    const card = openQuickAddCard;
+    if (card.contains(document.activeElement)) card.querySelector(".home-launches__image-link")?.focus({ preventScroll: true });
+    setQuickAddOpen(card, false);
+  });
   window.addEventListener("upy:wishlist:change", updateLaunchWishlistButtons);
   window.addEventListener("storage", (event) => { if (event.key === wishlistKey) updateLaunchWishlistButtons(); });
   document.addEventListener("shopify:section:load", (event) => initializeCards(event.target));

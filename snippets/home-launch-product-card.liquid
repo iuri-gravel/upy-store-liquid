@@ -135,8 +135,8 @@ Renders a product card with variant colors, favorites and quick add.
     </button>
 
     <div class="home-launches__quick-add" data-launch-quick-add>
-      <p class="home-launches__quick-add-label">Selecione o tamanho</p>
-      <div class="home-launches__sizes">
+      <p class="home-launches__quick-add-label">Escolha o tamanho</p>
+      <div class="home-launches__sizes" role="group" aria-label="Tamanhos de {{ product.title | escape }}">
         {% assign launch_seen_size_pairs = '|' %}
         {% for launch_product_variant in product.variants %}
           {% assign launch_variant_color = blank %}
@@ -159,6 +159,7 @@ Renders a product card with variant colors, favorites and quick add.
                 data-size-color="{{ launch_variant_color | escape }}"
                 data-size-label="{{ launch_variant_size | escape }}"
                 data-variant-id="{{ launch_product_variant.id }}"
+                aria-label="{% if launch_product_variant.available %}Adicionar tamanho {{ launch_variant_size | escape }}{% else %}Tamanho {{ launch_variant_size | escape }} indisponível{% endif %}{% if launch_variant_color != blank %} na cor {{ launch_variant_color | escape }}{% endif %}{% if launch_product_variant.available %} à sacola{% endif %}"
                 {% if launch_product_variant.available == false %}disabled{% endif %}
                 {% if launch_selected_color != blank and launch_variant_color != launch_selected_color %}hidden{% endif %}
               >{{ launch_variant_size | escape }}</button>
@@ -275,6 +276,7 @@ Renders a product card with variant colors, favorites and quick add.
 
 .home-launches__card {
   min-width: 0;
+  container: upy-product-card / inline-size;
 }
 
 .home-launches__image-wrap {
@@ -289,6 +291,7 @@ Renders a product card with variant colors, favorites and quick add.
   width: 100%;
   height: 100%;
   color: inherit;
+  touch-action: manipulation;
 }
 
 .home-launches__image {
@@ -362,59 +365,69 @@ Renders a product card with variant colors, favorites and quick add.
   position: absolute;
   z-index: 2;
   inset: auto 0 0;
-  padding: 3.25rem 0.75rem 0.8rem;
+  padding: 2rem 0.625rem 0.625rem;
   background: linear-gradient(180deg, transparent, rgb(0 0 0 / 48%));
   color: #fff;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transform: translateY(0.75rem);
-  transition: opacity 240ms ease, transform 240ms ease;
+  transform: translateY(0.35rem);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.home-launches__card:hover .home-launches__quick-add,
-.home-launches__card:focus-within .home-launches__quick-add {
+.home-launches__card.is-quick-add-open .home-launches__quick-add {
   opacity: 1;
-  pointer-events: auto;
+  visibility: visible;
   transform: translateY(0);
 }
 
 .home-launches__quick-add-label {
-  margin: 0 0 0.6rem;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.4;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .home-launches__sizes {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 44px);
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.375rem;
 }
 
 .home-launches__size {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   border: 1px solid rgb(255 255 255 / 80%);
-  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  padding: 0.25rem;
   background: rgb(255 255 255 / 95%);
   color: var(--upy-ink);
   cursor: pointer;
-  font-size: 0.7rem;
-  font-weight: 400;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  pointer-events: auto;
+  touch-action: manipulation;
   transition: background-color 160ms ease, color 160ms ease;
 }
 
-.home-launches__size:hover:not(:disabled) {
+.home-launches__size:focus-visible {
+  outline: 2px solid var(--upy-ink);
+  outline-offset: 2px;
+}
+
+.home-launches__size:active:not(:disabled) {
   background: var(--upy-ink);
-  color: #fff;
+  color: var(--upy-canvas);
 }
 
 .home-launches__size:disabled {
   cursor: not-allowed;
-  opacity: 0.45;
+  border-style: dashed;
+  color: #8b847e;
   text-decoration: line-through;
 }
 
@@ -422,6 +435,21 @@ Renders a product card with variant colors, favorites and quick add.
   margin: 0.45rem 0 0;
   font-size: 0.7rem;
   text-align: center;
+}
+
+.home-launches__quick-add-feedback:empty {
+  display: none;
+}
+
+@container upy-product-card (min-width: 240px) {
+  .home-launches__sizes { grid-template-columns: repeat(4, 44px); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-launches__size:hover:not(:disabled) {
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
+  }
 }
 
 .home-launches__details {
