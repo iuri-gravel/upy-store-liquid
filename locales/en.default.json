@@ -400,6 +400,14 @@
     "color_footer": "Footer background",
     "color_footer_text": "Footer text"
   },
+  "under_construction": {
+    "status": "Coming soon",
+    "context": "Our story",
+    "title": "Page under construction",
+    "description": "We're preparing this content for you. There will be more to discover here soon.",
+    "back_to_store": "Back to the store",
+    "manifesto_link": "Discover our manifesto"
+  },
   "search": {
     "title": "Search results",
     "label": "Search",

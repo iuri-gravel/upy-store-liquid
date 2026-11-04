@@ -9,6 +9,7 @@
  */
 {
   "sections": {
+    "under_construction": "Under construction page",
     "announcement_bar": "Announcement bar",
     "announcement_message_1": "Announcement 1",
     "announcement_message_2": "Announcement 2",

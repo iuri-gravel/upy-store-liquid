@@ -1,5 +1,12 @@
 {% assign primary_menu = section.settings.menu %}
 {% assign utility_menu = section.settings.utility_menu %}
+{% liquid
+  assign history_page = pages['nossa-historia']
+  assign history_page_url = history_page.url
+  if history_page_url == blank
+    assign history_page_url = routes.root_url | append: '?view=em-construcao'
+  endif
+%}
 {% assign collection_submenu = metaobjects.header_submenu_1['header-submenu1'] %}
 {% assign product_submenu = metaobjects.header_submenu_2['header-submenu2'] %}
 {% assign menu_collection_fields = 'colecao_1,colecao_2,colecao_3,colecao_4,colecao_5,colecao_6' | split: ',' %}
@@ -34,17 +41,17 @@
                   {% if link.links.size > 0 %}
                     <h2>{{ link.title | escape }}</h2>
                     <nav aria-label="{{ link.title | escape }}">
-                      {% for child_link in link.links %}<a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>{% endfor %}
+                      {% for child_link in link.links %}{% render 'institutional-menu-link', link: child_link, history_url: history_page_url %}{% endfor %}
                     </nav>
                   {% else %}
-                    <nav aria-label="Informações"><a href="{{ link.url }}">{{ link.title | escape }}</a></nav>
+                    <nav aria-label="Informações">{% render 'institutional-menu-link', link: link, history_url: history_page_url %}</nav>
                   {% endif %}
                 </section>
               {% endfor %}
             {% else %}
               <section>
                 <h2>Institucional</h2>
-                <span class="site-header__utility-disabled">Nossa História <small>Em breve</small></span>
+                <a href="{{ history_page_url }}">{{ 'under_construction.context' | t | escape }}</a>
                 <a href="/pages/manifesto">Manifesto</a>
               </section>
               <section>
@@ -301,16 +308,16 @@
               {% if link.links.size > 0 %}
                 <section>
                   <h2>{{ link.title | escape }}</h2>
-                  {% for child_link in link.links %}<a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>{% endfor %}
+                  {% for child_link in link.links %}{% render 'institutional-menu-link', link: child_link, history_url: history_page_url %}{% endfor %}
                 </section>
               {% else %}
-                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                {% render 'institutional-menu-link', link: link, history_url: history_page_url %}
               {% endif %}
             {% endfor %}
           {% else %}
             <section>
               <h2>Institucional</h2>
-              <span class="site-header__utility-disabled">Nossa História <small>Em breve</small></span>
+              <a href="{{ history_page_url }}">{{ 'under_construction.context' | t | escape }}</a>
               <a href="/pages/manifesto">Manifesto</a>
             </section>
             <section>

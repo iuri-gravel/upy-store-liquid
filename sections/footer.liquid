@@ -40,14 +40,20 @@
     </div>
 
     {% assign history_page = pages['nossa-historia'] %}
+    {% liquid
+      assign history_page_url = history_page.url
+      if history_page_url == blank
+        assign history_page_url = routes.root_url | append: '?view=em-construcao'
+      endif
+    %}
     {% assign manifesto_page = pages['manifesto'] %}
     <nav class="site-footer__column" aria-label="Institucional">
       <h2>Institucional</h2>
       <ul>
         {% if section.settings.institutional_menu != blank %}
-          {% for link in section.settings.institutional_menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
+          {% for link in section.settings.institutional_menu.links %}<li>{% render 'institutional-menu-link', link: link, history_url: history_page_url %}</li>{% endfor %}
         {% else %}
-          <li><a href="{{ history_page.url | default: '#' }}">Nossa História</a></li>
+          <li><a href="{{ history_page_url }}">{{ 'under_construction.context' | t | escape }}</a></li>
           <li><a href="{{ manifesto_page.url | default: '/pages/manifesto' }}">Manifesto</a></li>
         {% endif %}
       </ul>

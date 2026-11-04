@@ -1,4 +1,6 @@
-{% if page.handle == 'manifesto' %}
+{% if page.handle == 'nossa-historia' and page.content == blank %}
+  {% render 'under-construction-page', page_heading: page.title %}
+{% elsif page.handle == 'manifesto' %}
   {% render 'manifesto-page', section: section %}
 {% elsif page.handle == 'frete-e-entregas' %}
   {% render 'shipping-page' %}

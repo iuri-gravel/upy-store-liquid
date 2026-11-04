@@ -1,0 +1,142 @@
+{% doc %}
+Renders a temporary page while its content is being prepared.
+@param {string} [page_heading] - Context heading for pages without a Page resource
+@example
+{% render 'under-construction-page' %}
+{% enddoc %}
+{% liquid
+  assign construction_manifesto_url = pages['manifesto'].url | default: '/pages/manifesto'
+  assign construction_default_context = 'under_construction.context' | t
+  assign construction_context = page_heading | default: page.title | default: construction_default_context
+%}
+
+<section class="under-construction" aria-labelledby="UnderConstructionTitle">
+  <div class="under-construction__inner">
+    <p class="under-construction__status"><span aria-hidden="true"></span>{{ 'under_construction.status' | t | escape }}</p>
+    <p class="under-construction__context">{{ construction_context | escape }}</p>
+    <h1 class="under-construction__title" id="UnderConstructionTitle">{{ 'under_construction.title' | t | escape }}</h1>
+    <p class="under-construction__description">{{ 'under_construction.description' | t | escape }}</p>
+    <div class="under-construction__actions">
+      <a class="under-construction__button" href="{{ routes.root_url }}">{{ 'under_construction.back_to_store' | t | escape }}</a>
+      <a class="under-construction__link" href="{{ construction_manifesto_url }}">{{ 'under_construction.manifesto_link' | t | escape }}</a>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .under-construction {
+    display: grid;
+    min-height: 60vh;
+    place-items: center;
+    padding: clamp(3.5rem, 10vw, 8rem) 1.25rem;
+    background: var(--upy-canvas);
+    color: var(--upy-ink);
+    text-align: center;
+  }
+
+  .under-construction__inner {
+    width: min(100%, 58rem);
+    margin-inline: auto;
+  }
+
+  .under-construction__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 0 0 2rem;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--upy-line);
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .under-construction__status span {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--upy-accent);
+  }
+
+  .under-construction__context {
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .under-construction__title {
+    max-width: 14ch;
+    margin: 0 auto 1.5rem;
+    font-family: var(--upy-font-heading);
+    font-size: clamp(2.5rem, 6vw, 5.25rem);
+    font-weight: 300;
+    letter-spacing: -0.045em;
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+
+  .under-construction__description {
+    max-width: 44ch;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .under-construction__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem 1.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .under-construction__button {
+    display: inline-flex;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    border: 1px solid var(--upy-ink);
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .under-construction__button:hover {
+    border-color: var(--upy-accent);
+    background: color-mix(in srgb, var(--upy-ink) 90%, var(--upy-canvas));
+    color: var(--upy-canvas);
+  }
+
+  .under-construction__link {
+    padding-block: 0.5rem;
+    color: inherit;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    text-underline-offset: 0.35rem;
+  }
+
+  .under-construction__link:hover {
+    text-decoration-color: var(--upy-accent);
+  }
+
+  .under-construction__button:focus-visible,
+  .under-construction__link:focus-visible {
+    outline: 2px solid var(--upy-accent);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 36rem) {
+    .under-construction__actions { flex-direction: column; }
+    .under-construction__button { width: min(100%, 20rem); }
+  }
+{% endstylesheet %}

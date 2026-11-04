@@ -400,6 +400,14 @@
     "color_footer": "Fundo do rodapé",
     "color_footer_text": "Texto do rodapé"
   },
+  "under_construction": {
+    "status": "Em breve",
+    "context": "Nossa História",
+    "title": "Página em construção",
+    "description": "Estamos preparando este conteúdo para você. Em breve, teremos novidades por aqui.",
+    "back_to_store": "Voltar para a loja",
+    "manifesto_link": "Conheça nosso manifesto"
+  },
   "search": {
     "title": "Resultados da busca",
     "label": "Pesquisar",

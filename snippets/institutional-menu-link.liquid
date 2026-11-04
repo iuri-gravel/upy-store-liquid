@@ -1,0 +1,13 @@
+{% doc %}
+Renders an institutional menu link with a working destination for Our Story.
+@param {link} link - The menu entry to render.
+@param {string} history_url - The available Our Story page URL.
+{% enddoc %}
+{%- liquid
+  assign menu_link_url = link.url
+  assign menu_link_key = link.title | handleize
+  if menu_link_key == 'nossa-historia'
+    assign menu_link_url = history_url
+  endif
+-%}
+<a href="{{ menu_link_url | escape }}">{{ link.title | escape }}</a>

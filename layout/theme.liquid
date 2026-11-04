@@ -1,19 +1,27 @@
 <!doctype html>
 <html lang="{{ localization.language.iso_code | default: 'pt-BR' }}">
   <head>
+    {% liquid
+      assign display_page_title = page_title
+      assign display_page_description = page_description
+      if template.name == 'index' and template.suffix == 'em-construcao'
+        assign display_page_title = 'under_construction.context' | t
+        assign display_page_description = 'under_construction.description' | t
+      endif
+    %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_canvas }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
-    <title>{{ page_title | escape }}{% unless page_title contains shop.name %} · {{ shop.name | escape }}{% endunless %}</title>
-    {% if page_description != blank %}
-      <meta name="description" content="{{ page_description | strip_html | escape }}">
+    <title>{{ display_page_title | escape }}{% unless display_page_title contains shop.name %} · {{ shop.name | escape }}{% endunless %}</title>
+    {% if display_page_description != blank %}
+      <meta name="description" content="{{ display_page_description | strip_html | escape }}">
     {% elsif shop.description != blank %}
       <meta name="description" content="{{ shop.description | strip_html | escape }}">
     {% endif %}
     <meta property="og:site_name" content="{{ shop.name | escape }}">
-    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:title" content="{{ display_page_title | escape }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
     {% if request.page_type == 'product' and product != blank %}
