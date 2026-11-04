@@ -59,18 +59,16 @@
     vinho: "#752f43",
   };
   const normalizeLaunchColor = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-  const searchColorScore = (query, color) => {
-    const normalizedQuery = ` ${normalizeLaunchColor(query).replace(/\s+/g, " ")} `;
-    const parts = normalizeLaunchColor(color).split(/\s*(?:\/|\+|,|&|\be\b)\s*/i).filter(Boolean);
-    let score = -1;
-    parts.forEach((part) => {
-      const normalizedPart = part.replace(/\s+/g, " ").trim();
-      if (!normalizedPart) return;
-      if (normalizedQuery.includes(` ${normalizedPart} `)) score = Math.max(score, 200 + normalizedPart.length);
-      const firstWord = normalizedPart.split(" ")[0];
-      if (normalizedQuery.includes(` ${firstWord} `)) score = Math.max(score, 100 + firstWord.length);
-    });
-    return score;
+  const getSearchColorFilterValue = (section) => {
+    const query = normalizeLaunchColor(section.dataset.searchColorQuery || "").replace(/\s+/g, " ").trim();
+    if (!query) return "";
+    const colors = Array.from(section.querySelectorAll("[data-launch-color]"))
+      .flatMap((swatch) => String(swatch.dataset.colorName || "").split(/\s*(?:\/|\+|,|&|\be\b)\s*/i).map((part) => part.trim()))
+      .filter(Boolean);
+    const exact = colors.find((color) => normalizeLaunchColor(color).replace(/\s+/g, " ") === query);
+    if (exact) return exact;
+    if (query.split(" ").length === 1 && colors.some((color) => normalizeLaunchColor(color).split(" ")[0] === query)) return query;
+    return "";
   };
   const getLaunchColorValue = (value) => {
     const color = normalizeLaunchColor(value);
@@ -255,25 +253,22 @@
     });
   };
 
-  const initializeSearchColors = (section) => {
-    const query = section.dataset.searchColorQuery?.trim();
-    if (!query || section.dataset.searchColorApplied === query) return;
-    section.dataset.searchColorApplied = query;
-    section.querySelectorAll("[data-launch-card]").forEach((card) => {
-      const swatches = Array.from(card.querySelectorAll("[data-launch-color]"));
-      const match = swatches
-        .map((swatch) => ({ swatch, score: searchColorScore(query, swatch.dataset.colorName || "") }))
-        .filter(({ score }) => score >= 0)
-        .sort((a, b) => b.score - a.score)[0];
-      if (match) setCardColor(card, match.swatch.dataset.colorName || "", match.swatch, true);
-    });
+  const redirectColorSearch = (section) => {
+    if (section.dataset.colorSearchRedirected === "true") return;
+    const color = getSearchColorFilterValue(section);
+    const collectionUrl = section.dataset.allProductsUrl;
+    if (!color || !collectionUrl) return;
+    section.dataset.colorSearchRedirected = "true";
+    const destination = new URL(collectionUrl, window.location.origin);
+    destination.searchParams.set("cor", color);
+    window.location.replace(`${destination.pathname}${destination.search}${destination.hash}`);
   };
 
   const initializeCards = (scope = document) => {
     const sections = scope.matches?.("[data-home-launches]") ? [scope] : scope.querySelectorAll("[data-home-launches]");
     sections.forEach((section) => {
       section.querySelectorAll("[data-launch-card]").forEach(initializeCard);
-      initializeSearchColors(section);
+      redirectColorSearch(section);
       if (section.dataset.cardsInitialized === "true") return;
       section.dataset.cardsInitialized = "true";
       const carousel = section.querySelector("[data-launches-carousel]");

@@ -1,4 +1,4 @@
-<section class="main-search" data-home-launches data-search-color-query="{{ search.terms | escape }}">
+<section class="main-search" data-home-launches data-search-color-query="{{ search.terms | escape }}" data-all-products-url="{{ routes.all_products_collection_url | escape }}">
   <header class="main-search__header">
     <h1>{{ 'search.title' | t }}</h1>
     <form action="{{ routes.search_url }}" method="get" role="search" class="main-search__form">
