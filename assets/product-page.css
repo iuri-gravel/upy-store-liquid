@@ -309,9 +309,10 @@
 .product-reviews__app-block:empty { display: none; }
 .main-product__lightbox { max-width: min(94vw, 58rem); max-height: 90vh; padding: 0; border: 0; background: var(--upy-canvas); color: var(--upy-ink); }
 .main-product__lightbox::backdrop { background: rgb(14 13 13 / 72%); }
-.main-product__lightbox-close { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 0; background: transparent; font-size: 1.8rem; cursor: pointer; }
+.main-product__lightbox-close { display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 0; background: transparent; color: var(--upy-ink); font-family: system-ui, sans-serif; font-size: 2rem; font-weight: 400; line-height: 1; cursor: pointer; box-shadow: 0 2px 10px rgb(0 0 0 / 24%); }
 .main-product__lightbox { width: min(95vw, 80rem); height: min(94vh, 65rem); max-width: 95vw; max-height: 94vh; overflow: visible; background: transparent; }
-.main-product__lightbox-close { position: absolute; z-index: 2; top: 0.5rem; right: 0.5rem; border-radius: 50%; background: var(--upy-canvas); }
+.main-product__lightbox-close { position: fixed; z-index: 10; top: max(0.75rem, env(safe-area-inset-top)); right: max(0.75rem, env(safe-area-inset-right)); border-radius: 50%; background: var(--upy-canvas); }
+.main-product__lightbox-close:focus-visible { outline: 2px solid var(--upy-ink); outline-offset: 2px; }
 .main-product__lightbox [data-lightbox-content] { display: grid; width: 100%; height: 100%; place-items: center; }
 .main-product__lightbox [data-lightbox-content] > * { width: auto; max-width: 100%; max-height: 94vh; object-fit: contain; }
 .main-product__lightbox [data-lightbox-content] img { width: auto; }
