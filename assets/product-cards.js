@@ -59,6 +59,19 @@
     vinho: "#752f43",
   };
   const normalizeLaunchColor = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+  const searchColorScore = (query, color) => {
+    const normalizedQuery = ` ${normalizeLaunchColor(query).replace(/\s+/g, " ")} `;
+    const parts = normalizeLaunchColor(color).split(/\s*(?:\/|\+|,|&|\be\b)\s*/i).filter(Boolean);
+    let score = -1;
+    parts.forEach((part) => {
+      const normalizedPart = part.replace(/\s+/g, " ").trim();
+      if (!normalizedPart) return;
+      if (normalizedQuery.includes(` ${normalizedPart} `)) score = Math.max(score, 200 + normalizedPart.length);
+      const firstWord = normalizedPart.split(" ")[0];
+      if (normalizedQuery.includes(` ${firstWord} `)) score = Math.max(score, 100 + firstWord.length);
+    });
+    return score;
+  };
   const getLaunchColorValue = (value) => {
     const color = normalizeLaunchColor(value);
     const parts = color.split(/\s*(?:\/|\+|,|&|\be\b)\s*/i).filter(Boolean);
@@ -242,10 +255,25 @@
     });
   };
 
+  const initializeSearchColors = (section) => {
+    const query = section.dataset.searchColorQuery?.trim();
+    if (!query || section.dataset.searchColorApplied === query) return;
+    section.dataset.searchColorApplied = query;
+    section.querySelectorAll("[data-launch-card]").forEach((card) => {
+      const swatches = Array.from(card.querySelectorAll("[data-launch-color]"));
+      const match = swatches
+        .map((swatch) => ({ swatch, score: searchColorScore(query, swatch.dataset.colorName || "") }))
+        .filter(({ score }) => score >= 0)
+        .sort((a, b) => b.score - a.score)[0];
+      if (match) setCardColor(card, match.swatch.dataset.colorName || "", match.swatch, true);
+    });
+  };
+
   const initializeCards = (scope = document) => {
     const sections = scope.matches?.("[data-home-launches]") ? [scope] : scope.querySelectorAll("[data-home-launches]");
     sections.forEach((section) => {
       section.querySelectorAll("[data-launch-card]").forEach(initializeCard);
+      initializeSearchColors(section);
       if (section.dataset.cardsInitialized === "true") return;
       section.dataset.cardsInitialized = "true";
       const carousel = section.querySelector("[data-launches-carousel]");

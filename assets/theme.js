@@ -179,15 +179,26 @@
       container.append(heading);
     };
 
-    const appendLink = (container, item, kind) => {
+    const normalizeSearchText = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+    const predictiveVariantFor = (item, query) => {
+      const queryWords = normalizeSearchText(query).split(/\s+/).filter((word) => word.length > 1);
+      if (!queryWords.length || !Array.isArray(item.variants)) return null;
+      return item.variants.find((variant) => {
+        const variantWords = normalizeSearchText(variant.title).split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+        return queryWords.some((word) => variantWords.some((variantWord) => variantWord === word || variantWord.startsWith(word)));
+      }) || null;
+    };
+    const appendLink = (container, item, kind, query = "") => {
       const link = document.createElement("a");
       link.className = kind === "product" ? "site-header__suggestion-product" : "site-header__suggestion-collection";
-      link.href = item.url || "#";
+      const variant = kind === "product" ? predictiveVariantFor(item, query) : null;
+      link.href = variant?.url || item.url || "#";
       link.setAttribute("role", "option");
       if (kind === "product") {
-        const imageUrl = typeof item.featured_image === "string"
+        const variantImage = variant?.featured_image?.url || variant?.featured_image || variant?.image;
+        const imageUrl = variantImage || (typeof item.featured_image === "string"
           ? item.featured_image
-          : item.featured_image?.url || item.image?.url || item.image;
+          : item.featured_image?.url || item.image?.url || item.image);
         if (imageUrl) {
           const image = document.createElement("img");
           const resized = new URL(imageUrl, window.location.origin);
@@ -263,7 +274,7 @@
         const productGroup = document.createElement("section");
         productGroup.className = "site-header__suggestion-products";
         appendHeading(productGroup, searchDialog.dataset.searchProducts);
-        products.forEach((item) => appendLink(productGroup, item, "product"));
+        products.forEach((item) => appendLink(productGroup, item, "product", query));
         layout.append(productGroup);
       }
       const allResults = document.createElement("a");
