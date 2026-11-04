@@ -195,19 +195,37 @@
       link.href = variant?.url || item.url || "#";
       link.setAttribute("role", "option");
       if (kind === "product") {
-        const variantImage = variant?.featured_image?.url || variant?.featured_image || variant?.image;
-        const imageUrl = variantImage || (typeof item.featured_image === "string"
-          ? item.featured_image
-          : item.featured_image?.url || item.image?.url || item.image);
-        if (imageUrl) {
-          const image = document.createElement("img");
-          const resized = new URL(imageUrl, window.location.origin);
+        const imageUrl = (value) => {
+          if (typeof value === "string") return value;
+          return typeof value?.url === "string" ? value.url : "";
+        };
+        const imageSources = [...new Set([
+          imageUrl(variant?.featured_image),
+          imageUrl(variant?.image),
+          imageUrl(item.featured_image),
+          imageUrl(item.image),
+        ].filter(Boolean).map((source) => {
+          const resized = new URL(source, window.location.origin);
           resized.searchParams.set("width", "180");
-          image.src = resized.toString();
+          return resized.toString();
+        }))];
+        if (imageSources.length) {
+          const image = document.createElement("img");
           image.width = 72;
           image.height = 90;
           image.alt = "";
           image.loading = "lazy";
+          let sourceIndex = -1;
+          const loadNextImage = () => {
+            sourceIndex += 1;
+            if (sourceIndex >= imageSources.length) {
+              image.hidden = true;
+              return;
+            }
+            image.src = imageSources[sourceIndex];
+          };
+          image.addEventListener("error", loadNextImage);
+          loadNextImage();
           link.append(image);
         }
         const details = document.createElement("span");
