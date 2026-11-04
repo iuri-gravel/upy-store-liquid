@@ -361,6 +361,8 @@
     window.addEventListener("resize", updateDetailsOffset);
     const videoBackdrop = page.querySelector("[data-video-backdrop]");
     floatingVideos.forEach((bubble) => {
+      const toggleButton = bubble.querySelector("[data-video-toggle]");
+      const closeButton = bubble.querySelector("[data-video-close]");
       let drag = null;
       let wasDragged = false;
       let collapsedGeometry = null;
@@ -391,8 +393,11 @@
           };
         }
         bubble.classList.toggle("is-expanded", expanded);
-        bubble.setAttribute("aria-expanded", String(expanded));
-        bubble.setAttribute("aria-label", expanded ? "Reduzir vídeo do produto" : "Ampliar vídeo do produto");
+        if (toggleButton) {
+          toggleButton.setAttribute("aria-expanded", String(expanded));
+          toggleButton.setAttribute("aria-label", expanded ? toggleButton.dataset.labelExpanded : toggleButton.dataset.labelCollapsed);
+        }
+        if (closeButton) closeButton.hidden = !expanded;
         if (videoBackdrop) videoBackdrop.hidden = !expanded;
         if (expanded) {
           fitExpanded();
@@ -438,17 +443,18 @@
       };
       bubble.addEventListener("pointerup", finishDrag);
       bubble.addEventListener("pointercancel", finishDrag);
-      bubble.addEventListener("click", () => {
+      bubble.addEventListener("click", (event) => {
+        if (event.target instanceof Element && event.target.closest("[data-video-close]")) return;
         if (wasDragged) {
           wasDragged = false;
           return;
         }
         toggleExpanded();
       });
-      bubble.addEventListener("keydown", (event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        event.preventDefault();
-        toggleExpanded();
+      closeButton?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setExpanded(false);
+        toggleButton?.focus({ preventScroll: true });
       });
       const video = bubble.querySelector("video");
       const frame = bubble.querySelector("iframe");

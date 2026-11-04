@@ -137,6 +137,9 @@
     "no_technologies": "Nenhuma tecnologia informada.",
     "enlarged_image": "Imagem ampliada",
     "close_enlarged_image": "Fechar imagem ampliada",
+    "enlarge_video": "Ampliar vídeo do produto",
+    "reduce_video": "Reduzir vídeo do produto",
+    "close_video": "Fechar vídeo ampliado",
     "available_sizes": "Tamanhos disponíveis",
     "reviews_eyebrow": "Opiniões reais",
     "reviews_heading": "Avaliações de clientes"

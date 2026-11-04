@@ -132,7 +132,7 @@
 
     {% if pinned_video != blank %}
       <button class="main-product__video-backdrop" type="button" data-video-backdrop aria-label="Fechar vídeo ampliado" hidden></button>
-      <div class="main-product__video-bubble" data-product-floating-video role="button" tabindex="0" aria-label="Ampliar vídeo do produto" aria-expanded="false">
+      <div class="main-product__video-bubble" data-product-floating-video>
         {% if pinned_video.media_type == 'video' %}
           {{ pinned_video | media_tag: autoplay: true, loop: true, muted: true, controls: false, image_size: '480x' }}
         {% elsif pinned_video.host == 'youtube' %}
@@ -140,6 +140,10 @@
         {% else %}
           {{ pinned_video | external_video_url: autoplay: '1', controls: '0', loop: '1', muted: '1', playsinline: '1' | external_video_tag }}
         {% endif %}
+        <button class="main-product__video-toggle" type="button" data-video-toggle data-label-collapsed="{{ 'product.enlarge_video' | t | escape }}" data-label-expanded="{{ 'product.reduce_video' | t | escape }}" aria-label="{{ 'product.enlarge_video' | t | escape }}" aria-expanded="false"></button>
+        <button class="main-product__video-close" type="button" data-video-close aria-label="{{ 'product.close_video' | t | escape }}" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
       </div>
     {% endif %}
 
