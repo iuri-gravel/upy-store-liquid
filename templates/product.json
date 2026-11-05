@@ -11,7 +11,9 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "settings": {
+        "show_social_proof": false
+      }
     },
     "reviews": {
       "type": "product-reviews",

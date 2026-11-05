@@ -267,6 +267,7 @@
               <span data-favorite-label>{{ 'product.favorite_button' | t }}</span>
             </button>
           </div>
+          {% if section.settings.show_social_proof %}
           <div class="main-product__social-proof" data-product-social-proof>
             <div class="main-product__social-proof-row">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -282,6 +283,7 @@
               <p data-stock-out hidden>{{ 'product.stock_sold_out' | t }}</p>
             </div>
           </div>
+          {% endif %}
           <div class="main-product__trust" aria-label="{{ 'product.purchase_benefits' | t | escape }}">
             <div class="main-product__trust-item">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
@@ -363,6 +365,14 @@
   "name": "t:sections.main_product",
   "tag": "section",
   "class": "shopify-section-main-product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "t:sections.show_social_proof",
+      "default": false
+    }
+  ],
   "blocks": [
     { "type": "@app" }
   ]
