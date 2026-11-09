@@ -10,9 +10,9 @@
     .toLocaleLowerCase("pt-BR");
   const colorMap = {
     amarelo: "#f4d83d", azul: "#2b3f5f", "azul navy": "#31415c", bege: "#d8c4a8", black: "#111111",
-    branco: "#ffffff", bordo: "#722f37", cafe: "#6f4e37", caramelo: "#b87845",
+    branco: "#ffffff", bronze: "#D17E67", bordo: "#722f37", cafe: "#6f4e37", caramelo: "#b87845",
     chumbo: "#4b4f54", cinza: "#b8b8b8", coral: "#d17e67", creme: "#eee1c6",
-    grafite: "#4a4a4a", marinho: "#1d2c4f", marrom: "#d17e67", mostarda: "#ED8D2A", nude: "#d7ad91",
+    grafite: "#4a4a4a", marinho: "#1d2c4f", marrom: "#3F2626", mostarda: "#ED8D2A", nude: "#d7ad91",
     offwhite: "#f3efe6", pink: "#ec4899", preta: "#111111", preto: "#111111",
     rosa: "#e94791", roxo: "#75449b", terracota: "#d8a66f", verde: "#68684d",
     vermelho: "#d32f2f", vinho: "#752f43", navy: "#31415c", blue: "#2b3f5f",
