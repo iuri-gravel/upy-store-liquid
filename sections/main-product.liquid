@@ -94,7 +94,7 @@
               endif
 
               assign gallery_alt = media.alt | default: media.preview_image.alt | strip
-              if gallery_alt == blank
+              if gallery_alt == blank or gallery_alt == product.title
                 assign gallery_alt = product.title
                 assign gallery_color = blank
                 if color_option_index >= 0
