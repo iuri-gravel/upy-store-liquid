@@ -7,6 +7,34 @@
       if template.name == 'index' and template.suffix == 'em-construcao'
         assign display_page_title = 'under_construction.context' | t
         assign display_page_description = 'under_construction.description' | t
+      elsif request.page_type == 'collection' or request.page_type == 'list-collections'
+        assign collection_seo_key = 'collection_seo.default'
+        assign collection_seo_handles = 'all,calca,colecoes,conjuntos,even,move,produtos,shine,short,tops' | split: ','
+        if request.page_type == 'list-collections'
+          assign collection_seo_key = 'collection_seo.index'
+        elsif collection_seo_handles contains collection.handle
+          assign collection_seo_key = 'collection_seo.' | append: collection.handle
+        endif
+
+        assign collection_name = collection.title | default: page_title
+        assign collection_title = collection.title | strip
+        assign seo_title = page_title | strip
+        if seo_title == blank or seo_title == collection_title or seo_title == shop.name
+          assign title_key = collection_seo_key | append: '.title'
+          assign display_page_title = title_key | t: collection_title: collection_name
+        endif
+
+        assign store_description = shop.description | strip_html | strip
+        assign display_page_description = page_description | strip_html | strip
+        if display_page_description == blank or display_page_description == store_description
+          assign collection_description = collection.description | strip_html | replace: '&nbsp;', ' ' | strip
+          if collection_description != blank and collection_description != store_description
+            assign display_page_description = collection_description | truncate: 160
+          else
+            assign description_key = collection_seo_key | append: '.description'
+            assign display_page_description = description_key | t: collection_title: collection_name
+          endif
+        endif
       endif
     %}
     <meta charset="utf-8">
@@ -14,14 +42,14 @@
     <meta name="theme-color" content="{{ settings.color_canvas }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
-    <title>{{ display_page_title | escape }}{% unless display_page_title contains shop.name %} · {{ shop.name | escape }}{% endunless %}</title>
+    <title>{{ display_page_title | escape_once }}{% unless display_page_title contains shop.name %} · {{ shop.name | escape }}{% endunless %}</title>
     {% if display_page_description != blank %}
-      <meta name="description" content="{{ display_page_description | strip_html | escape }}">
-    {% elsif shop.description != blank %}
+      <meta name="description" content="{{ display_page_description | strip_html | escape_once }}">
+    {% elsif shop.description != blank and request.page_type != 'collection' and request.page_type != 'list-collections' %}
       <meta name="description" content="{{ shop.description | strip_html | escape }}">
     {% endif %}
     <meta property="og:site_name" content="{{ shop.name | escape }}">
-    <meta property="og:title" content="{{ display_page_title | escape }}">
+    <meta property="og:title" content="{{ display_page_title | escape_once }}">
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
     {% if request.page_type == 'product' and product != blank %}

@@ -130,6 +130,53 @@
   </div>
 </footer>
 
+{% if template.name == 'index' and template.suffix == blank %}
+  {% liquid
+    if section.settings.logo != blank
+      assign organization_logo = section.settings.logo | image_url: width: 640
+    else
+      assign organization_logo = 'logo-wordmark.svg' | asset_url
+    endif
+    assign organization_logo_prefix = organization_logo | slice: 0, 2
+    if organization_logo_prefix == '//'
+      assign organization_logo = organization_logo | prepend: 'https:'
+    endif
+    assign organization_description = section.settings.description | strip_html | strip
+    assign organization_email = section.settings.contact_email | strip
+    assign organization_social_fields = 'instagram_url,facebook_url,youtube_url,tiktok_url,pinterest_url' | split: ','
+    capture organization_social_links
+      assign social_separator = ''
+      for social_field in organization_social_fields
+        assign social_url = section.settings[social_field]
+        if social_url != blank
+          echo social_separator
+          echo social_url | json
+          assign social_separator = ', '
+        endif
+      endfor
+    endcapture
+  %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": {{ shop.secure_url | append: '/#organization' | json }},
+      "name": {{ shop.name | json }},
+      "logo": {{ organization_logo | json }},
+      {% if organization_description != blank %}
+        "description": {{ organization_description | json }},
+      {% endif %}
+      {% if organization_email != blank %}
+        "email": {{ organization_email | json }},
+      {% endif %}
+      {% if organization_social_links != blank %}
+        "sameAs": [{{ organization_social_links }}],
+      {% endif %}
+      "url": {{ shop.secure_url | json }}
+    }
+  </script>
+{% endif %}
+
 <section class="site-cookie-banner" data-cookie-banner hidden role="dialog" aria-modal="false" aria-labelledby="cookie-banner-title" aria-describedby="cookie-banner-description">
   <div class="site-cookie-banner__inner">
     <div class="site-cookie-banner__copy">

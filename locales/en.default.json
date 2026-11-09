@@ -57,6 +57,7 @@
   "home": {
     "hero": {
       "label": "Upy Store highlights",
+      "default_heading": "Women's activewear from {{ shop_name }}",
       "slide": "Slide",
       "slide_count": "{{ current }} of {{ total }}",
       "choose_slide": "Choose a banner",
@@ -86,9 +87,60 @@
     "previous_page": "Previous page",
     "next_page": "Next page"
   },
+  "collection_seo": {
+    "default": {
+      "title": "{{ collection_title }} | Women's activewear",
+      "description": "Explore {{ collection_title }} at Upy Store and find women's activewear for your workouts."
+    },
+    "index": {
+      "title": "Women's activewear collections",
+      "description": "Explore Upy Store's women's activewear collections by line and garment type. Find leggings, tops, shorts, and matching sets."
+    },
+    "all": {
+      "title": "Complete activewear catalog",
+      "description": "Browse the full Upy Store catalog and compare women's leggings, shorts, tops, and workout sets in different colors and fits."
+    },
+    "calca": {
+      "title": "Women's workout leggings",
+      "description": "Find women's high-waisted workout leggings at Upy Store. Compare polyamide styles, pocket leggings, seamless fronts, and ribbed fabrics."
+    },
+    "colecoes": {
+      "title": "Women's activewear edit",
+      "description": "Explore Upy Store's selection of polyamide leggings, tops, and shorts. Mix and match the pieces to create your workout outfit."
+    },
+    "conjuntos": {
+      "title": "Women's workout sets",
+      "description": "Shop women's matching workout sets at Upy Store. Discover the Move set with piping details and explore the available colors."
+    },
+    "even": {
+      "title": "Even Collection | Leggings, tops and shorts",
+      "description": "Discover Upy Store's Even collection, with high-waisted polyamide leggings and shorts and workout tops in a range of cuts."
+    },
+    "move": {
+      "title": "Move Collection | Piped workout set",
+      "description": "Discover Upy Store's Move collection and its women's workout set with contrast piping. See the available colors and sizes."
+    },
+    "produtos": {
+      "title": "Shop women's activewear",
+      "description": "Shop women's activewear at Upy Store. Browse pieces from the Even, Move, and Shine lines to build your workout outfits."
+    },
+    "shine": {
+      "title": "Shine Collection | Ribbed activewear",
+      "description": "Explore Upy Store's Shine collection, featuring ribbed leggings, shorts, and a cutout top you can mix and match."
+    },
+    "short": {
+      "title": "Women's workout shorts",
+      "description": "Find women's workout shorts at Upy Store. Browse high-waisted, pocket, ribbed, and seamless-front styles."
+    },
+    "tops": {
+      "title": "Women's workout tops",
+      "description": "Explore women's workout tops at Upy Store. Compare the Larissa top, racerback styles, and designs with straps, coverage, or cutouts."
+    }
+  },
   "product": {
     "breadcrumb": "Breadcrumb",
     "gallery": "Photos of {{ title }}",
+    "image_alt_color": "{{ title }} in {{ color }}",
     "previous_image": "Previous image",
     "next_image": "Next image",
     "choose_image": "Choose an image",

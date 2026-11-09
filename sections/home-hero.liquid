@@ -19,6 +19,9 @@
 %}
 
 <section class="home-hero" data-home-hero data-interval="5000" aria-label="{{ 'home.hero.label' | t }}" {% if hero_slide_count == 0 %}aria-busy="true"{% endif %}>
+  {% if hero_title == blank and template.name == 'index' and template.suffix == blank %}
+    <h1 class="visually-hidden">{{ 'home.hero.default_heading' | t: shop_name: shop.name | escape }}</h1>
+  {% endif %}
   <div class="home-hero__track" data-home-hero-track>
     {% if image_1 != blank %}
       {% render 'home-hero-slide', image: image_1, mobile_image: mobile_image_1, collection: collection_1, index: 1, total: hero_slide_count, eager: true %}

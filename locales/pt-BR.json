@@ -57,6 +57,7 @@
   "home": {
     "hero": {
       "label": "Destaques da Upy Store",
+      "default_heading": "Moda fitness feminina da {{ shop_name }}",
       "slide": "Slide",
       "slide_count": "{{ current }} de {{ total }}",
       "choose_slide": "Escolher imagem do banner",
@@ -86,9 +87,60 @@
     "previous_page": "Página anterior",
     "next_page": "Próxima página"
   },
+  "collection_seo": {
+    "default": {
+      "title": "{{ collection_title }} | Moda fitness feminina",
+      "description": "Conheça {{ collection_title }} da Upy Store e encontre peças de moda fitness feminina para seus treinos."
+    },
+    "index": {
+      "title": "Coleções de moda fitness feminina",
+      "description": "Explore as coleções de moda fitness feminina da Upy Store por linha e tipo de peça. Encontre leggings, tops, shorts e conjuntos."
+    },
+    "all": {
+      "title": "Catálogo completo de moda fitness",
+      "description": "Veja o catálogo completo da Upy Store. Compare calças leggings, shorts, tops e conjuntos fitness em diferentes cores e modelagens."
+    },
+    "calca": {
+      "title": "Calças leggings fitness femininas",
+      "description": "Encontre calças leggings fitness de cintura alta na Upy Store. Compare modelos de poliamida, com bolsos, sem costura no gancho e com tecido canelado."
+    },
+    "colecoes": {
+      "title": "Seleção de moda fitness feminina",
+      "description": "Conheça a seleção de leggings, tops e shorts de poliamida da Upy Store. Combine as peças para montar seu look de treino."
+    },
+    "conjuntos": {
+      "title": "Conjuntos fitness femininos",
+      "description": "Encontre conjuntos fitness femininos na Upy Store. Conheça o conjunto da linha Move com detalhes em vivo e explore as opções de cores."
+    },
+    "even": {
+      "title": "Coleção Even | Leggings, tops e shorts",
+      "description": "Conheça a coleção Even da Upy Store, com leggings e shorts de poliamida de cintura alta e tops em diferentes modelagens para treinar."
+    },
+    "move": {
+      "title": "Coleção Move | Conjunto fitness com vivo",
+      "description": "Descubra a coleção Move da Upy Store e conheça o conjunto fitness feminino com vivo contrastante. Veja as cores e os tamanhos disponíveis."
+    },
+    "produtos": {
+      "title": "Roupas fitness femininas",
+      "description": "Compre roupas fitness femininas na Upy Store. Explore os produtos das linhas Even, Move e Shine e encontre peças para combinar."
+    },
+    "shine": {
+      "title": "Coleção Shine | Moda fitness canelada",
+      "description": "Explore a coleção Shine da Upy Store, com calça, short e top com recorte em tecido canelado. Combine as peças para montar seu conjunto."
+    },
+    "short": {
+      "title": "Shorts fitness femininos",
+      "description": "Escolha seu short fitness feminino na Upy Store. Explore modelos de cintura alta, com bolsos, canelados e sem costura no gancho."
+    },
+    "tops": {
+      "title": "Tops fitness femininos",
+      "description": "Explore tops fitness femininos da Upy Store. Compare o top Larissa, o modelo nadador e as opções com tiras, cobertura ou recorte."
+    }
+  },
   "product": {
     "breadcrumb": "Navegação estrutural",
     "gallery": "Fotos de {{ title }}",
+    "image_alt_color": "{{ title }} na cor {{ color }}",
     "previous_image": "Imagem anterior",
     "next_image": "Próxima imagem",
     "choose_image": "Escolher imagem",
