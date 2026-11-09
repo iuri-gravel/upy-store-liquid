@@ -37,6 +37,7 @@
     lavanda: "#b5a1d8",
     lilas: "#ad82c4",
     marinho: "#1d2cf5",
+    mostarda: "#ED8D2A",
     marrom: "#d17e67",
     navy: "#31415c",
     nude: "#d7ad91",

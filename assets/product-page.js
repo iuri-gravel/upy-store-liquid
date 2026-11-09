@@ -11,6 +11,7 @@
     branco: "#fff", bordo: "#722f37", cafe: "#6f4e37", caramelo: "#b87845", chumbo: "#4b4f54",
     cinza: "#b8b8b8", coral: "#ef7b67", creme: "#eee1c6", dourado: "#c7a447", fucsia: "#d81b60",
     grafite: "#4a4a4a", laranja: "#d8a66f", lavanda: "#b5a1d8", lilas: "#ad82c4", marinho: "#1d2cf5",
+    mostarda: "#ED8D2A",
     marrom: "#d17e67", navy: "#31415c", nude: "#d7ad91", offwhite: "#f3efe6", pink: "#ec4899", preta: "#111",
     pretas: "#111", preto: "#111", rosa: "#e94791", "rosa-bebe": "#f3b8ca", "rosa-mesqueta": "#b3568c",
     "rosa-mosqueta": "#b3568c", pessego: "#ef8688", roxo: "#75449b", terracota: "#d8a66f", verde: "#68684d",
