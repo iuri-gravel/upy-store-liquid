@@ -7,7 +7,7 @@ Renders one image slide for the homepage hero from the Upy Store hero metaobject
 @param {number} total - Number of available slides
 @param {boolean} eager - Whether the image should load eagerly
 @example
-{% render 'home-hero-slide', image: image_1, mobile_image: mobile_image_1, collection: collection_1, index: 1, total: 2, eager: true %}
+{% render 'home-hero-slide', image: image, mobile_image: mobile_image, collection: collection, index: 1, total: hero_slide_count, eager: true %}
 {% enddoc %}
 {% liquid
   assign slide_alt = image.alt | default: collection.title | default: shop.name
