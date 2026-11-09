@@ -16,9 +16,28 @@
       endfor
     endif
   endfor
+
+  assign is_curated_collection_page = false
+  assign curated_collection_count = 0
+  assign curated_collection_columns = section.settings.desktop_columns | plus: 0
+  if collection.handle == 'colecoes'
+    assign is_curated_collection_page = true
+    assign curated_collection_entry = metaobjects.header_submenu_1['header-submenu1']
+    assign curated_collection_fields = 'colecao_1,colecao_2,colecao_3,colecao_4,colecao_5,colecao_6' | split: ','
+    for curated_collection_key in curated_collection_fields
+      assign curated_collection_field = curated_collection_entry[curated_collection_key]
+      assign curated_collection = curated_collection_field.value
+      if curated_collection != blank
+        assign curated_collection_count = curated_collection_count | plus: 1
+      endif
+    endfor
+    if curated_collection_count > 0 and curated_collection_count < curated_collection_columns
+      assign curated_collection_columns = curated_collection_count
+    endif
+  endif
 %}
 
-<section class="main-collection" data-home-launches data-collection-colors data-section-id="{{ section.id }}" style="--collection-columns: {{ section.settings.desktop_columns }};">
+<section class="main-collection{% if is_curated_collection_page %} main-collection--collection-index{% endif %}"{% unless is_curated_collection_page %} data-home-launches data-collection-colors{% endunless %} data-section-id="{{ section.id }}" style="--collection-columns: {{ section.settings.desktop_columns }}; --curated-columns: {{ curated_collection_columns }};">
   <header class="main-collection__header">
     <nav class="main-collection__breadcrumbs" aria-label="{{ 'collection.breadcrumb' | t }}">
       <a href="{{ routes.root_url }}">{{ 'collection.home' | t }}</a>
@@ -31,6 +50,54 @@
     {% endif %}
   </header>
 
+  {% if is_curated_collection_page %}
+    <div class="main-collection__form main-collection__form--collection-index">
+      <div class="main-collection__toolbar">
+        <p class="main-collection__count" aria-live="polite">
+          {% if curated_collection_count == 1 %}
+            {{ 'collection.list_results_one' | t: count: curated_collection_count }}
+          {% else %}
+            {{ 'collection.list_results_other' | t: count: curated_collection_count }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    {% if curated_collection_count > 0 %}
+      <div class="main-collection__collection-grid" role="list" aria-label="{{ 'header.collections' | t }}">
+        {% for curated_collection_key in curated_collection_fields %}
+          {% assign curated_collection_field = curated_collection_entry[curated_collection_key] %}
+          {% assign curated_collection = curated_collection_field.value %}
+          {% if curated_collection != blank %}
+            {% assign curated_collection_image = curated_collection.featured_image %}
+            <article class="main-collection__collection-item" role="listitem">
+              <a class="main-collection__collection-card" href="{{ curated_collection.url }}">
+                <span class="main-collection__collection-media">
+                  {% if curated_collection_image != blank %}
+                    {{ curated_collection_image | image_url: width: 1200 | image_tag:
+                      class: 'main-collection__collection-image',
+                      widths: '360, 540, 720, 900, 1200',
+                      sizes: '(min-width: 1024px) 25vw, 50vw',
+                      alt: '',
+                      loading: 'lazy',
+                      decoding: 'async'
+                    }}
+                  {% else %}
+                    {{ 'collection-1' | placeholder_svg_tag: 'main-collection__collection-placeholder' }}
+                  {% endif %}
+                </span>
+                <h2 class="main-collection__collection-name">{{ curated_collection.title | escape }}</h2>
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="main-collection__empty main-collection__collection-empty">
+        <p>{{ 'collection.list_empty' | t }}</p>
+      </div>
+    {% endif %}
+  {% else %}
   <form class="main-collection__form" action="{{ collection.url }}" method="get">
     <div class="main-collection__toolbar">
       <label class="main-collection__sort">
@@ -167,6 +234,7 @@
         {% if paginate.next %}<a href="{{ paginate.next.url }}" aria-label="{{ 'collection.next_page' | t }}">→</a>{% endif %}
       </nav>
   {% endpaginate %}
+  {% endif %}
 </section>
 
 {% stylesheet %}
@@ -228,6 +296,7 @@
     gap: 1rem;
     padding: 0;
   }
+  .main-collection__form--collection-index .main-collection__toolbar { justify-content: flex-end; }
   .main-collection__count { margin: 0; color: var(--upy-canvas); font-size: 0.9rem; }
   .main-collection__sort { position: relative; display: flex; align-items: center; font-size: 0.9rem; }
   .main-collection__sort select {
@@ -318,6 +387,39 @@
   }
   .main-collection .home-launches__slide { min-width: 0; }
   .main-collection .home-launches__details { padding: 0.5rem 0.125rem 0.75rem; }
+  .main-collection__collection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 0.65rem;
+    margin: 1.25rem 0.75rem 0;
+  }
+  .main-collection__collection-item { min-width: 0; }
+  .main-collection__collection-card { display: block; color: inherit; text-decoration: none; }
+  .main-collection__collection-card:focus-visible { outline: 2px solid var(--upy-accent); outline-offset: 4px; }
+  .main-collection__collection-media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: color-mix(in srgb, var(--upy-ink) 10%, var(--upy-canvas));
+  }
+  .main-collection__collection-image,
+  .main-collection__collection-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms ease-out;
+  }
+  .main-collection__collection-card:hover .main-collection__collection-image,
+  .main-collection__collection-card:hover .main-collection__collection-placeholder { transform: scale(1.025); }
+  .main-collection__collection-name {
+    margin: 0.65rem 0.125rem 0;
+    font-family: var(--upy-font-heading);
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
   .main-collection__empty { display: grid; min-height: 20rem; align-content: center; justify-items: center; padding: 2rem 1rem; text-align: center; }
   .main-collection__empty h2 { margin: 0; font-family: var(--upy-font-heading); font-size: 2rem; font-weight: 300; }
   .main-collection__empty p { max-width: 28rem; color: #77716c; font-size: 0.9rem; line-height: 1.6; }
@@ -326,12 +428,14 @@
   .main-collection__pagination a { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid rgb(32 29 28 / 22%); border-radius: 50%; color: inherit; text-decoration: none; }
   @media (min-width: 640px) {
     .main-collection .home-launches__track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1.25rem; }
+    .main-collection__collection-grid { gap: 1.5rem 1.25rem; margin-inline: 1.25rem; }
     .main-collection__filter-content { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .main-collection__facet:last-of-type { grid-column: auto; }
   }
   @media (min-width: 1024px) {
     .main-collection { padding-bottom: 5rem; }
     .main-collection .home-launches__track { grid-template-columns: repeat(var(--collection-columns), minmax(0, 1fr)); gap: 2rem 1.25rem; }
+    .main-collection__collection-grid { grid-template-columns: repeat(var(--curated-columns), minmax(0, 1fr)); gap: 2rem 1.25rem; }
     .main-collection__filter-content { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .main-collection__values { grid-template-columns: 1fr; }
   }
@@ -343,9 +447,14 @@
     .main-collection__form { padding-inline: 1rem; }
     .main-collection__title { font-size: clamp(2.5rem, 11vw, 3.5rem); }
     .main-collection__toolbar { gap: 0.5rem; }
+    .main-collection__collection-grid { margin-inline: 0.75rem; }
     .main-collection__sort select { width: 48vw; padding-inline: 0.8rem 1.5rem; }
     .main-collection__count { font-size: 0.75rem; text-align: right; }
     .main-collection__carousel { margin-inline: 0.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .main-collection__collection-image,
+    .main-collection__collection-placeholder { transition: none; }
   }
 {% endstylesheet %}
 
