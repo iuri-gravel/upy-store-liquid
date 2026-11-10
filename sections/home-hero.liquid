@@ -120,11 +120,17 @@
   scroll-snap-align: start;
 }
 
+.home-hero__link,
 .home-hero__picture,
 .home-hero__image {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.home-hero__link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -6px;
 }
 
 .home-hero__image {
