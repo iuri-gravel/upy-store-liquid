@@ -450,20 +450,43 @@
   window.UpyTheme = { readWishlist, writeWishlist, wishlistKey };
   const sources = document.currentScript?.dataset || {};
   const loadedFeatures = new Set();
-  const loadFeature = (name, selector) => {
-    if (loadedFeatures.has(name) || !sources[name] || !document.querySelector(selector)) return;
-    loadedFeatures.add(name);
-    const script = document.createElement("script");
-    script.src = sources[name];
-    script.async = true;
-    script.addEventListener("error", () => loadedFeatures.delete(name), { once: true });
-    document.head.append(script);
+  const pendingFeatureObservers = new Map();
+  const loadFeature = (name, selector, rootMargin) => {
+    if (loadedFeatures.has(name) || !sources[name]) return;
+    const target = document.querySelector(selector);
+    if (!target) return;
+
+    const load = () => {
+      pendingFeatureObservers.get(name)?.disconnect();
+      pendingFeatureObservers.delete(name);
+      if (loadedFeatures.has(name)) return;
+      loadedFeatures.add(name);
+
+      const script = document.createElement("script");
+      script.src = sources[name];
+      script.async = true;
+      script.addEventListener("error", () => loadedFeatures.delete(name), { once: true });
+      document.head.append(script);
+    };
+
+    if (rootMargin && "IntersectionObserver" in window) {
+      pendingFeatureObservers.get(name)?.disconnect();
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting && entry.target.isConnected)) return;
+        load();
+      }, { rootMargin });
+      pendingFeatureObservers.set(name, observer);
+      observer.observe(target.closest(".shopify-section") || target);
+      return;
+    }
+
+    load();
   };
   const loadPageFeatures = () => {
     loadFeature("homeScript", "[data-home-hero], [data-home-video-carousel], [data-home-categories], [data-buy-color]");
-    loadFeature("cardsScript", "[data-home-launches]");
+    loadFeature("cardsScript", "[data-home-launches]", "400px 0px");
     loadFeature("collectionColorsScript", "[data-collection-colors]");
-    loadFeature("recentScript", "[data-recently-viewed], [data-recent-product-id], [data-launch-product-link]");
+    loadFeature("recentScript", "[data-recently-viewed], [data-recent-product-id]", "400px 0px");
   };
   loadPageFeatures();
   document.addEventListener("shopify:section:load", loadPageFeatures);
