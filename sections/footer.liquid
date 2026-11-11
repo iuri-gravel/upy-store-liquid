@@ -120,10 +120,26 @@
         {% endfor %}
         {% unless has_pix %}<span class="site-footer__pix-mark">◆ PIX</span>{% endunless %}
         <a class="site-footer__security-badge" href="https://transparencyreport.google.com/safe-browsing/search?url=https://upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar a Upy Store no Google Safe Browsing">
-          <img src="{{ 'logo-google-safe-browsing.webp' | asset_url }}" alt="Google Safe Browsing" width="160" height="45" loading="lazy">
+          <img
+            src="{{ 'logo-google-safe-browsing.webp' | asset_img_url: '34x' }}"
+            srcset="{{ 'logo-google-safe-browsing.webp' | asset_img_url: '68x' }} 2x, {{ 'logo-google-safe-browsing.webp' | asset_img_url: '102x' }} 3x"
+            alt="Google Safe Browsing"
+            width="34"
+            height="20"
+            loading="lazy"
+            decoding="async"
+          >
         </a>
         <a class="site-footer__security-badge site-footer__security-badge--ssl" href="https://www.sslshopper.com/ssl-checker.html#hostname=upystore.com.br" target="_blank" rel="noopener noreferrer" aria-label="Verificar certificado SSL da Upy Store">
-          <img src="{{ 'ssl-secured.webp' | asset_url }}" alt="SSL Secured" width="120" height="40" loading="lazy">
+          <img
+            src="{{ 'ssl-secured.webp' | asset_img_url: '60x' }}"
+            srcset="{{ 'ssl-secured.webp' | asset_img_url: '120x' }} 2x, {{ 'ssl-secured.webp' | asset_img_url: '180x' }} 3x"
+            alt="SSL Secured"
+            width="60"
+            height="20"
+            loading="lazy"
+            decoding="async"
+          >
         </a>
       </div>
     </div>

@@ -204,7 +204,7 @@
       {% if section.settings.logo != blank %}
         {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'site-header__logo-image', alt: shop.name, widths: '120, 180, 240, 320, 420', sizes: '(max-width: 1023px) 112px, 160px' }}
       {% else %}
-        <img class="site-header__logo-image" src="{{ 'LOGOTIPO.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="2000" height="2000" fetchpriority="high">
+        <img class="site-header__logo-image" src="{{ 'LOGOTIPO.svg' | asset_url }}" alt="{{ shop.name | escape }}" width="2000" height="2000">
       {% endif %}
     </a>
 

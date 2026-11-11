@@ -11,6 +11,7 @@
   if pinned_video == blank
     assign pinned_video = product.media | where: 'media_type', 'external_video' | first
   endif
+  assign pinned_video_title = pinned_video.alt | default: product.title
   assign gallery_images = product.media | where: 'media_type', 'image'
   assign gallery_media_count = gallery_images.size
   assign product_form_id = 'ProductForm-' | append: section.id
@@ -51,6 +52,41 @@
     assign selected_variant = product.variants.first
   endif
 
+  assign initial_gallery_image = gallery_images.first
+  assign initial_gallery_color = blank
+  if color_option_index >= 0
+    assign initial_gallery_color = selected_variant.options[color_option_index] | handleize
+  endif
+  for variant in product.variants
+    if variant.featured_media.media_type != 'image'
+      continue
+    endif
+    if color_option_index >= 0
+      assign variant_gallery_color = variant.options[color_option_index] | handleize
+      if variant_gallery_color != initial_gallery_color
+        continue
+      endif
+    endif
+    if size_option_index >= 0
+      assign variant_gallery_size = variant.options[size_option_index] | downcase | strip
+      if variant_gallery_size == 'img 1' or variant_gallery_size == 'img 2'
+        continue
+      endif
+    endif
+    assign initial_gallery_image = variant.featured_media
+    break
+  endfor
+
+  if pinned_video.media_type == 'video'
+    assign video_mp4_sources = pinned_video.sources | where: 'format', 'mp4' | sort: 'width'
+    assign preferred_video_source = video_mp4_sources.last
+    for source in video_mp4_sources
+      if source.width >= 480
+        assign preferred_video_source = source
+        break
+      endif
+    endfor
+  endif
 %}
 
 <section
@@ -89,8 +125,10 @@
           {% for media in gallery_images %}
             {% liquid
               assign media_loading = 'lazy'
-              if forloop.first
+              assign media_priority = 'auto'
+              if media.id == initial_gallery_image.id
                 assign media_loading = 'eager'
+                assign media_priority = 'high'
               endif
 
               assign gallery_alt = media.alt | default: media.preview_image.alt | strip
@@ -115,15 +153,16 @@
               endif
             %}
             <figure
-              class="main-product__media{% if forloop.first %} is-active{% endif %}"
+              class="main-product__media{% if media.id == initial_gallery_image.id %} is-active{% endif %}"
               data-product-media
               data-media-index="{{ forloop.index0 }}"
               data-media-id="{{ media.id }}"
               data-media-type="image"
+              data-zoom-src="{{ media | image_url: width: 1800 }}"
               data-media-default="{% if media.id == product.featured_media.id %}true{% else %}false{% endif %}"
-              {% unless forloop.first %}hidden{% endunless %}
+              {% unless media.id == initial_gallery_image.id %}hidden{% endunless %}
             >
-              {{ media | image_url: width: 1800 | image_tag: widths: '480, 720, 960, 1200, 1600, 1800', sizes: '(min-width: 1000px) 32vw, 100vw', loading: media_loading, alt: gallery_alt }}
+              {{ media | image_url: width: 1800 | image_tag: widths: '360, 480, 600, 720, 768, 840, 960, 1080, 1200, 1440, 1600, 1800', sizes: '(min-width: 1920px) 600px, (min-width: 1000px) 32vw, 100vw', loading: media_loading, fetchpriority: media_priority, alt: gallery_alt }}
               <button class="main-product__zoom" type="button" data-open-lightbox aria-label="{{ 'product.enlarge_image' | t: number: forloop.index, title: product.title | escape }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5M10.8 7.5v6.6M7.5 10.8h6.6"></path></svg>
               </button>
@@ -143,7 +182,7 @@
           <div class="main-product__gallery-controls">
             <div class="main-product__gallery-dots" data-gallery-dots data-image-label-template="{{ 'product.view_image' | t: number: '__number__' | escape }}" aria-label="{{ 'product.choose_image' | t | escape }}">
               {% for media in gallery_images %}
-                <button type="button" data-gallery-dot data-media-index="{{ forloop.index0 }}" aria-label="{{ 'product.view_image' | t: number: forloop.index | escape }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+                <button type="button" data-gallery-dot data-media-index="{{ forloop.index0 }}" aria-label="{{ 'product.view_image' | t: number: forloop.index | escape }}"{% if media.id == initial_gallery_image.id %} aria-current="true"{% else %} hidden{% endif %}></button>
               {% endfor %}
             </div>
           </div>
@@ -157,15 +196,31 @@
 
     {% if pinned_video != blank %}
       <button class="main-product__video-backdrop" type="button" data-video-backdrop aria-label="Fechar vídeo ampliado" hidden></button>
-      <div class="main-product__video-bubble" data-product-floating-video>
-        {% if pinned_video.media_type == 'video' %}
-          {{ pinned_video | media_tag: autoplay: true, loop: true, muted: true, controls: false, image_size: '480x' }}
-        {% elsif pinned_video.host == 'youtube' %}
-          {{ pinned_video | external_video_url: autoplay: '1', controls: '0', loop: '1', mute: '1', playlist: pinned_video.external_id, playsinline: '1' | external_video_tag }}
-        {% else %}
-          {{ pinned_video | external_video_url: autoplay: '1', controls: '0', loop: '1', muted: '1', playsinline: '1' | external_video_tag }}
+      <div class="main-product__video-bubble" data-product-floating-video style="--video-ratio: {{ pinned_video.preview_image.aspect_ratio | default: 0.5625 }};">
+        {% if pinned_video.preview_image != blank %}
+          {{ pinned_video.preview_image | image_url: width: 384 | image_tag: class: 'main-product__video-poster', widths: '128, 192, 256, 384', sizes: '(max-width: 999px) 108px, 176px', loading: 'lazy', fetchpriority: 'low', alt: '' }}
         {% endif %}
-        <button class="main-product__video-toggle" type="button" data-video-toggle data-label-collapsed="{{ 'product.enlarge_video' | t | escape }}" data-label-expanded="{{ 'product.reduce_video' | t | escape }}" aria-label="{{ 'product.enlarge_video' | t | escape }}" aria-expanded="false"></button>
+        <template data-video-player>
+          {% if pinned_video.media_type == 'video' %}
+            <video muted loop playsinline preload="none">
+              {% if preferred_video_source != blank %}
+                <source src="{{ preferred_video_source.url | escape }}" type="{{ preferred_video_source.mime_type | escape }}">
+              {% endif %}
+              {% for source in pinned_video.sources %}
+                {% unless source.url == preferred_video_source.url %}
+                  <source src="{{ source.url | escape }}" type="{{ source.mime_type | escape }}">
+                {% endunless %}
+              {% endfor %}
+            </video>
+          {% elsif pinned_video.host == 'youtube' %}
+            {{ pinned_video | external_video_url: autoplay: '1', controls: '0', loop: '1', mute: '1', playlist: pinned_video.external_id, playsinline: '1' | external_video_tag: title: pinned_video_title }}
+          {% else %}
+            {{ pinned_video | external_video_url: autoplay: '1', controls: '0', loop: '1', muted: '1', playsinline: '1' | external_video_tag: title: pinned_video_title }}
+          {% endif %}
+        </template>
+        <button class="main-product__video-toggle" type="button" data-video-toggle data-label-collapsed="{{ 'product.enlarge_video' | t | escape }}" data-label-expanded="{{ 'product.reduce_video' | t | escape }}" aria-label="{{ 'product.enlarge_video' | t | escape }}" aria-expanded="false">
+          <svg class="main-product__video-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 10 6-10 6z"></path></svg>
+        </button>
         <button class="main-product__video-close" type="button" data-video-close aria-label="{{ 'product.close_video' | t | escape }}" hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
@@ -281,11 +336,8 @@
               data-product-handle="{{ product.handle | escape }}"
               data-product-url="{{ product.url }}"
               data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 240 }}{% endif %}"
-              data-label-favorite="{{ 'product.favorite_add' | t: title: product.title | escape }}"
-              data-label-unfavorite="{{ 'product.favorite_remove' | t: title: product.title | escape }}"
               data-label-favorite-text="{{ 'product.favorite_button' | t | escape }}"
               data-label-unfavorite-text="{{ 'product.favorited_button' | t | escape }}"
-              aria-label="{{ 'product.favorite_add' | t: title: product.title | escape }}"
               aria-pressed="false"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg>

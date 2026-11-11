@@ -124,10 +124,11 @@
       return candidates.find((variant) => variant.available) || candidates[0] || initialVariant;
     };
     const hasRequiredSelection = () => (colorIndex < 0 || Boolean(selected[colorIndex])) && (sizeIndex < 0 || Boolean(selected[sizeIndex])) && optionGroups.every((group) => group.dataset.optionKind === "color" || group.dataset.optionKind === "size" || Boolean(selected[Number(group.dataset.optionIndex)]));
-    const money = (cents) => new Intl.NumberFormat(document.documentElement.lang || "pt-BR", {
+    const currencyFormatter = new Intl.NumberFormat(document.documentElement.lang || "pt-BR", {
       style: "currency",
       currency: page.dataset.currency || "BRL",
-    }).format(Number(cents || 0) / 100);
+    });
+    const money = (cents) => currencyFormatter.format(Number(cents || 0) / 100);
     let lastGalleryKey = "";
     let currentGallery = [];
     const navigableMedia = () => currentGallery;
@@ -141,13 +142,23 @@
       // Limit the selected color's variant photos, after preserving their variant order.
       const galleryImageLimit = colorCandidates.length >= 6 ? 6 : 4;
       const visible = colorCandidates.slice(0, galleryImageLimit);
-      const firstVisible = visible[0];
+      const firstVariantWithMedia = variants.find((variant) =>
+        keyFor(variant.options[colorIndex]) === colorKey && mediaById.has(String(variant.featuredMediaId))
+      );
+      const firstVisible = visible.find((item) => item.dataset.mediaId === String(firstVariantWithMedia?.featuredMediaId)) || visible[0];
       media.forEach((item) => {
         const show = visible.includes(item);
         item.hidden = !show;
         item.classList.toggle("is-active", show && item === firstVisible);
       });
-      mediaGrid?.append(...visible);
+      if (mediaGrid && visible.some((item, index) => mediaGrid.children[index] !== item)) {
+        mediaGrid.prepend(...visible);
+      }
+      const activeImage = firstVisible?.querySelector("img");
+      if (activeImage?.loading === "lazy") {
+        activeImage.fetchPriority = "high";
+        activeImage.loading = "eager";
+      }
       const dots = galleryDots;
       dots.forEach((dot) => {
         const mediaItem = mediaByIndex.get(dot.dataset.mediaIndex);
@@ -167,13 +178,7 @@
       page.querySelectorAll("[data-gallery-previous], [data-gallery-next]").forEach((button) => {
         button.hidden = !hasMultipleImages;
       });
-      if (visible.length) {
-        const current = variants.find((variant) => normalize(variant.options[colorIndex]) === normalize(color) && variant.featuredMediaId);
-        if (current) {
-          const featured = visible.find((item) => String(item.dataset.mediaId) === String(current.featuredMediaId));
-          if (featured) activateMedia(featured, visible, media);
-        }
-      }
+      page.dataset.activeMediaIndex = String(Math.max(0, visible.indexOf(firstVisible)));
       lastGalleryKey = selectionKey;
       currentGallery = visible;
       return visible;
@@ -257,7 +262,6 @@
       }
       optionGroups.forEach((group) => {
         const index = Number(group.dataset.optionIndex);
-        const kind = group.dataset.optionKind;
         const label = group.querySelector("[data-selected-option-label]");
         if (label) label.textContent = selected[index] || "";
         group.querySelectorAll("[data-option-button]").forEach((button) => {
@@ -266,7 +270,6 @@
           const hasAvailableVariant = variants.some((variant) => variant.available && knownMatches(variant, index) && normalize(variant.options[index]) === normalize(value));
           button.setAttribute("aria-pressed", String(isSelected));
           button.disabled = !hasAvailableVariant;
-          if (kind === "color") colorFor(value, button.querySelector("span"));
         });
         const select = group.querySelector("[data-option-select]");
         if (select) select.value = selected[index] || "";
@@ -336,6 +339,7 @@
     optionGroups.forEach((group) => {
       const index = Number(group.dataset.optionIndex);
       group.querySelectorAll("[data-option-button]").forEach((button) => {
+        if (group.dataset.optionKind === "color") colorFor(button.dataset.optionValue, button.querySelector("span"));
         button.addEventListener("click", () => {
           const value = button.dataset.optionValue || "";
           selected[index] = value;
@@ -383,8 +387,14 @@
       const availableHeight = Math.max(0, window.innerHeight - top - gap);
       // Keep the top pinned through the photos, with room below for the rest of a tall panel.
       const overflow = Math.max(0, panelHeight - availableHeight);
-      detailsInner.style.setProperty("--product-details-top", `${top}px`);
-      detailsColumn?.style.setProperty("--product-details-min-height", `${galleryHeight + overflow}px`);
+      const topValue = `${top}px`;
+      const heightValue = `${galleryHeight + overflow}px`;
+      if (detailsInner.style.getPropertyValue("--product-details-top") !== topValue) {
+        detailsInner.style.setProperty("--product-details-top", topValue);
+      }
+      if (detailsColumn && detailsColumn.style.getPropertyValue("--product-details-min-height") !== heightValue) {
+        detailsColumn.style.setProperty("--product-details-min-height", heightValue);
+      }
       scheduleSticky();
     };
     if (detailsInner && "ResizeObserver" in window) {
@@ -398,6 +408,7 @@
     floatingVideos.forEach((bubble) => {
       const toggleButton = bubble.querySelector("[data-video-toggle]");
       const closeButton = bubble.querySelector("[data-video-close]");
+      const playerTemplate = bubble.querySelector("[data-video-player]");
       let drag = null;
       let wasDragged = false;
       let collapsedGeometry = null;
@@ -414,6 +425,29 @@
         bubble.style.right = "auto";
         bubble.style.bottom = "auto";
         bubble.style.transform = "none";
+      };
+      const setVideoRatio = (player) => {
+        const isVideo = player instanceof HTMLVideoElement;
+        const width = isVideo ? player.videoWidth : Number(player.getAttribute("width"));
+        const height = isVideo ? player.videoHeight : Number(player.getAttribute("height"));
+        if (width > 0 && height > 0) {
+          bubble.style.setProperty("--video-ratio", String(width / height));
+        }
+      };
+      const loadPlayer = () => {
+        if (!playerTemplate?.isConnected) return;
+        const player = playerTemplate.content.firstElementChild?.cloneNode(true);
+        if (!player) return;
+        const isVideo = player instanceof HTMLVideoElement;
+        const reveal = () => bubble.classList.add("is-video-ready");
+        player.addEventListener(isVideo ? "playing" : "load", reveal, { once: true });
+        if (isVideo) player.addEventListener("loadedmetadata", () => {
+          setVideoRatio(player);
+          if (bubble.classList.contains("is-expanded")) fitExpanded();
+        }, { once: true });
+        playerTemplate.replaceWith(player);
+        setVideoRatio(player);
+        if (isVideo) player.play()?.catch(() => {});
       };
       const setExpanded = (expanded) => {
         if (expanded && !collapsedGeometry) {
@@ -435,6 +469,7 @@
         if (closeButton) closeButton.hidden = !expanded;
         if (videoBackdrop) videoBackdrop.hidden = !expanded;
         if (expanded) {
+          loadPlayer();
           fitExpanded();
         } else if (collapsedGeometry) {
           Object.entries(collapsedGeometry).forEach(([property, value]) => { bubble.style[property] = value; });
@@ -491,19 +526,6 @@
         setExpanded(false);
         toggleButton?.focus({ preventScroll: true });
       });
-      const video = bubble.querySelector("video");
-      const frame = bubble.querySelector("iframe");
-      const setVideoRatio = () => {
-        const nativeRatio = video?.videoWidth && video?.videoHeight ? video.videoWidth / video.videoHeight : 0;
-        const frameWidth = Number(frame?.getAttribute("width")) || 0;
-        const frameHeight = Number(frame?.getAttribute("height")) || 0;
-        const frameRatio = frameWidth && frameHeight ? frameWidth / frameHeight : 0;
-        const ratio = nativeRatio || frameRatio || 0.5625;
-        if (ratio > 0 && Number.isFinite(ratio)) bubble.style.setProperty("--video-ratio", String(ratio));
-        if (bubble.classList.contains("is-expanded")) fitExpanded();
-      };
-      video?.addEventListener("loadedmetadata", setVideoRatio);
-      setVideoRatio();
       window.addEventListener("resize", () => { if (bubble.classList.contains("is-expanded")) fitExpanded(); });
       videoBackdrop?.addEventListener("click", () => setExpanded(false));
       document.addEventListener("keydown", (event) => {
@@ -534,6 +556,12 @@
       if (!media) return;
       const clone = media.cloneNode(true);
       clone.removeAttribute("id");
+      if (clone instanceof HTMLImageElement && active.dataset.zoomSrc) {
+        clone.removeAttribute("srcset");
+        clone.removeAttribute("sizes");
+        clone.loading = "eager";
+        clone.src = active.dataset.zoomSrc;
+      }
       if (clone instanceof HTMLVideoElement) clone.controls = true;
       lightboxContent.replaceChildren(clone);
       lightbox.showModal();
@@ -556,7 +584,6 @@
       if (!favoriteButton) return;
       const favorite = readWishlist().some((item) => String(item.id) === String(favoriteButton.dataset.productId));
       favoriteButton.setAttribute("aria-pressed", String(favorite));
-      favoriteButton.setAttribute("aria-label", favorite ? favoriteButton.dataset.labelUnfavorite : favoriteButton.dataset.labelFavorite);
       const favoriteLabel = favoriteButton.querySelector("[data-favorite-label]");
       if (favoriteLabel) favoriteLabel.textContent = favorite ? favoriteButton.dataset.labelUnfavoriteText : favoriteButton.dataset.labelFavoriteText;
     };
@@ -680,26 +707,21 @@
     if ("ResizeObserver" in window) {
       const stickyObserver = new ResizeObserver(() => {
         scheduleSticky();
-        if (stickyBar) document.documentElement.style.setProperty("--product-sticky-height", `${stickyBar.getBoundingClientRect().height}px`);
+        if (stickyBar && !stickyBar.hidden) {
+          const height = `${stickyBar.getBoundingClientRect().height}px`;
+          const rootStyle = document.documentElement.style;
+          if (rootStyle.getPropertyValue("--product-sticky-height") !== height) {
+            rootStyle.setProperty("--product-sticky-height", height);
+          }
+        }
       });
       stickyObserver.observe(detailsInner || form);
       if (siteHeader) stickyObserver.observe(siteHeader);
       if (stickyBar) stickyObserver.observe(stickyBar);
     }
-    updateSticky();
     refreshFavorite();
     update();
-    updateDetailsOffset();
-    floatingVideos.forEach((media) => {
-      const video = media.querySelector("video");
-      if (!video || media.hidden) return;
-      video.muted = true;
-      video.playsInline = true;
-      video.loop = true;
-      video.controls = false;
-      const playback = video.play();
-      playback?.catch?.(() => {});
-    });
+    if (!("ResizeObserver" in window)) window.requestAnimationFrame(updateDetailsOffset);
   });
 
   const loadRecommendations = async (section) => {
