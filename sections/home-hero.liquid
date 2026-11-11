@@ -245,19 +245,34 @@
 }
 
 .home-hero__dot {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-hero__dot::before {
   width: 0.65rem;
   height: 0.65rem;
   border: 1px solid rgb(255 255 255 / 85%);
   border-radius: 999px;
-  padding: 0;
   background: rgb(255 255 255 / 30%);
-  cursor: pointer;
+  content: "";
   transition: width 220ms ease, background-color 220ms ease;
 }
 
-.home-hero__dot.is-active {
+.home-hero__dot.is-active::before {
   width: 2rem;
   background: #fff;
+}
+
+.home-hero__dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 @media (min-width: 768px) {

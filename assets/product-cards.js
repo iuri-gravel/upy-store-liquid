@@ -124,12 +124,13 @@
       const image = card.querySelector("[data-launch-image]");
       const placeholder = card.querySelector("[data-launch-image-placeholder]");
       const src480 = swatch.getAttribute("data-image-480");
+      const src600 = swatch.getAttribute("data-image-600");
       const src760 = swatch.getAttribute("data-image-760");
       const src1000 = swatch.getAttribute("data-image-1000");
-      const src = src760 || src1000 || src480;
+      const src = src600 || src760 || src1000 || src480;
       if (image) {
         if (src) {
-          image.srcset = [src480 && `${src480} 480w`, src760 && `${src760} 760w`, src1000 && `${src1000} 1000w`].filter(Boolean).join(", ");
+          image.srcset = [src480 && `${src480} 480w`, src600 && `${src600} 600w`, src760 && `${src760} 760w`, src1000 && `${src1000} 1000w`].filter(Boolean).join(", ");
           image.src = src;
         } else {
           image.removeAttribute("srcset");

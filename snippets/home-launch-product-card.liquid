@@ -98,6 +98,7 @@ Renders a product card with variant colors, favorites and quick add.
     <a class="home-launches__image-link" href="{{ launch_card_url }}" data-launch-product-link data-product-base-url="{{ product.url }}" aria-label="Ver {{ product.title | escape }}">
       {% if launch_card_image != blank %}
         {% assign launch_image_480 = launch_card_image | image_url: width: 480 %}
+        {% assign launch_image_600 = launch_card_image | image_url: width: 600 %}
         {% assign launch_image_760 = launch_card_image | image_url: width: 760 %}
         {% assign launch_image_1000 = launch_card_image | image_url: width: 1000 %}
       {% endif %}
@@ -105,8 +106,8 @@ Renders a product card with variant colors, favorites and quick add.
           class="home-launches__image"
           data-launch-image
           {% if launch_card_image != blank %}
-          src="{{ launch_image_760 }}"
-          srcset="{{ launch_image_480 }} 480w, {{ launch_image_760 }} 760w, {{ launch_image_1000 }} 1000w"
+          src="{{ launch_image_600 }}"
+          srcset="{{ launch_image_480 }} 480w, {{ launch_image_600 }} 600w, {{ launch_image_760 }} 760w, {{ launch_image_1000 }} 1000w"
           {% else %}hidden{% endif %}
           sizes="{{ card_image_sizes }}"
           alt="{{ product.title | escape }}{% if launch_selected_color != blank %} na cor {{ launch_selected_color | escape }}{% endif %}"

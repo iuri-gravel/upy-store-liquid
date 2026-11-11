@@ -35,10 +35,12 @@ Renders a color swatch with the image assigned to that product color.
   endif
 
   assign swatch_image_480 = blank
+  assign swatch_image_600 = blank
   assign swatch_image_760 = blank
   assign swatch_image_1000 = blank
   if swatch_image != blank
     assign swatch_image_480 = swatch_image | image_url: width: 480
+    assign swatch_image_600 = swatch_image | image_url: width: 600
     assign swatch_image_760 = swatch_image | image_url: width: 760
     assign swatch_image_1000 = swatch_image | image_url: width: 1000
   endif
@@ -58,6 +60,7 @@ Renders a color swatch with the image assigned to that product color.
   data-launch-color
   data-color-name="{{ color_name | escape }}"
   data-image-480="{{ swatch_image_480 }}"
+  data-image-600="{{ swatch_image_600 }}"
   data-image-760="{{ swatch_image_760 }}"
   data-image-1000="{{ swatch_image_1000 }}"
   aria-label="Selecionar cor {{ color_name | escape }}"

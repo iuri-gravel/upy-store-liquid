@@ -16,14 +16,15 @@
 %}
 
 <section class="home-editorial">
-  <a class="home-editorial__visual" href="{{ editorial_link }}" aria-label="Abrir o Manifesto da UPY">
+  <a class="home-editorial__visual" href="{{ editorial_link }}">
     {% if image != blank %}
       <img
         class="home-editorial__image"
         src="{{ image | image_url: width: 2000 }}"
         srcset="
           {{ image | image_url: width: 480 }} 480w,
-          {{ image | image_url: width: 750 }} 750w,
+          {{ image | image_url: width: 600 }} 600w,
+          {{ image | image_url: width: 740 }} 740w,
           {{ image | image_url: width: 1000 }} 1000w,
           {{ image | image_url: width: 1400 }} 1400w,
           {{ image | image_url: width: 1800 }} 1800w,

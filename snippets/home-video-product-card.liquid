@@ -21,12 +21,12 @@
   assign poster_image = video.preview_image | default: product_item.featured_image
 %}
 
-<a class="home-video-products__card" href="{{ product_item.url }}" aria-label="Ver {{ product_item.title | escape }}" data-home-video-card>
+<a class="home-video-products__card" href="{{ product_item.url }}" data-home-video-card>
   <video
     class="home-video-products__video"
     data-home-video-element
     data-video-src="{{ video_source.url | escape }}"
-    {% if poster_image != blank %}poster="{{ poster_image | image_url: width: 720 }}"{% endif %}
+    {% if poster_image != blank %}poster="{{ poster_image | image_url: width: 500 }}"{% endif %}
     muted
     loop
     playsinline
