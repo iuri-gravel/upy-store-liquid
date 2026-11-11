@@ -47,7 +47,8 @@
   const productId = String(body.dataset.recentProductId || "");
   const productHandle = String(body.dataset.recentProductHandle || "");
   if (productId && productHandle) {
-    const color = new URLSearchParams(window.location.search).get("cor")?.trim() || "";
+    const productPage = body.querySelector("[data-product-page]");
+    const color = (productPage?.dataset.selectedColor ?? new URLSearchParams(window.location.search).get("cor") ?? "").trim();
     rememberProduct(productId, productHandle, color);
   }
 

@@ -184,17 +184,6 @@
       page.querySelectorAll("[data-gallery-dot]").forEach((dot) => dot.setAttribute("aria-current", String(dot.dataset.mediaIndex === item.dataset.mediaIndex)));
       page.dataset.activeMediaIndex = String(index < 0 ? 0 : index);
     };
-    const updateUrl = () => {
-      const url = new URL(window.location.href);
-      if (selected[colorIndex] && colorIndex >= 0) url.searchParams.set("cor", selected[colorIndex]);
-      else url.searchParams.delete("cor");
-      if (selected[sizeIndex] && sizeIndex >= 0) url.searchParams.set("tamanho", selected[sizeIndex]);
-      else url.searchParams.delete("tamanho");
-      const exact = exactVariant();
-      if (exact) url.searchParams.set("variant", exact.id);
-      else url.searchParams.delete("variant");
-      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
-    };
     const update = ({ focusMedia = false } = {}) => {
       const priceVariant = getPriceVariant();
       const exact = exactVariant();
@@ -295,7 +284,7 @@
       }
       if (focusMedia && firstSlide) activateMedia(firstSlide);
       selectionError.hidden = true;
-      updateUrl();
+      page.dataset.selectedColor = currentColor;
       scheduleSticky();
     };
 
