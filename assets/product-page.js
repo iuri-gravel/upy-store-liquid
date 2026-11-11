@@ -184,19 +184,48 @@
       page.querySelectorAll("[data-gallery-dot]").forEach((dot) => dot.setAttribute("aria-current", String(dot.dataset.mediaIndex === item.dataset.mediaIndex)));
       page.dataset.activeMediaIndex = String(index < 0 ? 0 : index);
     };
-    const updateVariantUrl = (color, variant) => {
-      const url = new URL(window.location.href);
-      const size = sizeIndex >= 0 ? selected[sizeIndex] : "";
-      if (color) url.searchParams.set("cor", color);
-      else url.searchParams.delete("cor");
-      if (size) url.searchParams.set("tamanho", size);
-      else url.searchParams.delete("tamanho");
-      if (variant) url.searchParams.set("variant", variant.id);
-      else url.searchParams.delete("variant");
-      if (url.href === window.location.href) return;
-      window.history.replaceState(window.history.state, "", url.href);
+    const shareControl = page.querySelector("[data-product-share]");
+    const shareFeedback = shareControl?.querySelector("[data-share-feedback]");
+    const shareLink = shareControl?.querySelector("[data-share-link]");
+    const getShareUrl = () => {
+      const url = new URL(page.dataset.productUrl, window.location.origin);
+      url.search = "";
+      url.hash = "";
+      const variant = exactVariant();
+      if (variant) {
+        url.searchParams.set("variant", variant.id);
+      } else {
+        const color = selected[colorIndex];
+        const size = selected[sizeIndex];
+        if (color) url.searchParams.set("cor", color);
+        if (size) url.searchParams.set("tamanho", size);
+      }
+      return url.href;
     };
-    const update = ({ focusMedia = false, syncVariantUrl = false } = {}) => {
+    if (shareControl) {
+      shareControl.querySelector("[data-share-button]").addEventListener("click", async () => {
+        const url = getShareUrl();
+        let copied;
+        shareFeedback.textContent = "";
+        shareLink.hidden = true;
+        try {
+          await navigator.clipboard.writeText(url);
+          copied = true;
+        } catch {
+          copied = false;
+        }
+        if (url !== getShareUrl()) return;
+        shareFeedback.textContent = copied ? shareControl.dataset.msgCopied : shareControl.dataset.msgCopyManually;
+        if (!copied) {
+          shareLink.value = url;
+          shareLink.hidden = false;
+          shareLink.focus();
+          shareLink.select();
+        }
+      });
+      shareControl.hidden = false;
+    }
+    const update = ({ focusMedia = false } = {}) => {
       const priceVariant = getPriceVariant();
       const exact = exactVariant();
       const canPurchase = Boolean(exact?.available && hasRequiredSelection());
@@ -297,7 +326,10 @@
       if (focusMedia && firstSlide) activateMedia(firstSlide);
       selectionError.hidden = true;
       page.dataset.selectedColor = currentColor;
-      if (syncVariantUrl) updateVariantUrl(currentColor, exact);
+      if (shareControl) {
+        shareFeedback.textContent = "";
+        shareLink.hidden = true;
+      }
       scheduleSticky();
     };
 
@@ -308,12 +340,12 @@
           const value = button.dataset.optionValue || "";
           selected[index] = value;
           if (index === colorIndex && sizeIndex >= 0 && selected[sizeIndex] && !variants.some((variant) => variant.available && normalize(variant.options[colorIndex]) === normalize(value) && normalize(variant.options[sizeIndex]) === normalize(selected[sizeIndex]))) selected[sizeIndex] = "";
-          update({ focusMedia: index === colorIndex, syncVariantUrl: true });
+          update({ focusMedia: index === colorIndex });
         });
       });
       group.querySelector("[data-option-select]")?.addEventListener("change", (event) => {
         selected[index] = event.currentTarget.value;
-        update({ syncVariantUrl: true });
+        update();
       });
     });
 

@@ -291,6 +291,19 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg>
               <span data-favorite-label>{{ 'product.favorite_button' | t }}</span>
             </button>
+            <div
+              data-product-share
+              data-msg-copied="{{ 'product.share_copied' | t | escape }}"
+              data-msg-copy-manually="{{ 'product.share_copy_manually' | t | escape }}"
+              hidden
+            >
+              <button class="main-product__share-button" type="button" data-share-button>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M8 10H5v11h14V10h-3"></path></svg>
+                {{ 'product.share_button' | t }}
+              </button>
+              <p class="main-product__share-feedback" data-share-feedback role="status"></p>
+              <textarea class="main-product__share-link" rows="2" aria-label="{{ 'product.share_link' | t | escape }}" data-share-link readonly hidden></textarea>
+            </div>
           </div>
           {% if section.settings.show_social_proof %}
           <div class="main-product__social-proof" data-product-social-proof>

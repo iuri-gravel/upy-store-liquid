@@ -147,7 +147,8 @@
   letter-spacing: -0.045em;
   text-wrap: balance;
 }
-.main-product__favorite {
+.main-product__favorite,
+.main-product__share-button {
   display: flex;
   width: 100%;
   min-height: 3.75rem;
@@ -164,11 +165,29 @@
   font-weight: 500;
   transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
 }
-.main-product__favorite svg { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; fill: transparent; stroke: currentColor; stroke-width: 1.6; }
+.main-product__favorite svg,
+.main-product__share-button svg { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; fill: transparent; stroke: currentColor; stroke-width: 1.6; }
 .main-product__favorite[aria-pressed="true"] { color: var(--product-action); }
 .main-product__favorite[aria-pressed="true"] svg { fill: currentColor; }
-.main-product__favorite:hover { border-color: var(--product-action); color: var(--product-action); }
-.main-product__favorite:focus-visible { outline: 2px solid var(--product-action); outline-offset: 3px; }
+.main-product__favorite:hover,
+.main-product__share-button:hover { border-color: var(--product-action); color: var(--product-action); }
+.main-product__favorite:focus-visible,
+.main-product__share-button:focus-visible { outline: 2px solid var(--product-action); outline-offset: 3px; }
+.main-product__share-button { min-height: 3rem; border-width: 1px; }
+.main-product__share-button svg { stroke-linecap: round; stroke-linejoin: round; }
+.main-product__share-feedback { margin: 0; font-size: 0.85rem; text-align: center; }
+.main-product__share-feedback:not(:empty) { margin-top: 0.5rem; }
+.main-product__share-link {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--upy-ink);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  resize: vertical;
+}
 .main-product__form { display: block; }
 .main-product__price-block { margin: 0 0 1.85rem; }
 .main-product__compare-price { margin-right: 0.6rem; color: #77716c; font-size: 1rem; }
