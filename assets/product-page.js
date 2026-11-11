@@ -184,7 +184,19 @@
       page.querySelectorAll("[data-gallery-dot]").forEach((dot) => dot.setAttribute("aria-current", String(dot.dataset.mediaIndex === item.dataset.mediaIndex)));
       page.dataset.activeMediaIndex = String(index < 0 ? 0 : index);
     };
-    const update = ({ focusMedia = false } = {}) => {
+    const updateVariantUrl = (color, variant) => {
+      const url = new URL(window.location.href);
+      const size = sizeIndex >= 0 ? selected[sizeIndex] : "";
+      if (color) url.searchParams.set("cor", color);
+      else url.searchParams.delete("cor");
+      if (size) url.searchParams.set("tamanho", size);
+      else url.searchParams.delete("tamanho");
+      if (variant) url.searchParams.set("variant", variant.id);
+      else url.searchParams.delete("variant");
+      if (url.href === window.location.href) return;
+      window.history.replaceState(window.history.state, "", url.href);
+    };
+    const update = ({ focusMedia = false, syncVariantUrl = false } = {}) => {
       const priceVariant = getPriceVariant();
       const exact = exactVariant();
       const canPurchase = Boolean(exact?.available && hasRequiredSelection());
@@ -285,6 +297,7 @@
       if (focusMedia && firstSlide) activateMedia(firstSlide);
       selectionError.hidden = true;
       page.dataset.selectedColor = currentColor;
+      if (syncVariantUrl) updateVariantUrl(currentColor, exact);
       scheduleSticky();
     };
 
@@ -295,12 +308,12 @@
           const value = button.dataset.optionValue || "";
           selected[index] = value;
           if (index === colorIndex && sizeIndex >= 0 && selected[sizeIndex] && !variants.some((variant) => variant.available && normalize(variant.options[colorIndex]) === normalize(value) && normalize(variant.options[sizeIndex]) === normalize(selected[sizeIndex]))) selected[sizeIndex] = "";
-          update({ focusMedia: index === colorIndex });
+          update({ focusMedia: index === colorIndex, syncVariantUrl: true });
         });
       });
       group.querySelector("[data-option-select]")?.addEventListener("change", (event) => {
         selected[index] = event.currentTarget.value;
-        update();
+        update({ syncVariantUrl: true });
       });
     });
 
