@@ -40,6 +40,8 @@
     "black_friday_popup_enabled": "Enable popup",
     "black_friday_popup_start_at": "Campaign start",
     "black_friday_popup_start_at_info": "Use YYYY-MM-DDTHH:mm:ss-03:00. The default is November 16, 2026 at midnight in Brasilia.",
+    "black_friday_popup_clock_start_at": "Clock display start",
+    "black_friday_popup_clock_start_at_info": "Use YYYY-MM-DDTHH:mm:ss-03:00. The default is December 1, 2026 at midnight in Brasilia.",
     "black_friday_popup_event_at": "Black Friday date",
     "black_friday_popup_event_at_info": "Use YYYY-MM-DDTHH:mm:ss-03:00. The default is November 20, 2026 at midnight in Brasilia.",
     "black_friday_popup_delay_seconds": "Delay before showing, in seconds",

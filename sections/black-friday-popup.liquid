@@ -3,6 +3,7 @@
   data-black-friday-popup
   data-enabled="{{ section.settings.enabled }}"
   data-start-at="{{ section.settings.start_at | escape }}"
+  data-clock-start-at="{{ section.settings.clock_start_at | escape }}"
   data-event-at="{{ section.settings.event_at | escape }}"
   data-delay-seconds="{{ section.settings.delay_seconds }}"
   data-campaign-id="bf-2026"
@@ -432,6 +433,7 @@
   "settings": [
     { "type": "checkbox", "id": "enabled", "label": "t:sections.black_friday_popup_enabled", "default": true },
     { "type": "text", "id": "start_at", "label": "t:sections.black_friday_popup_start_at", "info": "t:sections.black_friday_popup_start_at_info", "default": "2026-11-16T00:00:00-03:00" },
+    { "type": "text", "id": "clock_start_at", "label": "t:sections.black_friday_popup_clock_start_at", "info": "t:sections.black_friday_popup_clock_start_at_info", "default": "2026-12-01T00:00:00-03:00" },
     { "type": "text", "id": "event_at", "label": "t:sections.black_friday_popup_event_at", "info": "t:sections.black_friday_popup_event_at_info", "default": "2026-11-20T00:00:00-03:00" },
     { "type": "range", "id": "delay_seconds", "label": "t:sections.black_friday_popup_delay_seconds", "min": 0, "max": 10, "step": 1, "default": 10 },
     { "type": "image_picker", "id": "image", "label": "t:sections.black_friday_popup_image" },

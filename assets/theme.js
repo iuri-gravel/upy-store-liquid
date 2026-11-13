@@ -516,12 +516,14 @@
     };
 
     const preview = root.dataset.preview === "true" || new URLSearchParams(window.location.search).get("bf-preview") === "1";
+    const clock = root.querySelector("[data-black-friday-clock]");
+    const clockStartsAt = Date.parse(root.dataset.clockStartAt || "");
+    if (clock && (preview || (Number.isFinite(clockStartsAt) && Date.now() >= clockStartsAt))) clock.hidden = false;
+
     const startsAt = Date.parse(root.dataset.startAt || "");
     if (!preview && (!Number.isFinite(startsAt) || Date.now() < startsAt)) return;
 
     const storageKey = `upy:black-friday-popup:${root.dataset.campaignId || "2026"}`;
-    const clock = root.querySelector("[data-black-friday-clock]");
-    if (clock) clock.hidden = false;
 
     const wasShownThisSession = () => {
       if (preview) return false;
