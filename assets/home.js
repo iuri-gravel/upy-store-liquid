@@ -76,13 +76,14 @@
       const previous = carousel.querySelector("[data-home-video-previous]");
       const next = carousel.querySelector("[data-home-video-next]");
       const status = carousel.closest("[data-home-video-section]")?.querySelector("[data-home-video-status]");
+      const instagramDialog = carousel.querySelector("[data-home-instagram-dialog]");
       if (!track || cards.length === 0) return;
 
       let hasUserInteracted = false;
       let scrollFrame = 0;
       const videosInView = new WeakSet();
 
-      const shouldPlay = (video) => hasUserInteracted && videosInView.has(video) && !document.hidden && !reducedMotion.matches;
+      const shouldPlay = (video) => hasUserInteracted && videosInView.has(video) && !document.hidden && !reducedMotion.matches && !instagramDialog?.open;
       const updateVideo = (video) => {
         if (!shouldPlay(video)) {
           video.pause();
@@ -101,6 +102,29 @@
         if (playPromise?.catch) playPromise.catch(() => {});
       };
       const updateVideos = () => videos.forEach(updateVideo);
+
+      if (typeof instagramDialog?.showModal === "function") {
+        const link = carousel.querySelector("[data-home-instagram-open]");
+        const player = instagramDialog.querySelector("[data-home-instagram-player]");
+        const frame = instagramDialog.querySelector("[data-home-instagram-frame]");
+        if (link && player && frame) {
+          link.setAttribute("aria-haspopup", "dialog");
+          link.addEventListener("click", (event) => {
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            instagramDialog.showModal();
+            frame.replaceChildren(player.content.cloneNode(true));
+            updateVideos();
+          });
+          instagramDialog.addEventListener("click", (event) => {
+            if (event.target === instagramDialog) instagramDialog.close();
+          });
+          instagramDialog.addEventListener("close", () => {
+            frame.replaceChildren();
+            updateVideos();
+          });
+        }
+      }
 
       const interactionEvents = ["pointerdown", "wheel", "touchstart", "keydown"];
       const enableVideoPlayback = () => {

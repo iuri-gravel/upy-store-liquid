@@ -1,6 +1,25 @@
 {% assign video_section = metaobjects.videoproductssection.videoproductssection %}
 {% assign video_item_count = 0 %}
 
+{% liquid
+  assign instagram_url = blank
+  assign instagram_parts = video_section.video_teste.value | strip | split: '?' | first | split: '#' | first | split: '/'
+  assign instagram_host = instagram_parts[2] | downcase
+  assign instagram_type = instagram_parts[3]
+  assign instagram_id = instagram_parts[4]
+  assign instagram_id_encoded = instagram_id | url_encode
+  if instagram_parts[0] == 'https:' and instagram_parts[1] == '' and instagram_parts.size == 5 and instagram_id != blank and instagram_id == instagram_id_encoded
+    if instagram_host == 'www.instagram.com' or instagram_host == 'instagram.com'
+      if instagram_type == 'p' or instagram_type == 'reel'
+        unless instagram_id contains '.'
+          assign instagram_url = 'https://www.instagram.com/' | append: instagram_type | append: '/' | append: instagram_id | append: '/'
+          assign video_item_count = 1
+        endunless
+      endif
+    endif
+  endif
+%}
+
 {% if video_section != blank %}
   {% for item_index in (1..8) %}
     {% assign video_field_key = 'video_' | append: item_index %}
@@ -46,6 +65,16 @@
             {% endif %}
           {% endif %}
         {% endfor %}
+        {% if instagram_url != blank %}
+          <div class="home-video-products__slide">
+            <a class="home-video-products__card home-video-products__instagram-card" href="{{ instagram_url | escape }}" data-home-video-card data-home-instagram-open aria-label="{{ 'home.instagram.play' | t | escape }}">
+              <span class="home-video-products__play" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 5.8c0-.7.8-1.1 1.4-.7l10 6.2a.8.8 0 0 1 0 1.4l-10 6.2c-.6.4-1.4 0-1.4-.7V5.8Z" /></svg>
+              </span>
+              <span class="home-video-products__instagram-label">Instagram</span>
+            </a>
+          </div>
+        {% endif %}
       </div>
 
       {% if video_item_count > 1 %}
@@ -57,6 +86,18 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
           </button>
         </div>
+      {% endif %}
+      {% if instagram_url != blank %}
+        <dialog class="home-video-products__instagram-dialog" data-home-instagram-dialog aria-label="{{ 'home.instagram.video' | t | escape }}">
+          <form class="home-video-products__instagram-controls" method="dialog">
+            <a href="{{ instagram_url | escape }}" target="_blank" rel="noopener">{{ 'home.instagram.open' | t }}</a>
+            <button type="submit" autofocus>{{ 'header.close' | t }}</button>
+          </form>
+          <div data-home-instagram-frame></div>
+          <template data-home-instagram-player>
+            <iframe src="{{ instagram_url | append: 'embed/' | escape }}" title="{{ 'home.instagram.video' | t | escape }}" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          </template>
+        </dialog>
       {% endif %}
     </div>
     <p class="visually-hidden" data-home-video-status aria-live="polite"></p>
@@ -157,6 +198,69 @@
 .home-video-products__card:focus-visible {
   outline: 2px solid var(--upy-ink);
   outline-offset: 4px;
+}
+
+.home-video-products__instagram-card {
+  background: linear-gradient(155deg, #534845, var(--upy-ink) 75%);
+}
+
+.home-video-products__instagram-label {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.home-video-products__instagram-dialog {
+  width: min(26.25rem, calc(100% - 1rem));
+  max-height: calc(100dvh - 1rem);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0.75rem;
+  background: var(--upy-canvas);
+  color: var(--upy-ink);
+}
+
+.home-video-products__instagram-dialog::backdrop {
+  background: rgb(0 0 0 / 70%);
+}
+
+.home-video-products__instagram-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 0.75rem;
+}
+
+.home-video-products__instagram-controls a,
+.home-video-products__instagram-controls button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: inherit;
+}
+
+.home-video-products__instagram-controls a {
+  text-decoration: underline;
+}
+
+.home-video-products__instagram-controls button {
+  padding-inline: 0.5rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-video-products__instagram-dialog iframe {
+  display: block;
+  width: 100%;
+  height: min(46rem, calc(100dvh - 3.75rem));
+  border: 0;
+  background: #fff;
 }
 
 .home-video-products__video {
