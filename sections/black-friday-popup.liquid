@@ -9,9 +9,26 @@
   data-campaign-id="bf-2026"
   data-preview="{% if request.design_mode %}true{% else %}false{% endif %}"
 >
+  <button
+    class="bf-popup__clock"
+    type="button"
+    data-black-friday-clock
+    aria-label="{{ 'accessibility.black_friday_clock' | t | escape }}"
+    title="{{ 'accessibility.black_friday_clock' | t | escape }}"
+    aria-controls="BlackFridayPopupDialog-{{ section.id }}"
+    hidden
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle class="bf-popup__clock-face" cx="12" cy="12" r="9.25" />
+      <path class="bf-popup__clock-hand" d="M12 12V7.3M12 12l3.6 2.1" />
+      <g class="bf-popup__clock-second"><path d="M12 12V4.5" /></g>
+      <circle class="bf-popup__clock-pin" cx="12" cy="12" r="1" />
+    </svg>
+  </button>
   <dialog
     class="bf-popup__dialog"
     data-black-friday-dialog
+    id="BlackFridayPopupDialog-{{ section.id }}"
     aria-labelledby="BlackFridayPopupTitle-{{ section.id }}"
     aria-describedby="BlackFridayPopupDescription-{{ section.id }}"
   >
@@ -63,6 +80,63 @@
 </section>
 
 {% stylesheet %}
+  .bf-popup__clock[hidden] {
+    display: none;
+  }
+
+  .bf-popup__clock {
+    position: fixed;
+    z-index: 49;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    left: 50%;
+    display: grid;
+    width: 3.5rem;
+    height: 3.5rem;
+    place-items: center;
+    transform: translateX(-50%);
+    border: 1px solid rgb(255 255 255 / 24%);
+    border-radius: 50%;
+    background: var(--upy-accent);
+    color: #fff;
+    box-shadow: 0 0.25rem 0.9rem rgb(0 0 0 / 22%);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .bf-popup__clock svg {
+    display: block;
+    width: 1.9rem;
+    height: 1.9rem;
+    overflow: visible;
+  }
+
+  .bf-popup__clock-face,
+  .bf-popup__clock-hand,
+  .bf-popup__clock-second path {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .bf-popup__clock-face { stroke-width: 1.5; }
+  .bf-popup__clock-hand { stroke-width: 1.7; }
+  .bf-popup__clock-second path { stroke-width: 1.25; }
+  .bf-popup__clock-pin { fill: currentColor; }
+
+  .bf-popup__clock:focus-visible {
+    outline: 3px solid var(--upy-ink);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) {
+    .bf-popup__clock:hover {
+      transform: translateX(-50%) translateY(-2px) scale(1.04);
+      box-shadow: 0 0.4rem 1.1rem rgb(0 0 0 / 27%);
+    }
+  }
+
   .bf-popup__dialog {
     width: min(52rem, calc(100% - 2rem));
     max-width: none;
@@ -276,6 +350,17 @@
   }
 
   @media (max-width: 680px) {
+    .bf-popup__clock {
+      bottom: calc(1rem + env(safe-area-inset-bottom));
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+
+    .bf-popup__clock svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+
     .bf-popup__dialog {
       width: min(32rem, calc(100% - 1rem));
       max-height: calc(100dvh - 1rem);
@@ -344,8 +429,18 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    .bf-popup__clock-second {
+      transform-box: view-box;
+      transform-origin: 12px 12px;
+      animation: bf-clock-tick 60s steps(60, end) infinite;
+    }
+
     .bf-popup__dialog[open] {
       animation: bf-popup-enter 220ms ease-out both;
+    }
+
+    @keyframes bf-clock-tick {
+      to { transform: rotate(360deg); }
     }
 
     @keyframes bf-popup-enter {

@@ -11,7 +11,8 @@
   "accessibility": {
     "skip_to_content": "Skip to content",
     "whatsapp_contact": "Chat with UPY on WhatsApp",
-    "social_links": "UPY social media"
+    "social_links": "UPY social media",
+    "black_friday_clock": "Open the Black Friday countdown"
   },
   "header": {
     "menu": "Open menu",

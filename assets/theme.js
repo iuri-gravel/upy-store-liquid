@@ -519,6 +519,16 @@
     const startsAt = Date.parse(root.dataset.startAt || "");
     if (!preview && (!Number.isFinite(startsAt) || Date.now() < startsAt)) return;
 
+    const clock = root.querySelector("[data-black-friday-clock]");
+    if (clock) {
+      clock.hidden = false;
+      clock.addEventListener("click", () => {
+        if (dialog.open) return;
+        updateCountdown();
+        dialog.showModal();
+      });
+    }
+
     const repeatAfterDays = Number(root.dataset.dismissDays) || 0;
     const storageKey = `upy:black-friday-popup:${root.dataset.campaignId || "2026"}`;
     const wasDismissedRecently = () => {
@@ -530,8 +540,6 @@
         return false;
       }
     };
-    if (wasDismissedRecently()) return;
-
     const rememberDismissal = () => {
       if (preview || repeatAfterDays <= 0) return;
       try { window.localStorage.setItem(storageKey, String(Date.now())); } catch {}
@@ -545,6 +553,7 @@
       if (event.target === dialog) dialog.close();
     });
     dialog.addEventListener("close", rememberDismissal);
+    if (wasDismissedRecently()) return;
 
     const delay = Math.max(0, Number(root.dataset.delaySeconds) || 0) * 1000;
     window.setTimeout(() => {
