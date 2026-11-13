@@ -516,11 +516,26 @@
     };
 
     const preview = root.dataset.preview === "true" || new URLSearchParams(window.location.search).get("bf-preview") === "1";
+    const startsAt = Date.parse(root.dataset.startAt || "");
+    const coupon = root.querySelector("[data-black-friday-coupon]");
+    if (coupon && (preview || (Number.isFinite(startsAt) && Date.now() >= startsAt))) {
+      coupon.hidden = false;
+      coupon.querySelector("[data-black-friday-coupon-close]")?.addEventListener("click", () => {
+        coupon.open = false;
+        coupon.querySelector("summary")?.focus();
+      });
+      document.addEventListener("click", (event) => {
+        if (coupon.open && !coupon.contains(event.target)) coupon.open = false;
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && coupon.open) coupon.open = false;
+      });
+    }
+
     const clock = root.querySelector("[data-black-friday-clock]");
     const clockStartsAt = Date.parse(root.dataset.clockStartAt || "");
     if (clock && (preview || (Number.isFinite(clockStartsAt) && Date.now() >= clockStartsAt))) clock.hidden = false;
 
-    const startsAt = Date.parse(root.dataset.startAt || "");
     if (!preview && (!Number.isFinite(startsAt) || Date.now() < startsAt)) return;
 
     const storageKey = `upy:black-friday-popup:${root.dataset.campaignId || "2026"}`;

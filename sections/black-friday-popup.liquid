@@ -17,6 +17,35 @@
       <circle class="bf-popup__clock-pin" cx="12" cy="12" r="1" />
     </svg>
   </div>
+  <details class="bf-coupon" data-black-friday-coupon hidden>
+    <summary class="bf-coupon__tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 0 6.5 10h11a2.5 2.5 0 0 0 0-5h-11A2.5 2.5 0 0 0 4 7.5Zm0 9A2.5 2.5 0 0 1 6.5 14h11a2.5 2.5 0 0 1 0 5h-11A2.5 2.5 0 0 1 4 16.5ZM8 9v6m4-6v6m4-6v6" /></svg>
+      <span class="bf-coupon__tab-label">{{ 'black_friday.coupon.tab' | t | escape }}</span>
+    </summary>
+    <div class="bf-coupon__panel" id="BlackFridayCoupon-{{ section.id }}">
+      <div class="bf-coupon__header">
+        <div>
+          <p class="bf-coupon__eyebrow">{{ 'black_friday.coupon.eyebrow' | t | escape }}</p>
+          <h2 class="bf-coupon__title">{{ 'black_friday.coupon.title' | t | escape }}</h2>
+        </div>
+        <button class="bf-coupon__close" type="button" data-black-friday-coupon-close aria-label="{{ 'black_friday.coupon.close' | t | escape }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <p class="bf-coupon__description">{{ 'black_friday.coupon.description' | t | escape }}</p>
+      <ul class="bf-coupon__tiers" aria-label="{{ 'black_friday.coupon.tiers' | t | escape }}">
+        <li><span>{{ 'black_friday.coupon.one_item' | t | escape }}</span><strong>5% OFF</strong></li>
+        <li><span>{{ 'black_friday.coupon.two_items' | t | escape }}</span><strong>10% OFF</strong></li>
+        <li><span>{{ 'black_friday.coupon.three_items' | t | escape }}</span><strong>15% OFF</strong></li>
+        <li class="bf-coupon__tier--featured"><span>{{ 'black_friday.coupon.four_items' | t | escape }}</span><strong>20% OFF</strong></li>
+      </ul>
+      <p class="bf-coupon__automatic">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" /></svg>
+        <span>{{ 'black_friday.coupon.automatic' | t | escape }}</span>
+      </p>
+      <a class="bf-coupon__cta" href="{{ routes.all_products_collection_url }}">{{ 'black_friday.coupon.cta' | t | escape }}</a>
+    </div>
+  </details>
   <dialog
     class="bf-popup__dialog"
     data-black-friday-dialog
@@ -113,6 +142,205 @@
   .bf-popup__clock-hand { stroke-width: 1.7; }
   .bf-popup__clock-second path { stroke-width: 1.25; }
   .bf-popup__clock-pin { fill: currentColor; }
+
+  .bf-coupon[hidden],
+  .bf-coupon:not([open]) .bf-coupon__panel {
+    display: none;
+  }
+
+  .bf-coupon {
+    position: fixed;
+    z-index: 48;
+    top: 50%;
+    right: 0;
+    color: var(--upy-ink);
+    font-family: inherit;
+    transform: translateY(-50%);
+  }
+
+  .bf-coupon__tab {
+    display: flex;
+    min-height: 8.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.85rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--upy-canvas) 60%, transparent);
+    border-right: 0;
+    border-radius: 0.75rem 0 0 0.75rem;
+    background: var(--upy-accent);
+    color: #fff;
+    box-shadow: 0 0.4rem 1.25rem rgb(0 0 0 / 20%);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .bf-coupon__tab::-webkit-details-marker { display: none; }
+  .bf-coupon__tab::marker { content: ""; }
+
+  .bf-coupon__tab svg {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+
+  .bf-coupon__tab-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .bf-coupon__panel {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.65rem);
+    width: min(23rem, calc(100vw - 5rem));
+    padding: 0 1.15rem 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--upy-ink) 12%, transparent);
+    background: var(--upy-canvas);
+    box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 22%);
+    transform: translateY(-50%);
+  }
+
+  .bf-coupon__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 -1.15rem 1rem;
+    padding: 1rem 1.15rem;
+    background: var(--upy-ink);
+    color: var(--upy-canvas);
+  }
+
+  .bf-coupon__eyebrow,
+  .bf-coupon__title,
+  .bf-coupon__description { margin: 0; }
+
+  .bf-coupon__eyebrow {
+    color: var(--upy-accent);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+
+  .bf-coupon__title {
+    margin-top: 0.25rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .bf-coupon__close {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 38%);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .bf-coupon__close svg {
+    width: 0.9rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.7;
+  }
+
+  .bf-coupon__description {
+    margin-bottom: 0.85rem;
+    color: color-mix(in srgb, var(--upy-ink) 78%, transparent);
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .bf-coupon__tiers {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bf-coupon__tiers li {
+    display: flex;
+    min-height: 2.45rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--upy-ink) 12%, transparent);
+    font-size: 0.82rem;
+  }
+
+  .bf-coupon__tiers strong {
+    color: var(--upy-accent);
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .bf-coupon__tiers .bf-coupon__tier--featured {
+    border-color: color-mix(in srgb, var(--upy-accent) 55%, transparent);
+    background: color-mix(in srgb, var(--upy-accent) 12%, var(--upy-canvas));
+    font-weight: 600;
+  }
+
+  .bf-coupon__automatic {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0.9rem 0;
+    color: color-mix(in srgb, var(--upy-ink) 76%, transparent);
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  .bf-coupon__automatic svg {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: var(--upy-accent);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .bf-coupon__cta {
+    display: flex;
+    min-height: 2.9rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    background: var(--upy-accent);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .bf-coupon__tab:focus-visible,
+  .bf-coupon__close:focus-visible,
+  .bf-coupon__cta:focus-visible {
+    outline: 2px solid var(--upy-ink);
+    outline-offset: 3px;
+  }
 
   .bf-popup__dialog {
     width: min(52rem, calc(100% - 2rem));
@@ -327,6 +555,22 @@
   }
 
   @media (max-width: 680px) {
+    .bf-coupon__panel {
+      right: calc(100% + 0.5rem);
+      width: min(22rem, calc(100vw - 4.5rem));
+      padding: 0 0.9rem 0.9rem;
+    }
+
+    .bf-coupon__header {
+      margin-inline: -0.9rem;
+      padding-inline: 0.9rem;
+    }
+
+    .bf-coupon__tab {
+      min-height: 7.5rem;
+      padding-inline: 0.55rem;
+    }
+
     .bf-popup__clock {
       bottom: calc(1rem + env(safe-area-inset-bottom));
       width: 3.25rem;
@@ -406,6 +650,10 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    .bf-coupon__panel {
+      animation: bf-coupon-enter 200ms ease-out both;
+    }
+
     .bf-popup__clock-second {
       transform-box: view-box;
       transform-origin: 12px 12px;
@@ -418,6 +666,11 @@
 
     @keyframes bf-clock-tick {
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes bf-coupon-enter {
+      from { opacity: 0; transform: translate(0.75rem, -50%); }
+      to { opacity: 1; transform: translate(0, -50%); }
     }
 
     @keyframes bf-popup-enter {

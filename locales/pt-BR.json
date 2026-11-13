@@ -77,6 +77,20 @@
       "today": "É HOJE",
       "started": "JÁ COMEÇOU",
       "campaign": "BLACK FRIDAY UPY"
+    },
+    "coupon": {
+      "tab": "CUPOM",
+      "eyebrow": "BLACK FRIDAY UPY",
+      "title": "Desconto progressivo",
+      "description": "Adicione mais peças e aproveite uma porcentagem maior de desconto.",
+      "tiers": "Faixas de desconto por quantidade",
+      "one_item": "A partir de 1 peça",
+      "two_items": "A partir de 2 peças",
+      "three_items": "A partir de 3 peças",
+      "four_items": "A partir de 4 peças",
+      "automatic": "O desconto correspondente é aplicado automaticamente ao pedido, sem código.",
+      "close": "Fechar oferta",
+      "cta": "Escolher produtos"
     }
   },
   "collection": {

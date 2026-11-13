@@ -77,6 +77,20 @@
       "today": "TODAY",
       "started": "NOW LIVE",
       "campaign": "BLACK FRIDAY UPY"
+    },
+    "coupon": {
+      "tab": "OFFER",
+      "eyebrow": "BLACK FRIDAY UPY",
+      "title": "Progressive savings",
+      "description": "Add more pieces to unlock a higher discount.",
+      "tiers": "Discount tiers by quantity",
+      "one_item": "From 1 item",
+      "two_items": "From 2 items",
+      "three_items": "From 3 items",
+      "four_items": "From 4 items",
+      "automatic": "The matching discount is applied automatically to your order. No code needed.",
+      "close": "Close offer",
+      "cta": "Shop products"
     }
   },
   "collection": {
