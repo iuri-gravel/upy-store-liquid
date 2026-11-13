@@ -451,6 +451,49 @@
   const sources = document.currentScript?.dataset || {};
   const loadedFeatures = new Set();
   const pendingFeatureObservers = new Map();
+  const initializeBlackFridayPopup = (root) => {
+    if (root.dataset.blackFridayInitialized === "true") return;
+    const dialog = root.querySelector("[data-black-friday-dialog]");
+    if (!dialog || typeof dialog.showModal !== "function" || root.dataset.enabled !== "true") return;
+    root.dataset.blackFridayInitialized = "true";
+
+    const preview = root.dataset.preview === "true" || new URLSearchParams(window.location.search).get("bf-preview") === "1";
+    const startsAt = Date.parse(root.dataset.startAt || "");
+    if (!preview && (!Number.isFinite(startsAt) || Date.now() < startsAt)) return;
+
+    const repeatAfterDays = Number(root.dataset.dismissDays) || 0;
+    const storageKey = `upy:black-friday-popup:${root.dataset.campaignId || "2026"}`;
+    const wasDismissedRecently = () => {
+      if (preview || repeatAfterDays <= 0) return false;
+      try {
+        const dismissedAt = Number(window.localStorage.getItem(storageKey)) || 0;
+        return dismissedAt > 0 && Date.now() - dismissedAt < repeatAfterDays * 86400000;
+      } catch {
+        return false;
+      }
+    };
+    if (wasDismissedRecently()) return;
+
+    const rememberDismissal = () => {
+      if (preview || repeatAfterDays <= 0) return;
+      try { window.localStorage.setItem(storageKey, String(Date.now())); } catch {}
+    };
+
+    root.querySelectorAll("[data-black-friday-close]").forEach((button) => {
+      button.addEventListener("click", () => dialog.close());
+    });
+    root.querySelector("[data-black-friday-cta]")?.addEventListener("click", rememberDismissal);
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", rememberDismissal);
+
+    const delay = Math.max(0, Number(root.dataset.delaySeconds) || 0) * 1000;
+    window.setTimeout(() => {
+      if (!root.isConnected || document.visibilityState === "hidden" || dialog.open) return;
+      dialog.showModal();
+    }, delay);
+  };
   const loadFeature = (name, selector, rootMargin) => {
     if (loadedFeatures.has(name) || !sources[name]) return;
     const target = document.querySelector(selector);
@@ -487,6 +530,7 @@
     loadFeature("cardsScript", "[data-home-launches]", "400px 0px");
     loadFeature("collectionColorsScript", "[data-collection-colors]");
     loadFeature("recentScript", "[data-recently-viewed], [data-recent-product-id]", "400px 0px");
+    document.querySelectorAll("[data-black-friday-popup]").forEach(initializeBlackFridayPopup);
   };
   loadPageFeatures();
   document.addEventListener("shopify:section:load", loadPageFeatures);

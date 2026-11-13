@@ -1,0 +1,301 @@
+<section
+  class="bf-popup"
+  data-black-friday-popup
+  data-enabled="{{ section.settings.enabled }}"
+  data-start-at="{{ section.settings.start_at | escape }}"
+  data-delay-seconds="{{ section.settings.delay_seconds }}"
+  data-dismiss-days="{{ section.settings.dismissal_days }}"
+  data-campaign-id="bf-2026"
+  data-preview="{% if request.design_mode %}true{% else %}false{% endif %}"
+>
+  <dialog
+    class="bf-popup__dialog"
+    data-black-friday-dialog
+    aria-labelledby="BlackFridayPopupTitle-{{ section.id }}"
+    aria-describedby="BlackFridayPopupDescription-{{ section.id }}"
+  >
+    <div class="bf-popup__panel">
+      <button class="bf-popup__close" type="button" data-black-friday-close aria-label="{{ 'header.close' | t | escape }}" autofocus>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="bf-popup__visual">
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1200 | image_tag: class: 'bf-popup__image', loading: 'lazy', alt: '', widths: '480, 720, 960, 1200', sizes: '(max-width: 680px) 100vw, 44vw' }}
+          <span class="bf-popup__image-shade" aria-hidden="true"></span>
+        {% else %}
+          <div class="bf-popup__visual-fallback" aria-hidden="true">
+            <span class="bf-popup__brand">UPY</span>
+            <span class="bf-popup__date">16<span>.</span>11</span>
+            <span class="bf-popup__visual-label">BLACK FRIDAY</span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="bf-popup__content">
+        {% if section.settings.eyebrow != blank %}<p class="bf-popup__eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+        <h2 class="bf-popup__title" id="BlackFridayPopupTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        <p class="bf-popup__description" id="BlackFridayPopupDescription-{{ section.id }}">{{ section.settings.body | escape }}</p>
+        {% if section.settings.button_label != blank %}
+          {% assign popup_button_link = section.settings.button_link | default: routes.all_products_collection_url %}
+          <a class="bf-popup__button" href="{{ popup_button_link | escape }}" data-black-friday-cta>{{ section.settings.button_label | escape }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </dialog>
+</section>
+
+{% stylesheet %}
+  .bf-popup__dialog {
+    width: min(52rem, calc(100% - 2rem));
+    max-width: none;
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    border: 0;
+    background: transparent;
+    color: var(--upy-ink);
+  }
+
+  .bf-popup__dialog::backdrop {
+    background: rgb(16 14 14 / 72%);
+    backdrop-filter: blur(3px);
+  }
+
+  .bf-popup__panel {
+    position: relative;
+    display: grid;
+    min-height: min(34rem, calc(100dvh - 2rem));
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    overflow: hidden;
+    background: var(--upy-canvas);
+    box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 24%);
+  }
+
+  .bf-popup__close {
+    position: absolute;
+    z-index: 2;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid var(--upy-line);
+    border-radius: 50%;
+    background: var(--upy-canvas);
+    color: var(--upy-ink);
+    cursor: pointer;
+  }
+
+  .bf-popup__close svg {
+    width: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.6;
+  }
+
+  .bf-popup__visual {
+    position: relative;
+    min-height: 32rem;
+    overflow: hidden;
+    background: var(--upy-footer);
+    color: var(--upy-footer-text);
+  }
+
+  .bf-popup__image,
+  .bf-popup__image-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bf-popup__image {
+    object-fit: cover;
+  }
+
+  .bf-popup__image-shade {
+    background: linear-gradient(180deg, transparent 45%, rgb(14 12 12 / 36%));
+  }
+
+  .bf-popup__visual-fallback {
+    display: flex;
+    min-height: inherit;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 50% 60%, rgb(208 107 63 / 26%), transparent 58%), var(--upy-footer);
+    text-align: center;
+  }
+
+  .bf-popup__brand {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+  }
+
+  .bf-popup__date {
+    font-size: clamp(4.5rem, 10vw, 7.5rem);
+    font-weight: 300;
+    letter-spacing: -0.09em;
+    line-height: 1;
+  }
+
+  .bf-popup__date span {
+    color: var(--upy-accent);
+  }
+
+  .bf-popup__visual-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+
+  .bf-popup__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 4.5rem clamp(1.5rem, 4vw, 3.5rem) 3rem;
+  }
+
+  .bf-popup__eyebrow {
+    margin: 0;
+    color: var(--upy-accent);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .bf-popup__title {
+    max-width: 15ch;
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.15rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 1.08;
+  }
+
+  .bf-popup__description {
+    max-width: 34ch;
+    margin: 0;
+    color: color-mix(in srgb, var(--upy-ink) 78%, transparent);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .bf-popup__button {
+    display: inline-flex;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.35rem;
+    padding: 0.75rem 1.4rem;
+    background: var(--upy-accent);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, transform 180ms ease;
+  }
+
+  .bf-popup__button:hover {
+    background: color-mix(in srgb, var(--upy-accent) 82%, #000);
+    transform: translateY(-1px);
+  }
+
+  .bf-popup__button:focus-visible,
+  .bf-popup__close:focus-visible {
+    outline: 2px solid var(--upy-ink);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 680px) {
+    .bf-popup__dialog {
+      width: min(32rem, calc(100% - 1rem));
+      max-height: calc(100dvh - 1rem);
+    }
+
+    .bf-popup__panel {
+      max-height: calc(100dvh - 1rem);
+      grid-template-columns: minmax(0, 1fr);
+      overflow: auto;
+    }
+
+    .bf-popup__visual,
+    .bf-popup__visual-fallback {
+      min-height: clamp(9rem, 31vh, 14rem);
+    }
+
+    .bf-popup__visual-fallback {
+      gap: 0.35rem;
+      padding: 1.1rem;
+    }
+
+    .bf-popup__date {
+      font-size: clamp(3.6rem, 20vw, 5.2rem);
+    }
+
+    .bf-popup__content {
+      gap: 0.8rem;
+      padding: 1.7rem 1.35rem 1.5rem;
+    }
+
+    .bf-popup__title {
+      max-width: 18ch;
+      font-size: clamp(1.8rem, 9vw, 2.45rem);
+    }
+
+    .bf-popup__description {
+      font-size: 0.9rem;
+    }
+
+    .bf-popup__button {
+      width: 100%;
+    }
+
+    .bf-popup__close {
+      top: 0.65rem;
+      right: 0.65rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bf-popup__dialog[open] {
+      animation: bf-popup-enter 220ms ease-out both;
+    }
+
+    @keyframes bf-popup-enter {
+      from { opacity: 0; transform: translateY(0.65rem) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.black_friday_popup",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "t:sections.black_friday_popup_enabled", "default": true },
+    { "type": "text", "id": "start_at", "label": "t:sections.black_friday_popup_start_at", "info": "t:sections.black_friday_popup_start_at_info", "default": "2026-11-16T00:00:00-03:00" },
+    { "type": "range", "id": "delay_seconds", "label": "t:sections.black_friday_popup_delay_seconds", "min": 0, "max": 10, "step": 1, "default": 2 },
+    { "type": "range", "id": "dismissal_days", "label": "t:sections.black_friday_popup_dismissal_days", "min": 0, "max": 30, "step": 1, "default": 7 },
+    { "type": "image_picker", "id": "image", "label": "t:sections.black_friday_popup_image" },
+    { "type": "text", "id": "eyebrow", "label": "t:sections.black_friday_popup_eyebrow", "default": "BLACK FRIDAY UPY" },
+    { "type": "text", "id": "heading", "label": "t:sections.black_friday_popup_heading", "default": "A Black Friday Upy começa em 16.11." },
+    { "type": "textarea", "id": "body", "label": "t:sections.black_friday_popup_body", "default": "Acompanhe as novidades e prepare seus favoritos para o lançamento." },
+    { "type": "text", "id": "button_label", "label": "t:sections.black_friday_popup_button_label", "default": "VER NOVIDADES" },
+    { "type": "url", "id": "button_link", "label": "t:sections.black_friday_popup_button_link" }
+  ],
+  "presets": [{ "name": "t:sections.black_friday_popup" }]
+}
+{% endschema %}

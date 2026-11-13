@@ -35,6 +35,10 @@
         "title": "Vistos Recentemente",
         "product_limit": 4
       }
+    },
+    "black-friday-popup": {
+      "type": "black-friday-popup",
+      "settings": {}
     }
   },
   "order": [
@@ -44,6 +48,7 @@
     "home-categories",
     "home-buy-by-color",
     "home-editorial",
-    "home-recently-viewed"
+    "home-recently-viewed",
+    "black-friday-popup"
   ]
 }
