@@ -520,6 +520,44 @@
     const coupon = root.querySelector("[data-black-friday-coupon]");
     if (coupon && (preview || (Number.isFinite(startsAt) && Date.now() >= startsAt))) {
       coupon.hidden = false;
+      const cartProgress = coupon.querySelector("[data-black-friday-cart-progress]");
+      const updateCouponProgress = (itemCount) => {
+        if (!cartProgress) return;
+        const count = Math.max(0, Number(itemCount) || 0);
+        const stage = Math.min(count, 4);
+        const stageName = ["zero", "one", "two", "three", "four"][stage];
+        const progressBar = cartProgress.querySelector("[data-black-friday-progress]");
+        const progressFill = cartProgress.querySelector("[data-black-friday-progress-fill]");
+        const cartCount = cartProgress.querySelector("[data-black-friday-cart-count]");
+        const stageMessage = cartProgress.querySelector("[data-black-friday-stage-message]");
+
+        cartProgress.dataset.itemCount = String(count);
+        if (cartCount) {
+          const unit = count === 1 ? cartProgress.dataset.itemOne : cartProgress.dataset.itemOther;
+          cartCount.textContent = `${count} ${unit}`;
+        }
+        if (progressBar) {
+          progressBar.setAttribute("aria-valuenow", String(stage));
+          progressBar.setAttribute("aria-valuetext", `${stage} ${cartProgress.dataset.progressSteps}`);
+        }
+        if (progressFill) progressFill.style.width = `${stage * 25}%`;
+        if (stageMessage) {
+          const stageKey = `stage${stageName[0].toUpperCase()}${stageName.slice(1)}`;
+          stageMessage.textContent = cartProgress.dataset[stageKey] || "";
+        }
+
+        coupon.querySelectorAll("[data-black-friday-tier]").forEach((tier) => {
+          const isCurrent = stage > 0 && Number(tier.dataset.blackFridayTier) === stage;
+          tier.classList.toggle("is-current", isCurrent);
+          if (isCurrent) tier.setAttribute("aria-current", "step");
+          else tier.removeAttribute("aria-current");
+        });
+      };
+
+      updateCouponProgress(cartProgress?.dataset.itemCount);
+      document.addEventListener("upy:cart:change", (event) => {
+        updateCouponProgress(event.detail?.itemCount);
+      });
       coupon.querySelector("[data-black-friday-coupon-close]")?.addEventListener("click", () => {
         coupon.open = false;
         coupon.querySelector("summary")?.focus();

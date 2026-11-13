@@ -92,6 +92,9 @@
     }
     updateCartTrigger(renderedHeader);
     dialog.innerHTML = renderedDialog.innerHTML;
+    document.dispatchEvent(new CustomEvent("upy:cart:change", {
+      detail: { itemCount: Number(renderedHeader.dataset.cartItemCount) || 0 },
+    }));
     return true;
   };
 

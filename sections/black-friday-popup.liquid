@@ -33,11 +33,33 @@
         </button>
       </div>
       <p class="bf-coupon__description">{{ 'black_friday.coupon.description' | t | escape }}</p>
+      <div
+        class="bf-coupon__cart-progress"
+        data-black-friday-cart-progress
+        data-item-count="{{ cart.item_count }}"
+        data-item-one="{{ 'black_friday.coupon.cart_item_one' | t | escape }}"
+        data-item-other="{{ 'black_friday.coupon.cart_item_other' | t | escape }}"
+        data-stage-zero="{{ 'black_friday.coupon.stage_zero' | t | escape }}"
+        data-stage-one="{{ 'black_friday.coupon.stage_one' | t | escape }}"
+        data-stage-two="{{ 'black_friday.coupon.stage_two' | t | escape }}"
+        data-stage-three="{{ 'black_friday.coupon.stage_three' | t | escape }}"
+        data-stage-four="{{ 'black_friday.coupon.stage_four' | t | escape }}"
+        data-progress-steps="{{ 'black_friday.coupon.progress_steps' | t | escape }}"
+      >
+        <div class="bf-coupon__progress-heading">
+          <span>{{ 'black_friday.coupon.cart_progress' | t | escape }}</span>
+          <strong data-black-friday-cart-count></strong>
+        </div>
+        <div class="bf-coupon__progress-track" data-black-friday-progress role="progressbar" aria-label="{{ 'black_friday.coupon.progress_label' | t | escape }}" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+          <span class="bf-coupon__progress-fill" data-black-friday-progress-fill></span>
+        </div>
+        <p class="bf-coupon__stage-message" data-black-friday-stage-message role="status"></p>
+      </div>
       <ul class="bf-coupon__tiers" aria-label="{{ 'black_friday.coupon.tiers' | t | escape }}">
-        <li><span>{{ 'black_friday.coupon.one_item' | t | escape }}</span><strong>5% OFF</strong></li>
-        <li><span>{{ 'black_friday.coupon.two_items' | t | escape }}</span><strong>10% OFF</strong></li>
-        <li><span>{{ 'black_friday.coupon.three_items' | t | escape }}</span><strong>15% OFF</strong></li>
-        <li class="bf-coupon__tier--featured"><span>{{ 'black_friday.coupon.four_items' | t | escape }}</span><strong>20% OFF</strong></li>
+        <li data-black-friday-tier="1"><span>{{ 'black_friday.coupon.one_item' | t | escape }}</span><strong>5% OFF</strong></li>
+        <li data-black-friday-tier="2"><span>{{ 'black_friday.coupon.two_items' | t | escape }}</span><strong>10% OFF</strong></li>
+        <li data-black-friday-tier="3"><span>{{ 'black_friday.coupon.three_items' | t | escape }}</span><strong>15% OFF</strong></li>
+        <li data-black-friday-tier="4"><span>{{ 'black_friday.coupon.four_items' | t | escape }}</span><strong>20% OFF</strong></li>
       </ul>
       <p class="bf-coupon__automatic">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" /></svg>
@@ -204,7 +226,9 @@
     top: 50%;
     right: calc(100% + 0.65rem);
     width: min(23rem, calc(100vw - 5rem));
+    max-height: calc(100dvh - 2rem);
     padding: 0 1.15rem 1.15rem;
+    overflow-y: auto;
     border: 1px solid color-mix(in srgb, var(--upy-ink) 12%, transparent);
     background: var(--upy-canvas);
     box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 22%);
@@ -268,6 +292,44 @@
     line-height: 1.45;
   }
 
+  .bf-coupon__cart-progress {
+    margin-bottom: 0.8rem;
+    padding: 0.7rem;
+    background: color-mix(in srgb, var(--upy-ink) 5%, var(--upy-canvas));
+  }
+
+  .bf-coupon__progress-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .bf-coupon__progress-heading strong { font-weight: 600; }
+
+  .bf-coupon__progress-track {
+    height: 0.35rem;
+    overflow: hidden;
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--upy-ink) 14%, transparent);
+  }
+
+  .bf-coupon__progress-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--upy-accent);
+  }
+
+  .bf-coupon__stage-message {
+    margin: 0.5rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
   .bf-coupon__tiers {
     display: grid;
     gap: 0.35rem;
@@ -293,7 +355,7 @@
     white-space: nowrap;
   }
 
-  .bf-coupon__tiers .bf-coupon__tier--featured {
+  .bf-coupon__tiers li.is-current {
     border-color: color-mix(in srgb, var(--upy-accent) 55%, transparent);
     background: color-mix(in srgb, var(--upy-accent) 12%, var(--upy-canvas));
     font-weight: 600;
@@ -650,6 +712,10 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    .bf-coupon__progress-fill {
+      transition: width 220ms ease;
+    }
+
     .bf-coupon__panel {
       animation: bf-coupon-enter 200ms ease-out both;
     }
