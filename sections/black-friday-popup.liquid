@@ -3,6 +3,7 @@
   data-black-friday-popup
   data-enabled="{{ section.settings.enabled }}"
   data-start-at="{{ section.settings.start_at | escape }}"
+  data-event-at="{{ section.settings.event_at | escape }}"
   data-delay-seconds="{{ section.settings.delay_seconds }}"
   data-dismiss-days="{{ section.settings.dismissal_days }}"
   data-campaign-id="bf-2026"
@@ -18,25 +19,43 @@
       <button class="bf-popup__close" type="button" data-black-friday-close aria-label="{{ 'header.close' | t | escape }}" autofocus>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
       </button>
-      <div class="bf-popup__visual">
+      <div class="bf-popup__visual{% if section.settings.image == blank %} bf-popup__visual--fallback{% endif %}">
         {% if section.settings.image != blank %}
           {{ section.settings.image | image_url: width: 1200 | image_tag: class: 'bf-popup__image', loading: 'lazy', alt: '', widths: '480, 720, 960, 1200', sizes: '(max-width: 680px) 100vw, 44vw' }}
           <span class="bf-popup__image-shade" aria-hidden="true"></span>
-        {% else %}
-          <div class="bf-popup__visual-fallback" aria-hidden="true">
-            <span class="bf-popup__brand">UPY</span>
-            <span class="bf-popup__date">16<span>.</span>11</span>
-            <span class="bf-popup__visual-label">BLACK FRIDAY</span>
-          </div>
         {% endif %}
+        <div
+          class="bf-popup__countdown"
+          data-black-friday-countdown
+          data-days-before="{{ 'black_friday.countdown.days_before' | t | escape }}"
+          data-day-before="{{ 'black_friday.countdown.day_before' | t | escape }}"
+          data-days-label="{{ 'black_friday.countdown.days' | t | escape }}"
+          data-day-label="{{ 'black_friday.countdown.day' | t | escape }}"
+          data-today-label="{{ 'black_friday.countdown.today' | t | escape }}"
+          data-started-label="{{ 'black_friday.countdown.started' | t | escape }}"
+          data-campaign-label="{{ 'black_friday.countdown.campaign' | t | escape }}"
+          role="timer"
+          aria-live="off"
+        >
+          <span class="bf-popup__brand">UPY</span>
+          <span class="bf-popup__countdown-prefix" data-black-friday-prefix>{{ 'black_friday.countdown.days_before' | t | escape }}</span>
+          <span class="bf-popup__countdown-value">
+            <span class="bf-popup__countdown-number" data-black-friday-number>4</span>
+            <span class="bf-popup__countdown-unit" data-black-friday-unit>{{ 'black_friday.countdown.days' | t | escape }}</span>
+          </span>
+          <span class="bf-popup__visual-label" data-black-friday-caption>{{ 'black_friday.countdown.campaign' | t | escape }} · {{ section.settings.event_at | date: '%d/%m' }}</span>
+        </div>
       </div>
       <div class="bf-popup__content">
         {% if section.settings.eyebrow != blank %}<p class="bf-popup__eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
         <h2 class="bf-popup__title" id="BlackFridayPopupTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
         <p class="bf-popup__description" id="BlackFridayPopupDescription-{{ section.id }}">{{ section.settings.body | escape }}</p>
         {% if section.settings.button_label != blank %}
-          {% assign popup_button_link = section.settings.button_link | default: routes.all_products_collection_url %}
-          <a class="bf-popup__button" href="{{ popup_button_link | escape }}" data-black-friday-cta>{{ section.settings.button_label | escape }}</a>
+          {% assign popup_button_link = section.settings.button_link | default: 'https://www.instagram.com/upystore_/' %}
+          <a class="bf-popup__button" href="{{ popup_button_link | escape }}" target="_blank" rel="noopener noreferrer" data-black-friday-cta>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle class="bf-popup__instagram-dot" cx="17.5" cy="6.5" r="1" /></svg>
+            <span>{{ section.settings.button_label | escape }}</span>
+          </a>
         {% endif %}
       </div>
     </div>
@@ -103,6 +122,10 @@
     color: var(--upy-footer-text);
   }
 
+  .bf-popup__visual--fallback {
+    background: radial-gradient(ellipse at 50% 60%, rgb(208 107 63 / 26%), transparent 58%), var(--upy-footer);
+  }
+
   .bf-popup__image,
   .bf-popup__image-shade {
     position: absolute;
@@ -119,16 +142,18 @@
     background: linear-gradient(180deg, transparent 45%, rgb(14 12 12 / 36%));
   }
 
-  .bf-popup__visual-fallback {
+  .bf-popup__countdown {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
     display: flex;
-    min-height: inherit;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.7rem;
+    gap: 0.55rem;
     padding: 2rem;
-    background: radial-gradient(ellipse at 50% 60%, rgb(208 107 63 / 26%), transparent 58%), var(--upy-footer);
     text-align: center;
+    text-shadow: 0 1px 14px rgb(0 0 0 / 22%);
   }
 
   .bf-popup__brand {
@@ -137,15 +162,34 @@
     letter-spacing: 0.2em;
   }
 
-  .bf-popup__date {
+  .bf-popup__countdown-prefix {
+    margin-top: 0.5rem;
+    color: var(--upy-accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .bf-popup__countdown-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.55rem;
+  }
+
+  .bf-popup__countdown-number {
     font-size: clamp(4.5rem, 10vw, 7.5rem);
     font-weight: 300;
     letter-spacing: -0.09em;
     line-height: 1;
   }
 
-  .bf-popup__date span {
-    color: var(--upy-accent);
+  .bf-popup__countdown-unit {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
 
   .bf-popup__visual-label {
@@ -206,6 +250,20 @@
     transition: background-color 180ms ease, transform 180ms ease;
   }
 
+  .bf-popup__button svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+  }
+
+  .bf-popup__button .bf-popup__instagram-dot {
+    fill: currentColor;
+    stroke: none;
+  }
+
   .bf-popup__button:hover {
     background: color-mix(in srgb, var(--upy-accent) 82%, #000);
     transform: translateY(-1px);
@@ -229,18 +287,34 @@
       overflow: auto;
     }
 
-    .bf-popup__visual,
-    .bf-popup__visual-fallback {
-      min-height: clamp(9rem, 31vh, 14rem);
+    .bf-popup__visual {
+      min-height: clamp(10rem, 34vh, 15rem);
     }
 
-    .bf-popup__visual-fallback {
-      gap: 0.35rem;
-      padding: 1.1rem;
+    .bf-popup__countdown {
+      gap: 0.2rem;
+      padding: 1rem;
     }
 
-    .bf-popup__date {
+    .bf-popup__brand {
+      font-size: 0.9rem;
+    }
+
+    .bf-popup__countdown-prefix {
+      margin-top: 0.25rem;
+      font-size: 0.68rem;
+    }
+
+    .bf-popup__countdown-number {
       font-size: clamp(3.6rem, 20vw, 5.2rem);
+    }
+
+    .bf-popup__countdown-unit {
+      font-size: 0.75rem;
+    }
+
+    .bf-popup__visual-label {
+      font-size: 0.62rem;
     }
 
     .bf-popup__content {
@@ -287,13 +361,14 @@
   "settings": [
     { "type": "checkbox", "id": "enabled", "label": "t:sections.black_friday_popup_enabled", "default": true },
     { "type": "text", "id": "start_at", "label": "t:sections.black_friday_popup_start_at", "info": "t:sections.black_friday_popup_start_at_info", "default": "2026-11-16T00:00:00-03:00" },
+    { "type": "text", "id": "event_at", "label": "t:sections.black_friday_popup_event_at", "info": "t:sections.black_friday_popup_event_at_info", "default": "2026-11-20T00:00:00-03:00" },
     { "type": "range", "id": "delay_seconds", "label": "t:sections.black_friday_popup_delay_seconds", "min": 0, "max": 10, "step": 1, "default": 2 },
     { "type": "range", "id": "dismissal_days", "label": "t:sections.black_friday_popup_dismissal_days", "min": 0, "max": 30, "step": 1, "default": 7 },
     { "type": "image_picker", "id": "image", "label": "t:sections.black_friday_popup_image" },
     { "type": "text", "id": "eyebrow", "label": "t:sections.black_friday_popup_eyebrow", "default": "BLACK FRIDAY UPY" },
-    { "type": "text", "id": "heading", "label": "t:sections.black_friday_popup_heading", "default": "A Black Friday Upy começa em 16.11." },
-    { "type": "textarea", "id": "body", "label": "t:sections.black_friday_popup_body", "default": "Acompanhe as novidades e prepare seus favoritos para o lançamento." },
-    { "type": "text", "id": "button_label", "label": "t:sections.black_friday_popup_button_label", "default": "VER NOVIDADES" },
+    { "type": "text", "id": "heading", "label": "t:sections.black_friday_popup_heading", "default": "Vem aí a Black Friday da UPY." },
+    { "type": "textarea", "id": "body", "label": "t:sections.black_friday_popup_body", "default": "Siga a UPY no Instagram e acompanhe as novidades da campanha." },
+    { "type": "text", "id": "button_label", "label": "t:sections.black_friday_popup_button_label", "default": "ACOMPANHAR NO INSTAGRAM" },
     { "type": "url", "id": "button_link", "label": "t:sections.black_friday_popup_button_link" }
   ],
   "presets": [{ "name": "t:sections.black_friday_popup" }]

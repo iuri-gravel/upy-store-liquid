@@ -68,6 +68,17 @@
       "resume": "Resume slideshow"
     }
   },
+  "black_friday": {
+    "countdown": {
+      "days_before": "IN",
+      "day_before": "IN",
+      "days": "DAYS",
+      "day": "DAY",
+      "today": "TODAY",
+      "started": "NOW LIVE",
+      "campaign": "BLACK FRIDAY UPY"
+    }
+  },
   "collection": {
     "breadcrumb": "Breadcrumb",
     "home": "Home",

@@ -68,6 +68,17 @@
       "resume": "Retomar apresentação"
     }
   },
+  "black_friday": {
+    "countdown": {
+      "days_before": "FALTAM",
+      "day_before": "FALTA",
+      "days": "DIAS",
+      "day": "DIA",
+      "today": "É HOJE",
+      "started": "JÁ COMEÇOU",
+      "campaign": "BLACK FRIDAY UPY"
+    }
+  },
   "collection": {
     "breadcrumb": "Navegação estrutural",
     "home": "Início",

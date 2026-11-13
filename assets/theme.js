@@ -457,6 +457,64 @@
     if (!dialog || typeof dialog.showModal !== "function" || root.dataset.enabled !== "true") return;
     root.dataset.blackFridayInitialized = "true";
 
+    const updateCountdown = () => {
+      const countdown = root.querySelector("[data-black-friday-countdown]");
+      const eventAt = new Date(root.dataset.eventAt || "");
+      if (!countdown || Number.isNaN(eventAt.getTime())) return;
+
+      const getCampaignDay = (date) => {
+        const parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/Sao_Paulo",
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }).formatToParts(date).reduce((values, part) => {
+          if (part.type !== "literal") values[part.type] = Number(part.value);
+          return values;
+        }, {});
+        return Math.floor(Date.UTC(parts.year, parts.month - 1, parts.day) / 86400000);
+      };
+
+      const daysLeft = getCampaignDay(eventAt) - getCampaignDay(new Date());
+      const prefix = countdown.querySelector("[data-black-friday-prefix]");
+      const number = countdown.querySelector("[data-black-friday-number]");
+      const unit = countdown.querySelector("[data-black-friday-unit]");
+      const caption = countdown.querySelector("[data-black-friday-caption]");
+      if (!prefix || !number || !unit || !caption) return;
+
+      const locale = document.documentElement.lang || "pt-BR";
+      const dateLabel = new Intl.DateTimeFormat(locale, {
+        day: "2-digit",
+        month: "2-digit",
+        timeZone: "America/Sao_Paulo",
+      }).format(eventAt);
+
+      if (daysLeft > 1) {
+        prefix.textContent = countdown.dataset.daysBefore;
+        number.textContent = String(daysLeft);
+        unit.textContent = countdown.dataset.daysLabel;
+        caption.textContent = `${countdown.dataset.campaignLabel} · ${dateLabel}`;
+      } else if (daysLeft === 1) {
+        prefix.textContent = countdown.dataset.dayBefore;
+        number.textContent = "1";
+        unit.textContent = countdown.dataset.dayLabel;
+        caption.textContent = `${countdown.dataset.campaignLabel} · ${dateLabel}`;
+      } else {
+        prefix.textContent = daysLeft === 0 ? countdown.dataset.todayLabel : countdown.dataset.startedLabel;
+        number.textContent = new Intl.DateTimeFormat(locale, {
+          day: "2-digit",
+          timeZone: "America/Sao_Paulo",
+        }).format(eventAt);
+        unit.textContent = new Intl.DateTimeFormat(locale, {
+          month: "short",
+          timeZone: "America/Sao_Paulo",
+        }).format(eventAt).replace(".", "").toLocaleUpperCase(locale);
+        caption.textContent = countdown.dataset.campaignLabel;
+      }
+
+      countdown.setAttribute("aria-label", `${prefix.textContent} ${number.textContent} ${unit.textContent} · ${caption.textContent}`);
+    };
+
     const preview = root.dataset.preview === "true" || new URLSearchParams(window.location.search).get("bf-preview") === "1";
     const startsAt = Date.parse(root.dataset.startAt || "");
     if (!preview && (!Number.isFinite(startsAt) || Date.now() < startsAt)) return;
@@ -491,6 +549,7 @@
     const delay = Math.max(0, Number(root.dataset.delaySeconds) || 0) * 1000;
     window.setTimeout(() => {
       if (!root.isConnected || document.visibilityState === "hidden" || dialog.open) return;
+      updateCountdown();
       dialog.showModal();
     }, delay);
   };
