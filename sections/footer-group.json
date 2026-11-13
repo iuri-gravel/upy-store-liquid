@@ -18,10 +18,15 @@
         "tiktok_url": "https://www.tiktok.com/@upy.store_",
         "pinterest_url": "https://br.pinterest.com/upystore_/"
       }
+    },
+    "black-friday-popup": {
+      "type": "black-friday-popup",
+      "settings": {}
     }
   },
   "order": [
-    "footer"
+    "footer",
+    "black-friday-popup"
   ]
 }
 

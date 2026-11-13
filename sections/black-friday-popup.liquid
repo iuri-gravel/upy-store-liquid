@@ -5,26 +5,17 @@
   data-start-at="{{ section.settings.start_at | escape }}"
   data-event-at="{{ section.settings.event_at | escape }}"
   data-delay-seconds="{{ section.settings.delay_seconds }}"
-  data-dismiss-days="{{ section.settings.dismissal_days }}"
   data-campaign-id="bf-2026"
   data-preview="{% if request.design_mode %}true{% else %}false{% endif %}"
 >
-  <button
-    class="bf-popup__clock"
-    type="button"
-    data-black-friday-clock
-    aria-label="{{ 'accessibility.black_friday_clock' | t | escape }}"
-    title="{{ 'accessibility.black_friday_clock' | t | escape }}"
-    aria-controls="BlackFridayPopupDialog-{{ section.id }}"
-    hidden
-  >
+  <div class="bf-popup__clock" data-black-friday-clock aria-hidden="true" hidden>
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <circle class="bf-popup__clock-face" cx="12" cy="12" r="9.25" />
       <path class="bf-popup__clock-hand" d="M12 12V7.3M12 12l3.6 2.1" />
       <g class="bf-popup__clock-second"><path d="M12 12V4.5" /></g>
       <circle class="bf-popup__clock-pin" cx="12" cy="12" r="1" />
     </svg>
-  </button>
+  </div>
   <dialog
     class="bf-popup__dialog"
     data-black-friday-dialog
@@ -99,9 +90,6 @@
     background: var(--upy-accent);
     color: #fff;
     box-shadow: 0 0.25rem 0.9rem rgb(0 0 0 / 22%);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 180ms ease, box-shadow 180ms ease;
   }
 
   .bf-popup__clock svg {
@@ -124,18 +112,6 @@
   .bf-popup__clock-hand { stroke-width: 1.7; }
   .bf-popup__clock-second path { stroke-width: 1.25; }
   .bf-popup__clock-pin { fill: currentColor; }
-
-  .bf-popup__clock:focus-visible {
-    outline: 3px solid var(--upy-ink);
-    outline-offset: 3px;
-  }
-
-  @media (hover: hover) {
-    .bf-popup__clock:hover {
-      transform: translateX(-50%) translateY(-2px) scale(1.04);
-      box-shadow: 0 0.4rem 1.1rem rgb(0 0 0 / 27%);
-    }
-  }
 
   .bf-popup__dialog {
     width: min(52rem, calc(100% - 2rem));
@@ -457,8 +433,7 @@
     { "type": "checkbox", "id": "enabled", "label": "t:sections.black_friday_popup_enabled", "default": true },
     { "type": "text", "id": "start_at", "label": "t:sections.black_friday_popup_start_at", "info": "t:sections.black_friday_popup_start_at_info", "default": "2026-11-16T00:00:00-03:00" },
     { "type": "text", "id": "event_at", "label": "t:sections.black_friday_popup_event_at", "info": "t:sections.black_friday_popup_event_at_info", "default": "2026-11-20T00:00:00-03:00" },
-    { "type": "range", "id": "delay_seconds", "label": "t:sections.black_friday_popup_delay_seconds", "min": 0, "max": 10, "step": 1, "default": 2 },
-    { "type": "range", "id": "dismissal_days", "label": "t:sections.black_friday_popup_dismissal_days", "min": 0, "max": 30, "step": 1, "default": 7 },
+    { "type": "range", "id": "delay_seconds", "label": "t:sections.black_friday_popup_delay_seconds", "min": 0, "max": 10, "step": 1, "default": 10 },
     { "type": "image_picker", "id": "image", "label": "t:sections.black_friday_popup_image" },
     { "type": "text", "id": "eyebrow", "label": "t:sections.black_friday_popup_eyebrow", "default": "BLACK FRIDAY UPY" },
     { "type": "text", "id": "heading", "label": "t:sections.black_friday_popup_heading", "default": "Vem aí a Black Friday da UPY." },
