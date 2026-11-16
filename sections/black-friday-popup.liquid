@@ -17,6 +17,14 @@
       <circle class="bf-popup__clock-pin" cx="12" cy="12" r="1" />
     </svg>
   </div>
+  <button
+    class="bf-coupon__backdrop"
+    type="button"
+    data-black-friday-coupon-backdrop
+    aria-label="{{ 'black_friday.coupon.close' | t | escape }}"
+    tabindex="-1"
+    hidden
+  ></button>
   <details class="bf-coupon" data-black-friday-coupon hidden>
     <summary class="bf-coupon__tab">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 0 6.5 10h11a2.5 2.5 0 0 0 0-5h-11A2.5 2.5 0 0 0 4 7.5Zm0 9A2.5 2.5 0 0 1 6.5 14h11a2.5 2.5 0 0 1 0 5h-11A2.5 2.5 0 0 1 4 16.5ZM8 9v6m4-6v6m4-6v6" /></svg>
@@ -170,6 +178,18 @@
     display: none;
   }
 
+  .bf-coupon__backdrop[hidden] { display: none; }
+
+  .bf-coupon__backdrop {
+    position: fixed;
+    z-index: 64;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(16 14 14 / 18%);
+    cursor: default;
+  }
+
   .bf-coupon {
     position: fixed;
     z-index: 48;
@@ -180,21 +200,29 @@
     transform: translateY(-50%);
   }
 
+  .bf-coupon[open] { z-index: 65; }
+
   .bf-coupon__tab {
     display: flex;
-    min-height: 8.5rem;
+    min-height: 6.25rem;
     align-items: center;
     justify-content: center;
-    gap: 0.55rem;
-    padding: 0.85rem 0.65rem;
+    gap: 0.45rem;
+    padding: 0.65rem 0.55rem;
     border: 1px solid color-mix(in srgb, var(--upy-canvas) 60%, transparent);
     border-right: 0;
-    border-radius: 0.75rem 0 0 0.75rem;
+    border-radius: 0.65rem 0 0 0.65rem;
     background: var(--upy-accent);
     color: #fff;
-    box-shadow: 0 0.4rem 1.25rem rgb(0 0 0 / 20%);
+    box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 18%);
     cursor: pointer;
     list-style: none;
+  }
+
+  .bf-coupon__tab:hover {
+    background: color-mix(in srgb, var(--upy-accent) 88%, #000);
+    box-shadow: 0 0.45rem 1.15rem rgb(0 0 0 / 22%);
+    transform: translateX(-2px);
   }
 
   .bf-coupon__tab::-webkit-details-marker { display: none; }
@@ -223,13 +251,16 @@
 
   .bf-coupon__panel {
     position: absolute;
-    top: 50%;
-    right: calc(100% + 0.65rem);
-    width: min(23rem, calc(100vw - 5rem));
-    max-height: calc(100dvh - 2rem);
-    padding: 0 1.15rem 1.15rem;
+    top: calc(50% + 2rem);
+    right: calc(100% + 0.6rem);
+    box-sizing: border-box;
+    width: min(22rem, calc(100vw - 4.75rem));
+    max-height: calc(100dvh - 4.5rem);
+    padding: 0 1rem 1rem;
     overflow-y: auto;
+    overscroll-behavior: contain;
     border: 1px solid color-mix(in srgb, var(--upy-ink) 12%, transparent);
+    border-radius: 0.9rem;
     background: var(--upy-canvas);
     box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 22%);
     transform: translateY(-50%);
@@ -240,8 +271,9 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
-    margin: 0 -1.15rem 1rem;
-    padding: 1rem 1.15rem;
+    margin: 0 -1rem 0.9rem;
+    padding: 0.95rem 1rem;
+    border-radius: 0.9rem 0.9rem 0 0;
     background: var(--upy-ink);
     color: var(--upy-canvas);
   }
@@ -293,7 +325,7 @@
   }
 
   .bf-coupon__cart-progress {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
     padding: 0.7rem;
     background: color-mix(in srgb, var(--upy-ink) 5%, var(--upy-canvas));
   }
@@ -332,7 +364,7 @@
 
   .bf-coupon__tiers {
     display: grid;
-    gap: 0.35rem;
+    gap: 0.3rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -340,7 +372,7 @@
 
   .bf-coupon__tiers li {
     display: flex;
-    min-height: 2.45rem;
+    min-height: 2.3rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -365,7 +397,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    margin: 0.9rem 0;
+    margin: 0.6rem 0;
     color: color-mix(in srgb, var(--upy-ink) 76%, transparent);
     font-size: 0.72rem;
     line-height: 1.4;
@@ -619,18 +651,14 @@
   @media (max-width: 680px) {
     .bf-coupon__panel {
       right: calc(100% + 0.5rem);
-      width: min(22rem, calc(100vw - 4.5rem));
+      width: min(21rem, calc(100vw - 4.25rem));
+      max-height: calc(100dvh - 4.5rem);
       padding: 0 0.9rem 0.9rem;
     }
 
     .bf-coupon__header {
       margin-inline: -0.9rem;
       padding-inline: 0.9rem;
-    }
-
-    .bf-coupon__tab {
-      min-height: 7.5rem;
-      padding-inline: 0.55rem;
     }
 
     .bf-popup__clock {
@@ -712,12 +740,20 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    .bf-coupon__tab {
+      transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
     .bf-coupon__progress-fill {
       transition: width 220ms ease;
     }
 
     .bf-coupon__panel {
-      animation: bf-coupon-enter 200ms ease-out both;
+      animation: bf-coupon-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .bf-coupon__backdrop {
+      animation: bf-coupon-backdrop-enter 180ms ease-out both;
     }
 
     .bf-popup__clock-second {
@@ -735,8 +771,13 @@
     }
 
     @keyframes bf-coupon-enter {
-      from { opacity: 0; transform: translate(0.75rem, -50%); }
+      from { opacity: 0; transform: translate(1rem, -50%); }
       to { opacity: 1; transform: translate(0, -50%); }
+    }
+
+    @keyframes bf-coupon-backdrop-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     @keyframes bf-popup-enter {

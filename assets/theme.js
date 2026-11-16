@@ -520,7 +520,12 @@
     const coupon = root.querySelector("[data-black-friday-coupon]");
     if (coupon && (preview || (Number.isFinite(startsAt) && Date.now() >= startsAt))) {
       coupon.hidden = false;
+      const couponBackdrop = root.querySelector("[data-black-friday-coupon-backdrop]");
       const cartProgress = coupon.querySelector("[data-black-friday-cart-progress]");
+      const closeCoupon = () => {
+        coupon.open = false;
+        coupon.querySelector("summary")?.focus();
+      };
       const updateCouponProgress = (itemCount) => {
         if (!cartProgress) return;
         const count = Math.max(0, Number(itemCount) || 0);
@@ -558,15 +563,16 @@
       document.addEventListener("upy:cart:change", (event) => {
         updateCouponProgress(event.detail?.itemCount);
       });
-      coupon.querySelector("[data-black-friday-coupon-close]")?.addEventListener("click", () => {
-        coupon.open = false;
-        coupon.querySelector("summary")?.focus();
+      coupon.addEventListener("toggle", () => {
+        if (couponBackdrop) couponBackdrop.hidden = !coupon.open;
       });
+      coupon.querySelector("[data-black-friday-coupon-close]")?.addEventListener("click", closeCoupon);
+      couponBackdrop?.addEventListener("click", closeCoupon);
       document.addEventListener("click", (event) => {
         if (coupon.open && !coupon.contains(event.target)) coupon.open = false;
       });
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && coupon.open) coupon.open = false;
+        if (event.key === "Escape" && coupon.open) closeCoupon();
       });
     }
 
