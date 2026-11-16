@@ -44,6 +44,8 @@
     "black_friday_popup_clock_start_at_info": "Use o formato AAAA-MM-DDTHH:mm:ss-03:00. O padrão é 01/12/2026 à meia-noite de Brasília.",
     "black_friday_popup_event_at": "Data da Black Friday",
     "black_friday_popup_event_at_info": "Use o formato AAAA-MM-DDTHH:mm:ss-03:00. O padrão é 20/11/2026 à meia-noite de Brasília.",
+    "black_friday_discount_end_at": "Fim do desconto na sacola",
+    "black_friday_discount_end_at_info": "Use o formato AAAA-MM-DDTHH:mm:ss-03:00. O padrão é 01/12/2026 à meia-noite de Brasília.",
     "black_friday_popup_delay_seconds": "Atraso antes de exibir, em segundos",
     "black_friday_popup_image": "Imagem da campanha",
     "black_friday_popup_eyebrow": "Texto superior",

@@ -1,0 +1,33 @@
+<section class="site-header__cart-discount" aria-labelledby="HeaderCartDiscountTitle">
+  <div class="site-header__cart-discount-heading">
+    <h3 id="HeaderCartDiscountTitle">{{ 'black_friday.cart.title' | t | escape }}</h3>
+    <strong
+      data-cart-discount-rate
+      data-maximum="{{ 'black_friday.cart.maximum' | t | escape }}"
+      data-current="{{ 'black_friday.cart.current' | t: discount: '[discount]' | escape }}"
+    ></strong>
+  </div>
+  <ol class="site-header__cart-discount-tiers" aria-label="{{ 'black_friday.coupon.tiers' | t | escape }}">
+    {%- for tier in (1..4) -%}
+      {%- assign tier_discount = tier | times: 5 -%}
+      <li data-cart-discount-tier="{{ tier }}">
+        <span class="visually-hidden">
+          {%- case tier -%}
+            {%- when 1 -%}{{ 'black_friday.coupon.one_item' | t | escape }}
+            {%- when 2 -%}{{ 'black_friday.coupon.two_items' | t | escape }}
+            {%- when 3 -%}{{ 'black_friday.coupon.three_items' | t | escape }}
+            {%- when 4 -%}{{ 'black_friday.coupon.four_items' | t | escape }}
+          {%- endcase -%}
+        </span>
+        {{ tier_discount }}%
+      </li>
+    {%- endfor -%}
+  </ol>
+  <p
+    class="site-header__cart-discount-message"
+    data-cart-discount-message
+    data-first="{{ 'black_friday.cart.first_item' | t | escape }}"
+    data-next="{{ 'black_friday.cart.next_item' | t: discount: '[discount]' | escape }}"
+    data-max-reached="{{ 'black_friday.cart.max_reached' | t | escape }}"
+  ></p>
+</section>

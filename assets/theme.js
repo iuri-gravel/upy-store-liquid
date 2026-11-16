@@ -516,6 +516,44 @@
     };
 
     const preview = root.dataset.preview === "true" || new URLSearchParams(window.location.search).get("bf-preview") === "1";
+    const discountStartsAt = Date.parse(root.dataset.eventAt || "");
+    const discountEndsAt = Date.parse(root.dataset.discountEndAt || "");
+    const now = Date.now();
+    const showCartDiscount = preview || (now >= discountStartsAt && now < discountEndsAt);
+    const getDiscountStage = (count) => Math.min(4, Math.max(0, Math.floor(Number(count)) || 0));
+    const cartCard = root.querySelector("[data-black-friday-cart-card]");
+
+    if (showCartDiscount && cartCard) {
+      const updateCartDiscount = () => {
+        const header = document.querySelector("[data-site-header]");
+        const slot = header?.querySelector("[data-black-friday-cart-slot]");
+        if (!root.isConnected || !slot) return;
+
+        const stage = getDiscountStage(header.dataset.cartItemCount);
+        const card = cartCard.content.cloneNode(true);
+        const rate = card.querySelector("[data-cart-discount-rate]");
+        const message = card.querySelector("[data-cart-discount-message]");
+        rate.textContent = stage === 0 ? rate.dataset.maximum : rate.dataset.current.replace("[discount]", `${stage * 5}%`);
+        if (stage === 0) {
+          message.textContent = message.dataset.first;
+        } else if (stage < 4) {
+          message.textContent = message.dataset.next.replace("[discount]", `${(stage + 1) * 5}%`);
+        } else {
+          message.textContent = message.dataset.maxReached;
+        }
+        card.querySelectorAll("[data-cart-discount-tier]").forEach((item) => {
+          const tier = Number(item.dataset.cartDiscountTier);
+          item.classList.toggle("is-reached", tier <= stage);
+          if (tier === stage) item.setAttribute("aria-current", "step");
+        });
+        slot.replaceChildren(card);
+      };
+
+      updateCartDiscount();
+      document.addEventListener("upy:cart:change", updateCartDiscount);
+      document.addEventListener("shopify:section:load", updateCartDiscount);
+    }
+
     const startsAt = Date.parse(root.dataset.startAt || "");
     const coupon = root.querySelector("[data-black-friday-coupon]");
     if (coupon && (preview || (Number.isFinite(startsAt) && Date.now() >= startsAt))) {
@@ -529,7 +567,7 @@
       const updateCouponProgress = (itemCount) => {
         if (!cartProgress) return;
         const count = Math.max(0, Number(itemCount) || 0);
-        const stage = Math.min(count, 4);
+        const stage = getDiscountStage(count);
         const stageName = ["zero", "one", "two", "three", "four"][stage];
         const progressBar = cartProgress.querySelector("[data-black-friday-progress]");
         const progressFill = cartProgress.querySelector("[data-black-friday-progress-fill]");

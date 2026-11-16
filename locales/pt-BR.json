@@ -101,6 +101,14 @@
       "automatic": "O desconto correspondente é aplicado automaticamente ao pedido, sem código.",
       "close": "Fechar oferta",
       "cta": "Escolher produtos"
+    },
+    "cart": {
+      "title": "Desconto da Black Friday",
+      "maximum": "Até 20%",
+      "current": "{{ discount }} de desconto",
+      "first_item": "Adicione 1 peça para liberar 5% de desconto.",
+      "next_item": "Adicione mais 1 peça para chegar a {{ discount }}.",
+      "max_reached": "Você chegou à maior faixa de desconto."
     }
   },
   "collection": {
