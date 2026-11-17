@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "Footer",
@@ -9,13 +18,16 @@
         "newsletter_text": "Cadastre-se e receba novidades exclusivas",
         "register_label": "Cadastrar",
         "description": "Moda fitness feminina com conforto, estilo e liberdade. Para a mulher que vive em movimento.",
+        "institutional_menu": "",
+        "help_menu": "",
+        "information_menu": "",
         "support_hours": "Atendimento de segunda a sexta-feira, das 8h às 17h30.",
         "contact_email": "contato@upystore.com.br",
         "business_id": "35.895.795/0001-28",
         "instagram_url": "https://www.instagram.com/upystore_/",
         "facebook_url": "https://www.facebook.com/upysttore/",
         "youtube_url": "https://www.youtube.com/@UpyStore_",
-        "tiktok_url": "https://www.tiktok.com/@upy.store_",
+        "tiktok_url": "https://www.tiktok.com/@upystore_",
         "pinterest_url": "https://br.pinterest.com/upystore_/"
       }
     }
@@ -24,4 +36,3 @@
     "footer"
   ]
 }
-
