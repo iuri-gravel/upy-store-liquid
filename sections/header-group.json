@@ -1,14 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "Header",
   "sections": {
     "announcement-bar": {
       "type": "announcement-bar",
-      "settings": {}
+      "settings": {
+        "message_1": "BLACK UPY NO AR: Até 25% no Pix comprando 4 peças ou mais!",
+        "message_2": "Primeira troca GRÁTIS para todo o Brasil!",
+        "message_3": "Pague com PIX e ganhe 5% de desconto no seu carrinho!",
+        "message_4": "Parcele em até 3x sem juros no cartão, ou pague no boleto ou pix.",
+        "rotation_speed": 5
+      }
     },
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "menu": "main-menu",
+        "utility_menu": "",
+        "search_placeholder": "Produto, cor ou tamanho"
+      }
     }
   },
   "order": [
