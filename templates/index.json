@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "home-hero": {
@@ -6,26 +15,41 @@
     },
     "home-video-products": {
       "type": "home-video-products",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Movimento real",
+        "title": "Visto na Upy",
+        "supporting_text": "Use em movimento"
+      }
     },
     "home-launches": {
       "type": "home-launches",
-      "settings": {}
+      "settings": {
+        "title": "Lançamentos",
+        "supporting_text": "Novidades",
+        "product_limit": 7
+      }
     },
     "home-categories": {
       "type": "home-categories",
-      "settings": {}
+      "settings": {
+        "title": "Categorias",
+        "autoplay": true,
+        "autoplay_interval": 5
+      }
     },
     "home-buy-by-color": {
       "type": "home-buy-by-color",
       "settings": {
         "title": "Comprar por cor",
-        "caption": "Encontre o seu tom"
+        "caption": "Escolha o seu tom"
       }
     },
     "home-editorial": {
       "type": "home-editorial",
       "settings": {
+        "eyebrow": "",
+        "title": "",
+        "description": "",
         "link": "/pages/manifesto"
       }
     },
