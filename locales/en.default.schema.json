@@ -9,6 +9,12 @@
  */
 {
   "sections": {
+    "black_friday_clock_start_at": "Clock display start",
+    "black_friday_discounts": "Black Friday discounts",
+    "black_friday_discounts_enabled": "Enable campaign discounts",
+    "black_friday_discounts_start_at": "Display start",
+    "black_friday_discounts_end_at": "Display end",
+    "black_friday_discounts_date_info": "Use YYYY-MM-DDTHH:mm:ss-03:00 (Brasilia time).",
     "under_construction": "Under construction page",
     "announcement_bar": "Announcement bar",
     "announcement_message_1": "Announcement 1",

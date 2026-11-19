@@ -395,10 +395,12 @@
         <button class="icon-button site-header__dialog-close" type="button" aria-label="Fechar sacola" data-dialog-close><svg class="site-header__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
       </div>
       {% if cart.item_count == 0 %}
+        <div data-black-friday-cart-slot></div>
         <div class="site-header__cart-empty"><p>Sua sacola está vazia.</p><a class="upy-button" href="{{ routes.all_products_collection_url }}">Continuar comprando</a></div>
       {% else %}
         {% form 'cart', cart, id: 'HeaderCartForm', class: 'site-header__cart-form' %}
           <div class="site-header__cart-items" data-cart-items>
+            <div data-black-friday-cart-slot></div>
             {% for item in cart.items %}
               {% assign color_position = 0 %}
               {% assign size_position = 0 %}

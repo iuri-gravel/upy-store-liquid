@@ -9,6 +9,12 @@
  */
 {
   "sections": {
+    "black_friday_clock_start_at": "Início de exibição do relógio",
+    "black_friday_discounts": "Descontos Black Friday",
+    "black_friday_discounts_enabled": "Ativar descontos da campanha",
+    "black_friday_discounts_start_at": "Início de exibição",
+    "black_friday_discounts_end_at": "Fim de exibição",
+    "black_friday_discounts_date_info": "Use AAAA-MM-DDTHH:mm:ss-03:00 (horário de Brasília).",
     "under_construction": "Página em construção",
     "announcement_bar": "Barra de anúncios",
     "announcement_message_1": "Anúncio 1",

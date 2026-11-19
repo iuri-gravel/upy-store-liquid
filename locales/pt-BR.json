@@ -73,6 +73,40 @@
       "open": "Abrir no Instagram"
     }
   },
+  "black_friday": {
+    "coupon": {
+      "tab": "CUPOM",
+      "eyebrow": "BLACK FRIDAY UPY",
+      "title": "Desconto progressivo",
+      "description": "Adicione mais peças e aproveite uma porcentagem maior de desconto.",
+      "tiers": "Faixas de desconto por quantidade",
+      "cart_item_one": "peça na sacola",
+      "cart_item_other": "peças na sacola",
+      "cart_progress": "Seu desconto atual",
+      "progress_label": "Progresso do desconto",
+      "progress_steps": "etapas de desconto",
+      "stage_zero": "Adicione 1 peça para liberar 5% OFF.",
+      "stage_one": "Etapa 1 de 4: 5% OFF. Adicione mais 1 peça para liberar 10%.",
+      "stage_two": "Etapa 2 de 4: 10% OFF. Adicione mais 1 peça para liberar 15%.",
+      "stage_three": "Etapa 3 de 4: 15% OFF. Adicione mais 1 peça para liberar 20%.",
+      "stage_four": "Etapa 4 de 4: 20% OFF desbloqueados. Você alcançou o desconto máximo.",
+      "one_item": "A partir de 1 peça",
+      "two_items": "A partir de 2 peças",
+      "three_items": "A partir de 3 peças",
+      "four_items": "A partir de 4 peças",
+      "automatic": "O desconto correspondente é aplicado automaticamente ao pedido, sem código.",
+      "close": "Fechar oferta",
+      "cta": "Escolher produtos"
+    },
+    "cart": {
+      "title": "Desconto da Black Friday",
+      "maximum": "Até 20%",
+      "current": "{{ discount }} de desconto",
+      "first_item": "Adicione 1 peça para liberar 5% de desconto.",
+      "next_item": "Adicione mais 1 peça para chegar a {{ discount }}.",
+      "max_reached": "Você chegou à maior faixa de desconto."
+    }
+  },
   "collection": {
     "breadcrumb": "Navegação estrutural",
     "home": "Início",

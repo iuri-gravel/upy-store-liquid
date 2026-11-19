@@ -73,6 +73,40 @@
       "open": "Open on Instagram"
     }
   },
+  "black_friday": {
+    "coupon": {
+      "tab": "OFFER",
+      "eyebrow": "BLACK FRIDAY UPY",
+      "title": "Progressive savings",
+      "description": "Add more pieces to unlock a higher discount.",
+      "tiers": "Discount tiers by quantity",
+      "cart_item_one": "item in your bag",
+      "cart_item_other": "items in your bag",
+      "cart_progress": "Your current discount",
+      "progress_label": "Discount progress",
+      "progress_steps": "discount steps",
+      "stage_zero": "Add 1 item to unlock 5% OFF.",
+      "stage_one": "Step 1 of 4: 5% OFF. Add 1 more item to unlock 10%.",
+      "stage_two": "Step 2 of 4: 10% OFF. Add 1 more item to unlock 15%.",
+      "stage_three": "Step 3 of 4: 15% OFF. Add 1 more item to unlock 20%.",
+      "stage_four": "Step 4 of 4: 20% OFF unlocked. You reached the maximum discount.",
+      "one_item": "From 1 item",
+      "two_items": "From 2 items",
+      "three_items": "From 3 items",
+      "four_items": "From 4 items",
+      "automatic": "The matching discount is applied automatically to your order. No code needed.",
+      "close": "Close offer",
+      "cta": "Shop products"
+    },
+    "cart": {
+      "title": "Black Friday savings",
+      "maximum": "Up to 20%",
+      "current": "{{ discount }} off",
+      "first_item": "Add 1 item to unlock 5% off.",
+      "next_item": "Add 1 more item to get {{ discount }} off.",
+      "max_reached": "You reached the highest discount tier."
+    }
+  },
   "collection": {
     "breadcrumb": "Breadcrumb",
     "home": "Home",
